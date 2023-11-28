@@ -1,0 +1,57 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "paced-email",
+  "title": "Paced Email",
+  "description": "",
+  "icon": "paced-email.png",
+  "author": "xmok",
+  "categories": [
+    "Communication"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "accounts-and-inboxes",
+      "title": "Accounts and Inboxes",
+      "subtitle": "Paced Email",
+      "description": "List all your Accounts and manage Inboxes",
+      "mode": "view"
+    },
+    {
+      "name": "current-user",
+      "title": "Current User",
+      "subtitle": "Paced Email",
+      "description": "Fetch Information about the current user",
+      "mode": "view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "api_token",
+      "description": "",
+      "title": "API Token",
+      "required": true,
+      "type": "password"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.62.0",
+    "@raycast/utils": "^1.10.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.6",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.27",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
