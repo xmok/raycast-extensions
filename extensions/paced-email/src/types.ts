@@ -11,7 +11,7 @@ export enum Periodicity {
     weekly = "weekly",
     monthly = "monthly"
 }
-type Inbox = {
+export type Inbox = {
     id: string;
     alias: string;
     periodicity: Periodicity;
@@ -45,13 +45,19 @@ export type CreateInboxFormValues = {
     periodicity: string;
     digest_format: string;
     description: string;
-    // domain_id: string;
-    // username_id: string;
+    domain_id: string;
+    username_id: string;
     bypass_first_message: boolean;
     paused: boolean;
     additional_recipients: string;
     signature: string;
     // selected_recipient_ids: string[];
+    sender_name: string;
+}
+export type Domain = {
+    id: string;
+    host_name: string;
+    valid_dns: boolean;
 }
 
 export type User = {
@@ -61,7 +67,7 @@ export type User = {
 }
 
 export type PaginatedList = {
-    entries: Account[] | Inbox[] | User[];
+    entries: Account[] | Inbox[] | User[] | Domain[];
     metadata: {
         current_page: number;
         per_page: number;
@@ -81,6 +87,8 @@ type PaginatedListBase = {
 
 export type AccountsResponse = PaginatedListBase & { entries: Account[] };
 export type InboxesResponse = PaginatedListBase & { entries: Inbox[] };
+export type UsersResponse = PaginatedListBase & { entries: User[] };
+export type DomainsResponse = PaginatedListBase & { entries: Domain[] };
 
 export type SingleErrorResponse = { error: string };
 

@@ -16,3 +16,4 @@ export const DIGEST_FORMATS = {
     full: "Full",
     summary: "Basic summary"
 }
+export const DEFAULT_DOMAIN = "paced.email";
