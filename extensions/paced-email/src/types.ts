@@ -32,27 +32,26 @@ export type CreateInboxParameters = {
     periodicity: Periodicity;
     digest_format: DigestFormat;
     description: string;
-    domain_id: string;
-    username_id: string;
+    domain_id?: string;
+    username_id?: string;
     bypass_first_message: boolean;
     paused: boolean;
     additional_recipients: string;
     signature: string;
-    selected_recipient_ids: string[];
+    // selected_recipient_ids: string[];
 }
 export type CreateInboxFormValues = {
     name: string;
     periodicity: string;
     digest_format: string;
     description: string;
-    domain_id: string;
-    username_id: string;
+    domain_id?: string;
+    username_id?: string;
     bypass_first_message: boolean;
     paused: boolean;
     additional_recipients: string;
     signature: string;
     // selected_recipient_ids: string[];
-    sender_name: string;
 }
 export type Domain = {
     id: string;

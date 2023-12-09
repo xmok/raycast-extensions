@@ -11,8 +11,8 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "accounts-and-inboxes",
-      "title": "Accounts and Inboxes",
+      "name": "accounts-inboxes-users-domains",
+      "title": "Accounts, Inboxes, Users, Domains",
       "subtitle": "Paced Email",
       "description": "List all your Accounts and manage Inboxes",
       "mode": "view"

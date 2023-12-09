@@ -1,15 +1,16 @@
 import { getAvatarIcon, getFavicon, showFailureToast, useFetch, useForm } from "@raycast/utils";
 import { API_HEADERS, API_URL, DEFAULT_DOMAIN, DIGEST_FORMATS, PERIODICITIES } from "./constants";
-import { Action, ActionPanel, Alert, Color, Form, Icon, List, Toast, confirmAlert, showToast } from "@raycast/api";
+import { Action, ActionPanel, Alert, Color, Form, Icon, List, Toast, confirmAlert, showToast, useNavigation } from "@raycast/api";
 import { AccountsResponse, CreateInboxFormValues, Domain, DomainsResponse, Inbox, InboxesResponse, MultiErrorResponse, Periodicity, SingleErrorResponse, User, UsersResponse } from "./types";
 import { useEffect, useState } from "react";
 import fetch from "node-fetch";
+import ErrorComponent from "./components/ErrorComponent";
 
-export default function AccountsAndInboxes() {
+export default function AccountsInboxesUsersDomains() {
     const [page, setPage] = useState(1);
-    const { isLoading, data } = useFetch<AccountsResponse>(API_URL + `accounts?page=${page}`, { headers: API_HEADERS });
+    const { isLoading, data, error } = useFetch<AccountsResponse>(API_URL + `accounts?page=${page}`, { headers: API_HEADERS });
 
-    return <List isLoading={isLoading} searchBarPlaceholder="Search account" isShowingDetail>
+    return error ? <ErrorComponent error={error} /> : <List isLoading={isLoading} searchBarPlaceholder="Search account" isShowingDetail>
         {data && <List.Section title={`page: ${data.metadata.current_page} of ${data.metadata.total_pages} | per_page: ${data.metadata.per_page} | total_entries: ${data.metadata.total_entries}`}>
         {data.entries.map(account => <List.Item key={account.id} title={account.name} icon={account.avatar_path || getAvatarIcon(account.name)} actions={<ActionPanel>
             <Action.Push title="List Inboxes" icon={Icon.Envelope} target={<ListInboxes account_id={account.id} />} />
@@ -73,7 +74,7 @@ function ListInboxes({ account_id }: ListInboxesProps) {
                 {data.metadata.current_page < data.metadata.total_pages && <Action title="Fetch Next Page" icon={Icon.ArrowRight} onAction={() => setPage(data.metadata.current_page+1)} />}
                 {data.metadata.current_page > 1 && <Action title="Fetch Previous Page" icon={Icon.ArrowLeft} onAction={() => setPage(data.metadata.current_page-1)} />}
                 <ActionPanel.Section>
-                    <Action.Push title="Create Inbox" icon={Icon.Plus} target={<CreateInbox account_id={account_id} />} shortcut={{ modifiers: ["cmd"], key: "n" }} />
+                    <Action.Push title="Create Inbox" icon={Icon.Plus} target={<CreateInbox account_id={account_id} onInboxCreated={revalidate} />} shortcut={{ modifiers: ["cmd"], key: "n" }} />
                 </ActionPanel.Section>
             </ActionPanel>} detail={<List.Item.Detail metadata={<List.Item.Detail.Metadata>
                 <List.Item.Detail.Metadata.Label title="ID" text={inbox.id} />
@@ -90,7 +91,7 @@ function ListInboxes({ account_id }: ListInboxesProps) {
         </List.Section>}
         {!isLoading && <List.Section title="Actions">
             <List.Item title="Create Inbox" icon={Icon.Plus} actions={<ActionPanel>
-                <Action.Push title="Create Inbox" icon={Icon.Plus} target={<CreateInbox account_id={account_id} />} />
+                <Action.Push title="Create Inbox" icon={Icon.Plus} target={<CreateInbox account_id={account_id} onInboxCreated={revalidate} />} />
             </ActionPanel>} />
         </List.Section> }
     </List>
@@ -98,32 +99,44 @@ function ListInboxes({ account_id }: ListInboxesProps) {
 
 type CreateInboxProps = {
     account_id: string;
+    onInboxCreated: () => void;
 }
-function CreateInbox({ account_id } : CreateInboxProps) {
+function CreateInbox({ account_id, onInboxCreated } : CreateInboxProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<MultiErrorResponse>();
     const [domains, setDomains] = useState<Domain[]>();
     const [users, setUsers] = useState<User[]>();
+
+    const { pop } = useNavigation();
 
     const { handleSubmit, itemProps } = useForm<CreateInboxFormValues>({
         async onSubmit(values) {
             setIsLoading(true);
             await showToast({ title: "Creating Inbox", style: Toast.Style.Animated });
             
-            const recipients = Object.entries(values).filter(([key, val]) => key.startsWith("recipient_") && val).map(([key,]) => key.replace("recipient_", ""));
-            const selected_recipient_ids_param = recipients.map(recipient => `inbox[selected_recipient_ids][]=${encodeURIComponent(recipient)}`).join("&");
+            // Leaving these commented-out lines so when API starts to support username_id properly, we can uncomment and use as a base
+            // const recipients = Object.entries(values).filter(([key, val]) => key.startsWith("recipient_") && val).map(([key,]) => key.replace("recipient_", ""));
+            // const selected_recipient_ids_param = recipients.map(recipient => `inbox[selected_recipient_ids][]=${encodeURIComponent(recipient)}`).join("&");
             
-            const valuesWithoutRecipients = Object.fromEntries(Object.entries(values).filter(([key,]) => !key.startsWith("recipient_")));
-            const params = Object.entries(valuesWithoutRecipients).map(([key, val]) => `inbox[${key}]=${val}`).join("&");
-            const apiResponse = await fetch(API_URL + `inboxes?account_id=${account_id}&${params}&${selected_recipient_ids_param}`, { headers: API_HEADERS, method: "POST" });
-            const response = await apiResponse.json() as MultiErrorResponse | {inbox: string};
+            // const valuesWithoutRecipients = Object.fromEntries(Object.entries(values).filter(([key,]) => !key.startsWith("recipient_")));
+            // const params = Object.entries(valuesWithoutRecipients).map(([key, val]) => `inbox[${key}]=${val}`).join("&");
+            // const apiResponse = await fetch(API_URL + `inboxes?account_id=${account_id}&${params}&${selected_recipient_ids_param}`, { headers: API_HEADERS, method: "POST" });
+            if (values.domain_id==="") delete values.domain_id;
+            if (values.username_id==="") delete values.username_id;
+            const params = Object.entries(values).map(([key, val]) => `inbox[${key}]=${val}`).join("&");
+            const apiResponse = await fetch(API_URL + `inboxes?account_id=${account_id}&${params}`, { headers: API_HEADERS, method: "POST" });
+            const response = await apiResponse.json() as MultiErrorResponse | SingleErrorResponse | {inbox: string};
             
             if ("inbox" in response) {
                 await showToast({ title: "Inbox Created", message: response.inbox });
-            } else { 
+                onInboxCreated();
+                pop();
+            } else if ("errors" in response) {
                 await showFailureToast("");
-                setErrors(response)
-            };
+                setErrors(response);
+            } else {
+                await showFailureToast(response.error);
+            }
             setIsLoading(false);
         },
         validation: {
@@ -136,30 +149,29 @@ function CreateInbox({ account_id } : CreateInboxProps) {
       async function getDomainsAndUsers() {
         await showToast({ title: "Fetching Domains and Users", style: Toast.Style.Animated });
         
-        const [domainsResponse, usersResponse] = await Promise.all([
+        const [domainsResponse, meResponse] = await Promise.all([
             fetch(API_URL + `domains?account_id=${account_id}`, { headers: API_HEADERS }),
-            fetch(API_URL + `users?account_id=${account_id}`, { headers: API_HEADERS }),
+            fetch(API_URL + "me", { headers: API_HEADERS }),
         ]);
         
-        const [domainsData, usersData] = await Promise.all([
+        const [domainsData, meData] = await Promise.all([
             await domainsResponse.json() as SingleErrorResponse | DomainsResponse,
-            await usersResponse.json() as SingleErrorResponse | UsersResponse,
+            await meResponse.json() as SingleErrorResponse | User,
         ])
-        // const domainsData = await domainsResponse.json() as SingleErrorResponse | DomainsResponse;
-        // const usersData = await usersResponse.json() as SingleErrorResponse | UsersResponse;
-
+        
         let numOfDomains = 0;
         if ("entries" in domainsData) {
-            numOfDomains = domainsData.entries.length;
-            setDomains(domainsData.entries);
+            numOfDomains = domainsData.entries.length+1;
+            setDomains([...domainsData.entries, { id: "", host_name: DEFAULT_DOMAIN, valid_dns: true }]);
         }
 
-        let numOfUsers = 0;
-        if ("entries" in usersData) {
-            numOfUsers = usersData.entries.length;
-            setUsers(usersData.entries);
+        const numOfUsers = 1;
+        if ("id" in meData) {
+            setUsers([
+                {...meData, id: ""}
+            ]);
         }
-        await showToast({ title: `Fetched ${numOfDomains} domains and ${numOfUsers} users` });
+        await showToast({ title: `Fetched ${numOfDomains} domains and ${numOfUsers} user` });
       }
 
       useEffect(() => {
@@ -188,14 +200,12 @@ function CreateInbox({ account_id } : CreateInboxProps) {
             {Object.entries(PERIODICITIES).map(([value, title]) => <Form.Dropdown.Item key={value} title={title} value={value} />)}
         </Form.Dropdown>
         <Form.Dropdown title="Domain" {...itemProps.domain_id}>
-            <List.Dropdown.Item title={DEFAULT_DOMAIN} value="" icon={getFavicon(`https://${DEFAULT_DOMAIN}`)} />
             {domains?.map(domain => <List.Dropdown.Item key={domain.id} title={domain.host_name} value={domain.id} icon={getFavicon(`https://${domain.host_name}`)} />)}
         </Form.Dropdown>
-        <Form.TextField title="Sender name" placeholder="Enter sender name (optional)" {...itemProps.sender_name} />
         
         <Form.Separator />
-        <Form.Description title="Recipients" text="Select which teammates should receive this digest. By default, it's you" />
-        {users?.map(user => <Form.Checkbox id={`recipient_${user.id}`} key={user.id} label={user.email} />)}
+        {/* <Form.Description title="Recipients" text="Select which teammates should receive this digest. By default, it's you" /> */}
+        {/* {users?.map(user => <Form.Checkbox id={`recipient_${user.id}`} key={user.id} label={user.email} />)} */}
         <Form.TextField title="Additional recipients" {...itemProps.additional_recipients} placeholder="johndoe@example.com, janedoe@example.com" info="Add extra recipient emails separated by commas." />
 
         <Form.Dropdown title="Delivery" {...itemProps.digest_format} info="Choose the digest email delivery format you would prefer.">
@@ -247,6 +257,9 @@ function ListDomains({ account_id }: ListDomainsProps) {
     
     return <List navigationTitle="Domains" searchBarPlaceholder="Search domain" isLoading={isLoading}>
         {data && <List.Section title={`page: ${data.metadata.current_page} of ${data.metadata.total_pages} | per_page: ${data.metadata.per_page} | total_entries: ${data.metadata.total_entries}`}>
+            <List.Item title={DEFAULT_DOMAIN} icon={getFavicon(`https://${DEFAULT_DOMAIN}`)} accessories={[{tag: "DEFAULT_DOMAIN"}]} actions={<ActionPanel>
+                    <Action.CopyToClipboard title="Copy Host Name to Clipboard" content={DEFAULT_DOMAIN} />
+            </ActionPanel>} />
             {data.entries.map(domain => <List.Item key={domain.id} title={domain.host_name} icon={getFavicon(`https://${domain.host_name}`, { fallback: Icon.Globe })} accessories={[
                 { tag: { value: "Valid DNS", color: domain.valid_dns ? Color.Green : Color.Red } }
             ]} actions={<ActionPanel>
