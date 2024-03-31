@@ -1,0 +1,80 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "storyblok",
+  "title": "Storyblok",
+  "description": "",
+  "icon": "extension_icon.png",
+  "author": "xmok",
+  "categories": [
+    "Applications"
+  ],
+  "license": "MIT",
+  "preferences": [
+    {
+      "name": "oathToken",
+      "title": "OAuth2 Token",
+      "type": "password",
+      "required": true,
+      "description": ""
+    },
+    {
+      "name": "region",
+      "title": "Region",
+      "type": "dropdown",
+      "required": true,
+      "description": "",
+      "default": "eu",
+      "data": [
+        {
+          "title": "EU",
+          "value": "eu"
+        },
+        {
+          "title": "US",
+          "value": "us"
+        },
+        {
+          "title": "Australia",
+          "value": "ap"
+        },
+        {
+          "title": "Canada",
+          "value": "ca"
+        },
+        {
+          "title": "China",
+          "value": "cn"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "name": "spaces",
+      "title": "Spaces",
+      "description": "",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.69.0",
+    "@raycast/utils": "^1.13.5",
+    "isomorphic-fetch": "^3.0.0",
+    "storyblok-js-client": "^6.7.1"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.6",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.27",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
