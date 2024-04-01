@@ -9,7 +9,7 @@ export type StoryblokSpace = {
     id: number;
     role?: string;
     owner_id: number;
-    story_published_hook?: boolean;
+    story_published_hook?: string;
     // environments
     stories_count?: number;
     parent_id?: number;
@@ -48,4 +48,37 @@ export type StoryblokSpace = {
     // stripe_trial_end: null,
     // canceled_at: null,
     org_requires_2fa: boolean;
+}
+
+export type StoryblokUpdateSpaceRequest = {
+    name?: string;
+    domain?: string;
+    uniq_domain?: string;
+    id?: number;
+    owner_id?: number;
+    story_published_hook?: string;
+    // environ
+    parent_id?: number;
+    searchblok_id?: number;
+    duplicatable?: boolean;
+    // billing_address
+    // routes
+    default_root?: string;
+    // options   
+}
+export type StoryblokUpdateSpaceFormValues = {
+    name: string;
+    domain: string;
+    uniq_domain: string;
+    id: string;
+    owner_id: string;
+    story_published_hook: string;
+    // environ
+    parent_id: string;
+    // searchblok_id: string;
+    duplicatable: boolean;
+    // billing_address
+    // routes
+    default_root: string;
+    // options   
 }
