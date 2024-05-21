@@ -35,6 +35,18 @@
       "title": "Monitors",
       "description": "",
       "mode": "view"
+    },
+    {
+      "name": "incidents",
+      "title": "Incidents",
+      "description": "",
+      "mode": "view"
+    },
+    {
+      "name": "status-pages",
+      "title": "Status Pages",
+      "description": "",
+      "mode": "view"
     }
   ],
   "dependencies": {

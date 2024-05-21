@@ -43,3 +43,15 @@ export type Incident = {
     resolvedBy: number | null;
     resolvedAt: string | null;
 }
+
+export type StatusPage = {
+    id: number;
+    title: string;
+    description: string;
+    slug: string;
+    passwordProtected: boolean;
+    password: string;
+    customDomain?: string | null;
+    icon?: string | null;
+    monitors?: number[];
+}
