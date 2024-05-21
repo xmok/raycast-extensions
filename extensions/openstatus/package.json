@@ -1,0 +1,59 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "openstatus",
+  "title": "OpenStatus",
+  "description": "",
+  "icon": "command-icon.png",
+  "author": "xmok",
+  "categories": [
+    "Applications",
+    "Developer Tools"
+  ],
+  "license": "MIT",
+  "preferences": [
+    {
+      "name": "api_url",
+      "description": "",
+      "title": "API URL",
+      "placeholder": "https://api.openstatus.dev/v1",
+      "required": true,
+      "default": "https://api.openstatus.dev/v1",
+      "type": "textfield"
+    },
+    {
+      "name": "api_token",
+      "description": "",
+      "title": "API Token",
+      "placeholder": "os_xxxxxxxxx",
+      "required": true,
+      "type": "password"
+    }
+  ],
+  "commands": [
+    {
+      "name": "monitors",
+      "title": "Monitors",
+      "description": "",
+      "mode": "view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.74.1",
+    "@raycast/utils": "^1.15.0"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.6",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.27",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}

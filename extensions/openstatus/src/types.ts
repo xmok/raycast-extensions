@@ -1,0 +1,45 @@
+enum Periodicity {
+    "30s" = "30s",
+    "1m" = "1m",
+    "5m" = "5m",
+    "10m" = "10m",
+    "30m" = "30m",
+    "1h" = "1h",
+    "other" = "other"
+}
+enum Region {
+    ams = "ams",
+    iad = "iad",
+    hkg = "hkg",
+    jnb = "jnb",
+    syd = "syd",
+    gru = "gru"
+}
+enum Method {
+    GET = "GET",
+    POST = "POST",
+    HEAD = "HEAD"
+}
+export type Monitor = {
+    id: number;
+    periodicity: Periodicity;
+    url: string;
+    regions: Region[];
+    name: string | null;
+    description: string | null;
+    method: Method,
+    body: string | null;
+    headers: {key: string; value: string}[] | null;
+    active: boolean;
+    public: boolean;
+}
+
+export type Incident = {
+    id: number;
+    startedAt: string | null;
+    monitorId: number | null;
+    acknowledgedAt: string | null;
+    acknowledgedBy: number | null;
+    resolvedBy: number | null;
+    resolvedAt: string | null;
+}
