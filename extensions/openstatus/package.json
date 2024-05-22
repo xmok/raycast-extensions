@@ -47,6 +47,18 @@
       "title": "Status Pages",
       "description": "",
       "mode": "view"
+    },
+    {
+      "name": "status-reports",
+      "title": "Status Reports",
+      "description": "",
+      "mode": "view"
+    },
+    {
+      "name": "notifications",
+      "title": "Notifications",
+      "description": "",
+      "mode": "view"
     }
   ],
   "dependencies": {

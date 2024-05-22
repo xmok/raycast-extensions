@@ -55,3 +55,10 @@ export type StatusPage = {
     icon?: string | null;
     monitors?: number[];
 }
+
+export type StatusReport = {
+    title: string;
+    status: "investigating" | "identified" | "monitoring" | "resolved";
+    id: number;
+    status_report_updates: number[];
+}
