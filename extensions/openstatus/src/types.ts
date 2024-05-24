@@ -62,3 +62,22 @@ export type StatusReport = {
     id: number;
     status_report_updates: number[];
 }
+
+export type CheckerResponse = {
+    status: number;
+    latency: number;
+    headers: Record<string, string>;
+    time: number;
+    timing: {
+      dnsStart: number;
+      dnsDone: number;
+      connectStart: number;
+      connectDone: number;
+      tlsHandshakeStart: number;
+      tlsHandshakeDone: number;
+      firstByteStart: number;
+      firstByteDone: number;
+      transferStart: number;
+      transferDone: number;
+    };
+};   

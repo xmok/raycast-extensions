@@ -12,12 +12,12 @@
   "license": "MIT",
   "preferences": [
     {
-      "name": "api_url",
+      "name": "openstatus_url",
       "description": "",
-      "title": "API URL",
-      "placeholder": "https://api.openstatus.dev/v1",
+      "title": "OpenStatus URL",
+      "placeholder": "https://openstatus.dev/",
       "required": true,
-      "default": "https://api.openstatus.dev/v1",
+      "default": "https://openstatus.dev/",
       "type": "textfield"
     },
     {
@@ -59,6 +59,50 @@
       "title": "Notifications",
       "description": "",
       "mode": "view"
+    },
+    {
+      "name": "checker",
+      "title": "Checker",
+      "description": "",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "region",
+          "type": "dropdown",
+          "placeholder": "REGION",
+          "required": true,
+          "data": [
+            { "title": "Amsterdam", "value": "ams"},
+            { "title": "Hong-Kong", "value": "hkg"},
+            { "title": "Northern Virginia", "value": "iad"},
+            { "title": "São Paulo", "value": "gru"},
+            { "title": "Sydney", "value": "syd"},
+            { "title": "Johannesburg", "value": "jnb"}
+          ]
+        },
+        {
+          "name": "url",
+          "placeholder": "URL",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "method",
+          "placeholder": "METHOD",
+          "type": "dropdown",
+          "required": true,
+          "data": [
+            {
+              "title": "GET",
+              "value": "GET"
+            },
+            {
+              "title": "POST",
+              "value": "POST"
+            }
+          ]
+        }
+      ]
     }
   ],
   "dependencies": {

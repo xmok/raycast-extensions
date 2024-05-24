@@ -8,7 +8,7 @@ export default function Monitors() {
     const { isLoading, data: monitors } = useOpenStatus<Monitor[]>("monitor");
 
     return <List isLoading={isLoading}>
-        {monitors?.map(monitor => <List.Item key={monitor.id} icon={{ source: Icon.Dot, tintColor: monitor.active ? Color.Green : Color.Red }} title={monitor.name || ""} subtitle={monitor.url} accessories={[
+        {monitors?.map(monitor => <List.Item key={monitor.id} icon={{ tooltip: monitor.active ? "Monitor is active" : "Monitor is inactive", value: {source: Icon.Dot, tintColor: monitor.active ? Color.Green : Color.Red }} } title={monitor.name || ""} subtitle={monitor.url} accessories={[
         { text: `every ${monitor.periodicity}` },
         {tag: { value: "PUBLIC", color: monitor.public ? Color.Green : Color.Red }}
         ]} actions={<ActionPanel>
