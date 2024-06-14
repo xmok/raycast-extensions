@@ -10,7 +10,7 @@ export default function Monitors() {
     return <List isLoading={isLoading}>
         {monitors?.map(monitor => <List.Item key={monitor.id} icon={{ tooltip: monitor.active ? "Monitor is active" : "Monitor is inactive", value: {source: Icon.Dot, tintColor: monitor.active ? Color.Green : Color.Red }} } title={monitor.name || ""} subtitle={monitor.url} accessories={[
         { text: `every ${monitor.periodicity}` },
-        {tag: { value: "PUBLIC", color: monitor.public ? Color.Green : Color.Red }}
+        {tag: monitor.public ? "PUBLIC" : "PRIVATE" }
         ]} actions={<ActionPanel>
             <Action.Push title="Update Monitor" icon={Icon.Pencil} target={<UpdateMonitor monitor={monitor} />} />
         </ActionPanel>} />)}
@@ -38,8 +38,18 @@ function UpdateMonitor({monitor}: {monitor: Monitor}) {
         headers: {key: string; value: string}[] | null;
     }
     const { itemProps, handleSubmit, values } = useForm<FormValues>({
-        onSubmit(values) {
-            
+        onSubmit() {
+            update?.();
+        },
+        initialValues: {
+            name: monitor.name || "",
+            active: monitor.active,
+            method: monitor.method,
+            url: monitor.url,
+            periodicity: monitor.periodicity,
+            regions: monitor.regions,
+            description: monitor.description || "",
+            public: monitor.public
         },
         validation: {
             periodicity: FormValidation.Required,
@@ -48,6 +58,11 @@ function UpdateMonitor({monitor}: {monitor: Monitor}) {
             method: FormValidation.Required,
         }
     });
+    const { isLoading, revalidate: update, openstatusUrl } = useOpenStatus<Monitor>(`monitor/${monitor.id}`, {
+        method: "PUT",
+        body: values,
+        execute: false
+    })
 
     const REGIONS = {
         ams: "Amsterdam, Netherlands 🇳🇱",
@@ -58,7 +73,9 @@ function UpdateMonitor({monitor}: {monitor: Monitor}) {
         gru: "Sao Paulo, Brazil 🇧🇷"
     }
 
-    return <Form navigationTitle="Update Monitor">
+    return <Form navigationTitle="Update Monitor" isLoading={isLoading} actions={<ActionPanel>
+        <Action.SubmitForm title="Submit" icon={Icon.Check} onSubmit={handleSubmit} />
+    </ActionPanel>}>
         <Form.Description title="Basic Information" text="Be able to find your monitor easily" />
         <Form.TextField title="Name" placeholder="Documenso" info="Displayed on the status page" {...itemProps.name} />
         <Form.Checkbox label="Active" info="If the monitor is active" {...itemProps.active} />
@@ -87,7 +104,7 @@ function UpdateMonitor({monitor}: {monitor: Monitor}) {
             {["30s", "1m", "5m", "10m", "30m", "1hr"].map(periodicity => <Form.Dropdown.Item key={periodicity} title={periodicity} value={periodicity} />)}
         </Form.Dropdown>
         <Form.TagPicker title="Regions" {...itemProps.regions}>
-            {Object.entries(REGIONS).map(([title, value]) => <Form.TagPicker.Item key={title} title={title} value={value} />)}
+            {Object.entries(REGIONS).map(([value, title]) => <Form.TagPicker.Item key={value} title={title} value={value} />)}
         </Form.TagPicker>
 
         <Form.Separator />
@@ -97,6 +114,6 @@ function UpdateMonitor({monitor}: {monitor: Monitor}) {
         <Form.Separator />
         <Form.Description title="Danger" text="Be aware of the changes you are about to make." />
         <Form.Checkbox label="Allow public monitor" info="Change monitor visibility" {...itemProps.public} />
-        <Form.Description text={`Change monitor visibility. When checked, the monitor stats from the overview page will be public. You will be able to share it via a connected status page or openstatus.dev/public/monitors/${initialMonitor.id}.`} />
+        <Form.Description text={`Change monitor visibility. When checked, the monitor stats from the overview page will be public. You will be able to share it via a connected status page or ${openstatusUrl}public/monitors/${initialMonitor.id}.`} />
     </Form>
 }

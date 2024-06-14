@@ -1,5 +1,6 @@
 import { showFailureToast, useFetch } from "@raycast/utils"
 import { API_HEADERS, OPENSTATUS_URL } from "./constants"
+import { ErrorResponse } from "./types";
 
 // export default function useOpenStatus<T>(endpoint: "monitor" | "incident" | "page" | "status_report", options?: { method?: "GET" | "POST" | "PUT", body?, execute?: boolean, onData? }) {
 export default function useOpenStatus<T>(endpoint: string, options?: { method?: "GET" | "POST" | "PUT", body?, execute?: boolean, onData? }) {
@@ -14,7 +15,7 @@ export default function useOpenStatus<T>(endpoint: string, options?: { method?: 
         //     url, method: (options?.method) || (options?.body ? "POST" : "GET"), body: options?.body ? JSON.stringify(options.body) : undefined
         // })
         const { isLoading, data, revalidate } = useFetch<T>(url.toString(), {
-            method: (options?.method) || (options?.body ? "POST" : "GET"),
+            method: (options?.method) || "GET",
             headers: API_HEADERS,
             body: options?.body ? JSON.stringify(options.body) : undefined,
             onData(data) {
@@ -22,21 +23,30 @@ export default function useOpenStatus<T>(endpoint: string, options?: { method?: 
                 console.log({data})
             },
             async parseResponse(response) {
+                if (!response.ok) {
+                    if (response.headers.get("Content-Type")?.includes("text/plain")) {
+                        const result = await response.text();
+                        throw new Error(result);
+                    } else {
+                        const result = await response.json() as ErrorResponse;
+                        throw({
+                            name: result.code,
+                            message: result.message
+                        });
+                    }
+                }
+            
                 const result = await response.json();
-                if (!response.ok) throw({
-                    name: response.statusText,
-                    message: result.message
-                });
                 return result;
             },
-            async onError(error) {
-                await showFailureToast(error.message, { title: error.name });
-            },
+            // async onError(error) {
+            //     await showFailureToast(error.message, { title: error.name });
+            // },
             execute: options?.execute
         })
         return { isLoading, data, revalidate, openstatusUrl };
     } catch (error) {
-        console.log({error})
-        return { isLoading: false, error }
+            showFailureToast(error);
+            return { isLoading: false, error }
     }
 }

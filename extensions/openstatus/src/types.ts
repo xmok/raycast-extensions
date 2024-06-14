@@ -20,6 +20,11 @@ enum Method {
     POST = "POST",
     HEAD = "HEAD"
 }
+type Assertion = {
+    type: string;
+    compare: string;
+    target: number | string;
+}
 export type Monitor = {
     id: number;
     periodicity: Periodicity;
@@ -30,6 +35,7 @@ export type Monitor = {
     method: Method,
     body: string | null;
     headers: {key: string; value: string}[] | null;
+    assertions: Assertion | null;
     active: boolean;
     public: boolean;
 }
@@ -80,4 +86,10 @@ export type CheckerResponse = {
       transferStart: number;
       transferDone: number;
     };
-};   
+};
+
+export type ErrorResponse = {
+    code: string;
+    message: string;
+    docs: string;
+}
