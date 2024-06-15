@@ -1,0 +1,97 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "robohash",
+  "title": "RoboHash",
+  "description": "Robots lovingly delivered by Robohash.org",
+  "icon": "command-icon.png",
+  "author": "xmok",
+  "categories": [
+    "Fun"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "generate-robohash-avatar",
+      "title": "Generate RoboHash Avatar",
+      "subtitle": "RoboHash",
+      "description": "Generate Unique Images From Any Text",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "text",
+          "placeholder": "TEXT",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "bgset",
+          "placeholder": "bgSET",
+          "type": "dropdown",
+          "required": true,
+          "data": [
+            {
+              "title": "bgset1",
+              "value": "bg1"
+            },
+            {
+              "title": "bgset2",
+              "value": "bg2"
+            },
+            {
+              "title": "bgset3",
+              "value": "bg3"
+            },
+            {
+              "title": "bgset4",
+              "value": "bg4"
+            }
+          ]
+        },
+        {
+          "name": "set",
+          "placeholder": "SET",
+          "type": "dropdown",
+          "required": true,
+          "data": [
+            {
+              "title": "set1",
+              "value": "set1"
+            },
+            {
+              "title": "set2",
+              "value": "set2"
+            },
+            {
+              "title": "set3",
+              "value": "set3"
+            },
+            {
+              "title": "set4",
+              "value": "set4"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tools": null,
+  "dependencies": {
+    "@raycast/api": "^1.76.0"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.6",
+    "@types/node": "20.8.10",
+    "@types/react": "18.2.27",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint",
+    "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
+    "publish": "npx @raycast/api@latest publish"
+  }
+}
