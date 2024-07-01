@@ -1,18 +1,20 @@
+export type Endpoint = "person" | "place" | "country" | "occupation" | "era";
+
 export type Person = {
     wd_id: string; //"Q2746373",
     wp_id: number; //7270356,
     slug: string;
     name: string;
     occupation: string;
-    // "prob_ratio": 58.9818295408834,
-    gender: "M" | "F";
+    prob_ratio: number;
+    gender: "M" | "F" | null;
     twitter: string | null;
     alive: boolean;
-    // "l": 16,
-    // "l_prev": 16,
-    // "hpi": 52.6054854400811,
-    // "hpi_prev": 50.9768524465966,
-    // "bplace_name": null,
+    l: number | null;
+    l_prev: number | null;
+    hpi: number | null;
+    hpi_prev: number | null;
+    bplace_name: string | null;
     // "bplace_lat": null,
     // "bplace_lon": null,
     // "bplace_geonameid": null,
@@ -33,9 +35,16 @@ export type Person = {
     // "age": 1197,
     // "coefficient_of_variation": 2.32245935496909,
     // "non_en_page_views": 10610,
-    // "youtube": null,
+    youtube: string | null;
     description: string | null;
-    // "famous_for": null,
+    famous_for: string | null;
     id: number;
     // "hpi_raw": 21.1484443361004
+}
+
+export type ErrorResponse = {
+    hint?: string | null;
+    details: string | null;
+    code?: string;
+    message: string;
 }
