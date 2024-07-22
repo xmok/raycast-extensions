@@ -3,6 +3,13 @@ type UserTodo = {
     value: number;
 }
 type UserExp = UserTodo;
+
+type UserInvitation = {
+  id: string;
+  name: string;
+  inviter: string;
+}
+
 export type User = {
         auth: {
             local: {
@@ -16,9 +23,15 @@ export type User = {
                 created: string;
                 updated: string;
             }
-            // facebook: {},
-            // google: {},
-            // apple: {}
+            facebook: {
+              [key: string]: unknown;
+            };
+            google: {
+              [key: string]: unknown;
+            };
+            apple: {
+              [key: string]: unknown;
+            };
         }
         achievements: {
             ultimateGearSets: {
@@ -30,19 +43,35 @@ export type User = {
             habitBirthdays: number;
             perfect: number;
             quests: {
-                bewilder: number;
-                dysheartener: number;
+                [quest: string]: 1;
             }
-            // "challenges": [],
+            challenges: unknown[];
             habiticaDays: number;
             completedTask: boolean;
             createdTask: boolean;
             hatchedPet: boolean;
             streak: number;
         }
-        // backer: {},
-        // contributor: {},
-        // permissions: {},
+        backer: Record<string, never> | {
+          tier: number;
+          npc: string;
+          tokensApplied: boolean;
+        }
+        contributor: Record<string, never> | {
+          level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+          admin: boolean;
+          text: string;
+          contributions: string;
+          critical: string;
+        }
+        permissions: Record<string, never> | {
+          full: boolean;
+          news: boolean;
+          user: boolean;
+          challenge: boolean;
+          moderator: boolean;
+          coupons: boolean;
+        }
         purchased: {
             plan: {
                 consecutive: {
@@ -51,7 +80,7 @@ export type User = {
                     offset: number;
                     count: number;
                 },
-                // mysteryItems: [],
+                mysteryItems: unknown[];
                 gemsBought: number;
                 extraMonths: number;
                 dateUpdated: string;
@@ -60,171 +89,142 @@ export type User = {
             }
             txnCount: number;
             background: {
-                violet: boolean;
-                blue: boolean;
-                green: boolean;
-                purple: boolean;
-                red: boolean;
-                yellow: boolean;
+              [background: string]: true;
             }
-            // "shirt": {},
-            // "hair": {},
-            // "skin": {},
+            shirt: {
+              [shirt: string]: true;
+            }
+            hair: {
+              [hair: string]: true;
+            }
+            skin: {
+              [skin: string]: true;
+            }
             ads: boolean;
         }
-        "flags": {
-      "tour": {
-        "equipment": number;
-        "hall": number;
-        "mounts": number;
-        "pets": number;
-        "market": number;
-        "challenges": number;
-        "guilds": number;
-        "party": number;
-        "tavern": number;
-        "stats": number;
-        "classes": number;
-        "intro": number;
-        "groupPlans": number;
+        flags: {
+      tour: {
+        equipment: number;
+        hall: number;
+        mounts: number;
+        pets: number;
+        market: number;
+        challenges: number;
+        guilds: number;
+        party: number;
+        tavern: number;
+        stats: number;
+        classes: number;
+        intro: number;
+        groupPlans: number;
       },
-      "tutorial": {
-        "common": {
-          "items": boolean;
-          "equipment": boolean;
-          "tavern": boolean;
-          "classes": boolean;
-          "skills": boolean;
-          "gems": boolean;
-          "pets": boolean;
-          "party": boolean;
-          "rewards": boolean;
-          "todos": boolean;
-          "dailies": boolean;
-          "habits": boolean;
-          "inbox": boolean;
-          "mounts": boolean;
-          "stats": boolean;
+      tutorial: {
+        common: {
+          items: boolean;
+          equipment: boolean;
+          tavern: boolean;
+          classes: boolean;
+          skills: boolean;
+          gems: boolean;
+          pets: boolean;
+          party: boolean;
+          rewards: boolean;
+          todos: boolean;
+          dailies: boolean;
+          habits: boolean;
+          inbox: boolean;
+          mounts: boolean;
+          stats: boolean;
         },
-        "ios": {
-          "inviteParty": boolean;
-          "groupPets": boolean;
-          "filterTask": boolean;
-          "deleteTask": boolean;
-          "editTask": boolean;
-          "addTask": boolean;
-          "reorderTask": boolean;
+        ios: {
+          inviteParty: boolean;
+          groupPets: boolean;
+          filterTask: boolean;
+          deleteTask: boolean;
+          editTask: boolean;
+          addTask: boolean;
+          reorderTask: boolean;
         }
       },
-        "warnedLowHealth": boolean;
-        "cardReceived": boolean;
-        "armoireEmpty": boolean;
-        "armoireOpened": boolean;
-        "armoireEnabled": boolean;
-        "welcomed": boolean;
-        "cronCount": number;
-        "communityGuidelinesAccepted": boolean;
-        "lastWeeklyRecap": string;
-        "weeklyRecapEmailsPhase": number;
-        "recaptureEmailsPhase": number;
-        // "levelDrops": {},
-        "rebirthEnabled": boolean;
-        "classSelected": boolean;
-        "rewrite": boolean;
-        "newStuff": boolean;
-        "itemsEnabled": boolean;
-        "dropsEnabled": boolean;
-        "showTour": boolean;
-        "customizationsNotification": boolean;
-        "lastNewStuffRead": string;
-        "verifiedUsername": boolean;
-        "thirdPartyTools": string;
+        warnedLowHealth: boolean;
+        cardReceived: boolean;
+        armoireEmpty: boolean;
+        armoireOpened: boolean;
+        armoireEnabled: boolean;
+        welcomed: boolean;
+        cronCount: number;
+        communityGuidelinesAccepted: boolean;
+        lastWeeklyRecap: string;
+        weeklyRecapEmailsPhase: number;
+        recaptureEmailsPhase: number;
+        levelDrops: Record<string, never> | unknown;
+        rebirthEnabled: boolean;
+        classSelected: boolean;
+        rewrite: boolean;
+        // newStuff: boolean;
+        itemsEnabled: boolean;
+        dropsEnabled: boolean;
+        showTour: boolean;
+        customizationsNotification: boolean;
+        lastNewStuffRead: string;
+        verifiedUsername: boolean;
+        thirdPartyTools: string;
         }
         history: {
             todos: UserTodo[];
             exp: UserExp[];
         }
         items: {
-            "gear": {
-        "equipped": {
-          "shield": "shield_base_0",
-          "head": "head_base_0",
-          "armor": "armor_base_0"
+            gear: {
+        equipped: {
+          shield: string;
+          head: string;
+          armor: string;
+          weapon?: string;
+          back?: string;
+          headAccessory?: string;
+          eyewear?: string;
+          body?: string;
         },
-        "costume": {
-          "shield": "shield_base_0",
-          "head": "head_base_0",
-          "armor": "armor_base_0"
+        costume: {
+          shield: string;
+          head: string;
+          armor: string;
+          weapon?: string;
+          back?: string;
+          headAccessory?: string;
+          eyewear?: string;
+          body?: string;
         },
-        "owned": {
-          "head_special_nye": false,
-          "armor_special_birthday": false,
-          "eyewear_special_yellowTopFrame": true,
-          "eyewear_special_whiteTopFrame": true,
-          "eyewear_special_redTopFrame": true,
-          "eyewear_special_pinkTopFrame": true,
-          "eyewear_special_greenTopFrame": true,
-          "eyewear_special_blueTopFrame": true,
-          "eyewear_special_blackTopFrame": true,
-          "head_special_nye2014": false,
-          "armor_special_birthday2015": false,
-          "head_special_nye2015": false,
-          "armor_special_birthday2016": false,
-          "armor_special_bardRobes": true,
-          "head_special_namingDay2017": false,
-          "head_special_nye2016": false,
-          "armor_special_birthday2017": false,
-          "head_special_piDay": false,
-          "shield_special_piDay": false,
-          "eyewear_special_blackHalfMoon": true,
-          "eyewear_special_blueHalfMoon": true,
-          "eyewear_special_greenHalfMoon": true,
-          "eyewear_special_pinkHalfMoon": true,
-          "eyewear_special_redHalfMoon": true,
-          "eyewear_special_whiteHalfMoon": true,
-          "eyewear_special_yellowHalfMoon": true,
-          "body_special_namingDay2018": false,
-          "head_special_nye2017": false,
-          "armor_special_birthday2018": false,
-          "back_special_namingDay2020": false,
-          "armor_special_turkeyArmorBase": false,
-          "back_special_turkeyTailBase": false,
-          "head_special_turkeyHelmBase": false,
-          "head_special_nye2018": false,
-          "armor_special_birthday2019": false,
-          "armor_special_turkeyArmorGilded": false,
-          "back_special_turkeyTailGilded": false,
-          "head_special_turkeyHelmGilded": false,
-          "head_special_nye2019": false,
-          "armor_special_birthday2020": false,
-          "head_special_nye2020": false
+        owned: {
+          [item: string]: boolean;
         }
       },
-      "special": {
-        "birthdayReceived": [],
-        "birthday": 0,
-        "thankyouReceived": [],
-        "thankyou": 0,
-        "greetingReceived": [],
-        "greeting": 0,
-        "nyeReceived": [],
-        "nye": 0,
-        "valentineReceived": [],
-        "valentine": 0,
-        "seafoam": 0,
-        "shinySeed": 0,
-        "spookySparkles": 0,
-        "snowball": 0,
-        "congratsReceived": [],
-        "getwellReceived": [],
-        "goodluckReceived": [],
-        "congrats": 0,
-        "getwell": 0,
-        "goodluck": 0
-      },
-      "lastDrop": {
-        "count": 0,
-        "date": "2015-12-21T17:58:28.164Z"
+      special: {
+        birthdayReceived: unknown[];
+        birthday: number;
+        thankyouReceived: unknown[];
+        thankyou: number;
+        greetingReceived: unknown[];
+        greeting: number;
+        nyeReceived: unknown[];
+        nye: number;
+        valentineReceived: unknown[];
+        valentine: number;
+        seafoam: number;
+        shinySeed: number;
+        spookySparkles: number;
+        snowball: number;
+        congratsReceived: unknown[];
+        getwellReceived: unknown[];
+        goodluckReceived: unknown[];
+        congrats: number;
+        getwell: number;
+        goodluck: number;
+      }
+      lastDrop: {
+        count: number;
+        date: string;
       }
       quests: {
         [key: string]: 1;
@@ -235,47 +235,128 @@ export type User = {
       food: {
         [key: string]: number;
       }
-    //   "hatchingPotions": {},
-    //   "eggs": {},
+      hatchingPotions: {
+        [potion: string]: number;
+      }
+      eggs: {
+        [egg: string]: number;
+      }
     pets: {
-        [key: string]: number;
+        [pet: string]: number;
     }
-    "currentMount": string;
-      "currentPet": string;
+    currentMount: string;
+      currentPet: string;
         }
-        "invitations": {
-      "party": {},
-      "guilds": [],
-      "parties": []
+        invitations: {
+      party: UserInvitation[];
+      guilds: Array<UserInvitation & {
+        publicGuild: boolean;
+      }>;
+      parties: Array<UserInvitation & {
+        cancelledPlan: boolean;
+      }>
     }
-    "party": {
-      "quest": {
-        "progress": {
-          "up": 0,
-          "down": 0,
-          "collectedItems": 0,
-          "collect": {}
+    party: {
+      quest: {
+        progress: {
+          up: number;
+          down: number;
+          collectedItems: number;
+          collect: Record<string, never> | unknown;
         },
-        "RSVPNeeded": false,
-        "completed": ""
+        RSVPNeeded: boolean;
+        completed: string;
       },
-      "order": "level",
-      "orderAscending": "ascending"
+      order: string;
+      orderAscending: string;
     }
     
   }
   export type UserNotification = {
     type: string;
       data: {
-        icon: string;
+        icon?: string;
         title: string;
-        text: string;
-        destination: string;
+        text?: string;
+        destination?: string;
       },
       seen: boolean;
       id: string;
   }
-  // userV: number;
+
+export type UserTask = {
+  _id: string;
+  text: string;
+  notes: string;
+  tags: unknown[];
+  value: number;
+  priority: number;
+  attribute: string;
+  reminders: Array<{
+    startDate: string;
+    time: string;
+    id: string
+  }>;
+  userId: string;
+  _legacyId: string;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  byHabitica: boolean;
+  // "challenge": {},
+  //     "group": {
+  //       "completedBy": {},
+  //       "assignedUsers": []
+  //     },
+} & (
+  {
+    type: "habit";
+    history: Array<{
+      date: number;
+      value: number;
+      scoredUp: number;
+      scoredDown: number;
+    }>;
+    up: boolean;
+    down: boolean;
+    counterDown: number;
+    counterUp: number;
+    frequency: string;
+  } | {
+    type: "daily";
+    repeat: {
+      su: boolean;
+      s: boolean;
+      f: boolean;
+      th: boolean;
+      w: boolean;
+      t: boolean;
+      m: boolean;
+    }
+    completed: boolean;
+    collapseChecklist: boolean;
+    checklist: Array<{
+      id: string;
+      text: string;
+      completed: boolean;
+    }>;
+    history: Array<{
+      date: number;
+      value: number;
+      isDue?: boolean;
+      complete?: boolean;
+    }>;
+    frequency: string;
+    everyX: number;
+    startDate: string;
+    streak: number;
+    yesterDaily: boolean;
+      daysOfMonth: unknown[];
+      isDue: boolean;
+    nextDue: string[];
+    weeksOfMonth: unknown[];
+  }
+)
 
 type Event = {
   event: string;

@@ -11,3 +11,6 @@ export const API_HEADERS = {
     "x-api-key": api_key,
     "x-client": `${XMOK_USER_ID}-HabiticaRaycastExtension`
 }
+
+export const ICONS_BASE_URL = "https://habitica-assets.s3.amazonaws.com/mobileApp/images/"
+export const DEFAULT_ICON = "habitica.png";
