@@ -39,7 +39,7 @@
   ],
   "commands": [
     {
-      "name": "view-projects",
+      "name": "projects",
       "title": "View Projects",
       "subtitle": "Plane",
       "description": "View Workspace Projects and More",

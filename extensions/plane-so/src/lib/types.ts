@@ -1,6 +1,13 @@
+type Common = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  created_by: string;
+  updated_by: string;
+}
 
-export type Project = {
-    "id": string;
+export type Project = Common & {
     "total_members": number;
     "total_cycles": number;
     "total_modules": number;
@@ -8,9 +15,6 @@ export type Project = {
     "sort_order": number;
     "member_role": number;
     "is_deployed": boolean;
-    "created_at": string;
-    "updated_at": string;
-    "deleted_at": string | null;
     "name": string;
     "description": string;
     "description_text": string | null;
@@ -37,8 +41,6 @@ export type Project = {
       "in_use": string;
     },
     // "archived_at": null,
-    "created_by": string;
-    "updated_by": string;
     "workspace": string;
     // "default_assignee": null,
     // "project_lead": null,
@@ -97,7 +99,36 @@ export type IssueActivity = {
     "issue_comment": string | null;
     "actor": string;
 }
-  
+ 
+export type Label = Common & {
+  name: string;
+  description: string;
+  color: string;
+  sort_order: number;
+  // "external_source": null,
+  // "external_id": null,
+  project: string;
+  workspace: string;
+  // "parent": null
+}
+export type State = Common & {
+  name: string;
+  description: string;
+  color: string;
+  slug: string;
+  sequence: number;
+  group: string;
+  is_triage: true;
+  default: true;
+  // "external_source": null,
+  // "external_id": null,
+  project: string;
+  workspace: string;
+}
+
+// COMBINED
+export type IssueWithLabels = Omit<Issue, "labels"> & { labels: Label[] };
+
 export type PaginatedResult<T> = {
     // "grouped_by": null,
     // "sub_grouped_by": null,
