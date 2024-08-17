@@ -67,7 +67,7 @@ function AddIssue({ project, onAdded }: { project: Project, onAdded: () => void 
         }
     })
     
-    const { isLoading: isAdding } = usePlane<Issue>(`projects/${project.id}/issues`, {
+    const { isLoading: isAdding } = usePlane<Issue>(`projects/${project.id}/issues/`, {
         method: "POST",
         body: values,
         execute,

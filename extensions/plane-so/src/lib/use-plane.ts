@@ -20,8 +20,7 @@ type UsePlane<T> = {
 }
 export function usePlane<T>(endpoint: string, { method="POST", body, execute, onData, onError }: UsePlane<T>) {
     const url = generateApiWorkspaceUrl();
-
-    const { isLoading, data } = useFetch<T>(url + "/" + endpoint, {
+    const { isLoading, data } = useFetch<T>(url + endpoint, {
         method,
         headers,
         body: JSON.stringify(body),
@@ -62,7 +61,7 @@ export function usePlanePaginated<T>(endpoint: string, { expand=[], fields=[] }:
     
     const { isLoading, data, pagination, revalidate } = useFetch(
         (options) =>
-            url + "/" + endpoint + "?" + new URLSearchParams({ per_page: "20", expand: expand.join(), fields: fields.join() }).toString() + (options.cursor ? `&cursor=${options.cursor}` : ""), {
+            url + endpoint + "?" + new URLSearchParams({ per_page: "20", expand: expand.join(), fields: fields.join() }).toString() + (options.cursor ? `&cursor=${options.cursor}` : ""), {
         headers,
         mapResult(result: PaginatedResult<T>) {
             return {
