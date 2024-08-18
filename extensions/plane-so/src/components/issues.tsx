@@ -1,158 +1,304 @@
 import { Action, ActionPanel, Detail, Form, Icon, Keyboard, List, showToast, Toast, useNavigation } from "@raycast/api";
-import { Issue, IssueActivity, IssueWithLabels, Label, Project, State } from "../lib/types";
+import { Issue, IssueActivity, IssueWithLabels, Label, Link, Project, State } from "../lib/types";
 import { usePlane, usePlanePaginated } from "../lib/use-plane";
 import { useState } from "react";
-import { FormValidation, useForm } from "@raycast/utils";
+import { FormValidation, getFavicon, useForm } from "@raycast/utils";
 import { STATE_GROUP_ICONS } from "../lib/config";
 
 export default function ViewIssues({ project }: { project: Project }) {
-    const { isLoading, data: issues, pagination, revalidate } = usePlanePaginated<IssueWithLabels>(`projects/${project.id}/issues`, {
-        expand: ["labels"]
-    });
-    
-    return <List isLoading={isLoading} searchBarPlaceholder={`Search issues in ${project.name}`} isShowingDetail pagination={pagination}>
-        <List.Section title={`${project.name} > Issues (${issues.length})`}>
-            {issues.map(issue => <List.Item key={issue.id} icon={Icon.Circle} title={issue.name} subtitle={`${project.identifier} ${issue.sequence_id}`} detail={<List.Item.Detail markdown={issue.description_html} metadata={<List.Item.Detail.Metadata>
-                <List.Item.Detail.Metadata.TagList title="Labels">
-                    {issue.labels.map(label => <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />)}
-                </List.Item.Detail.Metadata.TagList>
-            </List.Item.Detail.Metadata>} />} actions={<ActionPanel>
-                <Action.Push icon={Icon.Ellipsis} title="View Issue Activity" target={<ViewIssueActivity project={project} issue={issue} />} />
-                <Action.Push icon={Icon.Pencil} title="Update Issue" target={<UpdateIssue project={project} initialIssue={issue} onUpdated={revalidate} />} />
-                <Action.Push icon={Icon.Plus} title="Add Issue" target={<AddIssue project={project} onAdded={revalidate} />} shortcut={Keyboard.Shortcut.Common.New} />
-            </ActionPanel>} />)}
-        </List.Section>
+  const {
+    isLoading,
+    data: issues,
+    pagination,
+    revalidate,
+  } = usePlanePaginated<IssueWithLabels>(`projects/${project.id}/issues`, {
+    expand: ["labels"],
+  });
+
+  return (
+    <List
+      isLoading={isLoading}
+      searchBarPlaceholder={`Search issues in ${project.name}`}
+      isShowingDetail
+      pagination={pagination}
+    >
+      <List.Section title={`${project.name} > Issues (${issues.length})`}>
+        {issues.map((issue) => (
+          <List.Item
+            key={issue.id}
+            icon={Icon.Circle}
+            title={issue.name}
+            subtitle={`${project.identifier} ${issue.sequence_id}`}
+            detail={
+              <List.Item.Detail
+                markdown={issue.description_html}
+                metadata={
+                  <List.Item.Detail.Metadata>
+                    <List.Item.Detail.Metadata.TagList title="Labels">
+                      {issue.labels.map((label) => (
+                        <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />
+                      ))}
+                    </List.Item.Detail.Metadata.TagList>
+                  </List.Item.Detail.Metadata>
+                }
+              />
+            }
+            actions={
+              <ActionPanel>
+                <Action.Push
+                  icon={Icon.Ellipsis}
+                  title="View Issue Activity"
+                  target={<ViewIssueActivity project={project} issue={issue} />}
+                />
+                <Action.Push
+                  icon={Icon.Link}
+                  title="View Issue Links"
+                  target={<ViewIssueLinks project={project} issue={issue} />}
+                />
+                <Action.Push
+                  icon={Icon.Pencil}
+                  title="Update Issue"
+                  target={<UpdateIssue project={project} initialIssue={issue} onUpdated={revalidate} />}
+                  shortcut={Keyboard.Shortcut.Common.Edit}
+                />
+                <Action.Push
+                  icon={Icon.Plus}
+                  title="Add Issue"
+                  target={<AddIssue project={project} onAdded={revalidate} />}
+                  shortcut={Keyboard.Shortcut.Common.New}
+                />
+              </ActionPanel>
+            }
+          />
+        ))}
+      </List.Section>
     </List>
+  );
 }
 
-function ViewIssueActivity({ project, issue }: { project: Project, issue: IssueWithLabels }) {
-    const { isLoading, data: activities, pagination } = usePlanePaginated<IssueActivity>(`projects/${project.id}/issues/${issue.id}/activities`);
+function ViewIssueActivity({ project, issue }: { project: Project; issue: IssueWithLabels }) {
+  const {
+    isLoading,
+    data: activities,
+    pagination,
+  } = usePlanePaginated<IssueActivity>(`projects/${project.id}/issues/${issue.id}/activities`);
 
-    function getActivityIcon(activity: IssueActivity) {
-        if (activity.verb==="created") return Icon.Plus;
-        if (activity.field==="labels") return Icon.Tag;
-        if (activity.field==="description") return Icon.SpeechBubble;
-        return Icon.Ellipsis;
-    }
+  function getActivityIcon(activity: IssueActivity) {
+    if (activity.verb === "created") return Icon.Plus;
+    if (activity.field === "labels") return Icon.Tag;
+    if (activity.field === "description") return Icon.SpeechBubble;
+    return Icon.Ellipsis;
+  }
 
-    return <List isLoading={isLoading} searchBarPlaceholder={`Search ${issue.name} activity`} pagination={pagination}>
-        <List.Section title={`${project.name} > ${issue.name} > Activity`}>
-            {activities.map(activity => <List.Item key={activity.id} icon={getActivityIcon(activity)} title={activity.comment} subtitle={activity.verb} accessories={[ {date: new Date(activity.created_at) } ]} />)}
-        </List.Section>
+  return (
+    <List isLoading={isLoading} searchBarPlaceholder={`Search ${issue.name} activity`} pagination={pagination}>
+      <List.Section title={`${project.name} > ${issue.name} > Activity`}>
+        {activities.map((activity) => (
+          <List.Item
+            key={activity.id}
+            icon={getActivityIcon(activity)}
+            title={activity.comment}
+            subtitle={activity.verb}
+            accessories={[{ date: new Date(activity.created_at) }]}
+          />
+        ))}
+      </List.Section>
     </List>
+  );
 }
 
-function AddIssue({ project, onAdded }: { project: Project, onAdded: () => void }) {
-    const { isLoading: isLoadingLabels, data: labels } = usePlanePaginated<Label>(`projects/${project.id}/labels`);
-    const { isLoading: isLoadingStates, data: states } = usePlanePaginated<State>(`projects/${project.id}/states`);
+function ViewIssueLinks({ project, issue }: { project: Project; issue: IssueWithLabels }) {
+  const {
+    isLoading,
+    data: links,
+    pagination,
+  } = usePlanePaginated<Link>(`projects/${project.id}/issues/${issue.id}/links`);
 
-    const { pop } = useNavigation();
-
-    type AddIssue = {
-        name: string;
-        description_html: string;
-        labels: string[];
-        state: string;
-    }
-    const [execute, setExecute] = useState(false);
-    const { itemProps, handleSubmit, values } = useForm<AddIssue>({
-        onSubmit() {
-            setExecute(true);
-        },
-        initialValues: {
-            state: states.find(state => state.default)?.id,
-        },
-        validation: {
-            name: FormValidation.Required
-        }
-    })
-    
-    const { isLoading: isAdding } = usePlane<Issue>(`projects/${project.id}/issues/`, {
-        method: "POST",
-        body: values,
-        execute,
-        async onData(data) {
-            onAdded();
-            await showToast(Toast.Style.Success, "Created Issue", data.name);
-            pop();
-        },
-        onError() {
-            setExecute(false);
-        },
-    })
-
-    const isLoading = isLoadingLabels || isLoadingStates || isAdding;
-
-    return <Form isLoading={isLoading} actions={<ActionPanel>
-        <Action.SubmitForm icon={Icon.Plus} title="Add Issue" onSubmit={handleSubmit} />
-    </ActionPanel>}>
-    <Form.Description title="Project" text={project.name} />
-        <Form.TextField title="Title" placeholder="Title" {...itemProps.name} />
-        <Form.TextArea title="Description" placeholder="Supports HTML" {...itemProps.description_html} />
-        <Form.TagPicker title="Labels" placeholder="Labels" {...itemProps.labels}>
-            {labels.map(label => <Form.TagPicker.Item key={label.id} icon={{ source: Icon.CircleFilled, tintColor: label.color }} title={label.name} value={label.id} />)}
-        </Form.TagPicker>
-        <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-            {states.map(state => <List.Dropdown.Item key={state.id} icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }} title={state.name} value={state.id} />)}
-        </Form.Dropdown>
-    </Form>
+  return (
+    <List isLoading={isLoading} searchBarPlaceholder={`Search ${issue.name} links`} pagination={pagination}>
+      <List.Section title={`${project.name} > ${issue.name} > Links`}>
+        {links.map((link) => (
+          <List.Item
+            key={link.id}
+            icon={getFavicon(link.url)}
+            title={link.title}
+            subtitle={link.url}
+            accessories={[{ date: new Date(link.created_at) }]}
+          />
+        ))}
+      </List.Section>
+    </List>
+  );
 }
-function UpdateIssue({ project, initialIssue, onUpdated }: { project: Project, initialIssue: IssueWithLabels, onUpdated: () => void }) {
-    const { isLoading: isLoadingLabels, data: labels } = usePlanePaginated<Label>(`projects/${project.id}/labels`);
-    const { isLoading: isLoadingStates, data: states } = usePlanePaginated<State>(`projects/${project.id}/states`);
 
-    const { pop, push } = useNavigation();
+function AddIssue({ project, onAdded }: { project: Project; onAdded: () => void }) {
+  const { isLoading: isLoadingLabels, data: labels } = usePlanePaginated<Label>(`projects/${project.id}/labels`);
+  const { isLoading: isLoadingStates, data: states } = usePlanePaginated<State>(`projects/${project.id}/states`);
 
-    type UpdateIssue = {
-        name: string;
-        description_html: string;
-        labels: string[];
-        state: string;
-    }
-    const [execute, setExecute] = useState(false);
-    const { itemProps, handleSubmit, values } = useForm<UpdateIssue>({
-        onSubmit() {
-            setExecute(true);
-        },
-        initialValues: {
-            name: initialIssue.name,
-            description_html: initialIssue.description_html,
-            labels: initialIssue.labels.map(label => label.id),
-            state: initialIssue.state,
-        },
-        validation: {
-            name: FormValidation.Required
-        }
-    })
-    
-    const { isLoading: isUpdating } = usePlane<Issue>(`projects/${project.id}/issues/${initialIssue.id}`, {
-        method: "PATCH",
-        body: values,
-        execute,
-        async onData(data) {
-            onUpdated();
-            await showToast(Toast.Style.Success, "Updated Issue", data.name);
-            pop();
-        },
-        onError(error) {
-            setExecute(false);
-            error.cause && push(<Detail markdown={`# ERROR \n\n` + Object.entries(error.cause).map(([key, values]) => `${key} \n\n \t${values.join(`\n`)}`)} />)
-        },
-    })
+  const { pop } = useNavigation();
 
-    const isLoading = isLoadingLabels || isLoadingStates || isUpdating;
+  type AddIssue = {
+    name: string;
+    description_html: string;
+    labels: string[];
+    state: string;
+  };
+  const [execute, setExecute] = useState(false);
+  const { itemProps, handleSubmit, values } = useForm<AddIssue>({
+    onSubmit() {
+      setExecute(true);
+    },
+    initialValues: {
+      state: states.find((state) => state.default)?.id,
+    },
+    validation: {
+      name: FormValidation.Required,
+    },
+  });
 
-    return <Form isLoading={isLoading} actions={<ActionPanel>
-        <Action.SubmitForm icon={Icon.Pencil} title="Update Issue" onSubmit={handleSubmit} />
-    </ActionPanel>}>
-    <Form.Description title="Project" text={project.name} />
-        <Form.TextField title="Title" placeholder="Title" {...itemProps.name} />
-        <Form.TextArea title="Description" placeholder="Supports HTML" {...itemProps.description_html} />
-        <Form.TagPicker title="Labels" placeholder="Labels" {...itemProps.labels}>
-            {labels.map(label => <Form.TagPicker.Item key={label.id} icon={{ source: Icon.Dot, tintColor: label.color }} title={label.name} value={label.id} />)}
-        </Form.TagPicker>
-        <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-            {states.map(state => <List.Dropdown.Item key={state.id} icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }} title={state.name} value={state.id} />)}
-        </Form.Dropdown>
+  const { isLoading: isAdding } = usePlane<Issue>(`projects/${project.id}/issues/`, {
+    method: "POST",
+    body: values,
+    execute,
+    async onData(data) {
+      onAdded();
+      await showToast(Toast.Style.Success, "Created Issue", data.name);
+      pop();
+    },
+    onError() {
+      setExecute(false);
+    },
+  });
+
+  const isLoading = isLoadingLabels || isLoadingStates || isAdding;
+
+  return (
+    <Form
+      isLoading={isLoading}
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm icon={Icon.Plus} title="Add Issue" onSubmit={handleSubmit} />
+        </ActionPanel>
+      }
+    >
+      <Form.Description title="Project" text={project.name} />
+      <Form.TextField title="Title" placeholder="Title" {...itemProps.name} />
+      <Form.TextArea title="Description" placeholder="Supports HTML" {...itemProps.description_html} />
+      <Form.TagPicker title="Labels" placeholder="Labels" {...itemProps.labels}>
+        {labels.map((label) => (
+          <Form.TagPicker.Item
+            key={label.id}
+            icon={{ source: Icon.CircleFilled, tintColor: label.color }}
+            title={label.name}
+            value={label.id}
+          />
+        ))}
+      </Form.TagPicker>
+      <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
+        {states.map((state) => (
+          <List.Dropdown.Item
+            key={state.id}
+            icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
+            title={state.name}
+            value={state.id}
+          />
+        ))}
+      </Form.Dropdown>
     </Form>
+  );
+}
+function UpdateIssue({
+  project,
+  initialIssue,
+  onUpdated,
+}: {
+  project: Project;
+  initialIssue: IssueWithLabels;
+  onUpdated: () => void;
+}) {
+  const { isLoading: isLoadingLabels, data: labels } = usePlanePaginated<Label>(`projects/${project.id}/labels`);
+  const { isLoading: isLoadingStates, data: states } = usePlanePaginated<State>(`projects/${project.id}/states`);
+
+  const { pop, push } = useNavigation();
+
+  type UpdateIssue = {
+    name: string;
+    description_html: string;
+    labels: string[];
+    state: string;
+  };
+  const [execute, setExecute] = useState(false);
+  const { itemProps, handleSubmit, values } = useForm<UpdateIssue>({
+    onSubmit() {
+      setExecute(true);
+    },
+    initialValues: {
+      name: initialIssue.name,
+      description_html: initialIssue.description_html,
+      labels: initialIssue.labels.map((label) => label.id),
+      state: initialIssue.state,
+    },
+    validation: {
+      name: FormValidation.Required,
+    },
+  });
+
+  const { isLoading: isUpdating } = usePlane<Issue>(`projects/${project.id}/issues/${initialIssue.id}`, {
+    method: "PATCH",
+    body: values,
+    execute,
+    async onData(data) {
+      onUpdated();
+      await showToast(Toast.Style.Success, "Updated Issue", data.name);
+      pop();
+    },
+    onError(error) {
+      setExecute(false);
+      error.cause &&
+        push(
+          <Detail
+            markdown={
+              `# ERROR \n\n` + Object.entries(error.cause).map(([key, values]) => `${key} \n\n \t${values.join(`\n`)}`)
+            }
+          />,
+        );
+    },
+  });
+
+  const isLoading = isLoadingLabels || isLoadingStates || isUpdating;
+
+  return (
+    <Form
+      isLoading={isLoading}
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm icon={Icon.Pencil} title="Update Issue" onSubmit={handleSubmit} />
+        </ActionPanel>
+      }
+    >
+      <Form.Description title="Project" text={project.name} />
+      <Form.TextField title="Title" placeholder="Title" {...itemProps.name} />
+      <Form.TextArea title="Description" placeholder="Supports HTML" {...itemProps.description_html} />
+      <Form.TagPicker title="Labels" placeholder="Labels" {...itemProps.labels}>
+        {labels.map((label) => (
+          <Form.TagPicker.Item
+            key={label.id}
+            icon={{ source: Icon.Dot, tintColor: label.color }}
+            title={label.name}
+            value={label.id}
+          />
+        ))}
+      </Form.TagPicker>
+      <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
+        {states.map((state) => (
+          <List.Dropdown.Item
+            key={state.id}
+            icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
+            title={state.name}
+            value={state.id}
+          />
+        ))}
+      </Form.Dropdown>
+    </Form>
+  );
 }
