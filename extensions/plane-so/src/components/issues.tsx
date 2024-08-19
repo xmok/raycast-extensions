@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Detail, Form, Icon, Keyboard, List, showToast, Toast, useNavigation } from "@raycast/api";
-import { Issue, IssueActivity, IssueWithLabels, Label, Link, Project, State } from "../lib/types";
+import { Issue, IssueActivity, IssueWithLabelsAndState, Label, Link, Project, State } from "../lib/types";
 import { usePlane, usePlanePaginated } from "../lib/use-plane";
 import { useState } from "react";
 import { FormValidation, getFavicon, useForm } from "@raycast/utils";
@@ -11,8 +11,8 @@ export default function ViewIssues({ project }: { project: Project }) {
     data: issues,
     pagination,
     revalidate,
-  } = usePlanePaginated<IssueWithLabels>(`projects/${project.id}/issues`, {
-    expand: ["labels"],
+  } = usePlanePaginated<IssueWithLabelsAndState>(`projects/${project.id}/issues`, {
+    expand: ["labels", "state"],
   });
 
   return (
@@ -26,7 +26,7 @@ export default function ViewIssues({ project }: { project: Project }) {
         {issues.map((issue) => (
           <List.Item
             key={issue.id}
-            icon={Icon.Circle}
+            icon={{ source: Icon.Circle, tintColor: issue.state.color }}
             title={issue.name}
             subtitle={`${project.identifier} ${issue.sequence_id}`}
             detail={
@@ -34,10 +34,13 @@ export default function ViewIssues({ project }: { project: Project }) {
                 markdown={issue.description_html}
                 metadata={
                   <List.Item.Detail.Metadata>
-                    <List.Item.Detail.Metadata.TagList title="Labels">
+                    {issue.labels.length ? <List.Item.Detail.Metadata.TagList title="Labels">
                       {issue.labels.map((label) => (
                         <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />
                       ))}
+                    </List.Item.Detail.Metadata.TagList> : <List.Item.Detail.Metadata.Label title="Labels" icon={Icon.Minus} />}
+                    <List.Item.Detail.Metadata.TagList title="State">
+                      <List.Item.Detail.Metadata.TagList.Item text={issue.state.name} color={issue.state.color} />
                     </List.Item.Detail.Metadata.TagList>
                   </List.Item.Detail.Metadata>
                 }
@@ -76,7 +79,7 @@ export default function ViewIssues({ project }: { project: Project }) {
   );
 }
 
-function ViewIssueActivity({ project, issue }: { project: Project; issue: IssueWithLabels }) {
+function ViewIssueActivity({ project, issue }: { project: Project; issue: IssueWithLabelsAndState }) {
   const {
     isLoading,
     data: activities,
@@ -107,7 +110,7 @@ function ViewIssueActivity({ project, issue }: { project: Project; issue: IssueW
   );
 }
 
-function ViewIssueLinks({ project, issue }: { project: Project; issue: IssueWithLabels }) {
+function ViewIssueLinks({ project, issue }: { project: Project; issue: IssueWithLabelsAndState }) {
   const {
     isLoading,
     data: links,
@@ -195,14 +198,18 @@ function AddIssue({ project, onAdded }: { project: Project; onAdded: () => void 
         ))}
       </Form.TagPicker>
       <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-        {states.map((state) => (
-          <List.Dropdown.Item
-            key={state.id}
-            icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
-            title={state.name}
-            value={state.id}
-          />
-        ))}
+        {Object.keys(STATE_GROUP_ICONS).map(group => 
+          <Form.Dropdown.Section key={group} title={group}>
+            {states.filter(state=>state.group===group).map((state) => (
+              <List.Dropdown.Item
+                key={state.id}
+                icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
+                title={state.name}
+                value={state.id}
+              />
+            ))}
+          </Form.Dropdown.Section>
+        )}
       </Form.Dropdown>
     </Form>
   );
@@ -213,7 +220,7 @@ function UpdateIssue({
   onUpdated,
 }: {
   project: Project;
-  initialIssue: IssueWithLabels;
+  initialIssue: IssueWithLabelsAndState;
   onUpdated: () => void;
 }) {
   const { isLoading: isLoadingLabels, data: labels } = usePlanePaginated<Label>(`projects/${project.id}/labels`);
@@ -236,7 +243,7 @@ function UpdateIssue({
       name: initialIssue.name,
       description_html: initialIssue.description_html,
       labels: initialIssue.labels.map((label) => label.id),
-      state: initialIssue.state,
+      state: initialIssue.state.id,
     },
     validation: {
       name: FormValidation.Required,
@@ -290,14 +297,18 @@ function UpdateIssue({
         ))}
       </Form.TagPicker>
       <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-        {states.map((state) => (
-          <List.Dropdown.Item
-            key={state.id}
-            icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
-            title={state.name}
-            value={state.id}
-          />
-        ))}
+        {Object.keys(STATE_GROUP_ICONS).map(group => 
+          <Form.Dropdown.Section key={group} title={group}>
+            {states.filter(state=>state.group===group).map((state) => (
+              <List.Dropdown.Item
+                key={state.id}
+                icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
+                title={state.name}
+                value={state.id}
+              />
+            ))}
+          </Form.Dropdown.Section>
+        )}
       </Form.Dropdown>
     </Form>
   );

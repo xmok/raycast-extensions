@@ -162,7 +162,15 @@ export type Module = Common & {
 };
 
 // COMBINED
-export type IssueWithLabels = Omit<Issue, "labels"> & { labels: Label[] };
+export type IssueWithLabelsAndState = Omit<Issue, "labels"|"state"> & {
+  labels: Label[];
+  state: {
+    id: string;
+    name: string;
+    color: string;
+    group: string;
+  }
+};
 
 export type PaginatedResult<T> = {
   // "grouped_by": null,
