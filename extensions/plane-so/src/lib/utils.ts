@@ -1,4 +1,5 @@
-import { getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues, Image } from "@raycast/api";
+import { LogoProps } from "./types";
 
 export function generateApiWorkspaceUrl() {
   try {
@@ -8,4 +9,9 @@ export function generateApiWorkspaceUrl() {
   } catch (error) {
     return undefined;
   }
+}
+
+export function getProjectIcon(logo: LogoProps): Image.ImageLike {
+  if (logo.in_use==="emoji") return logo.emoji.url;
+  return { source: "briefcase.svg", tintColor: logo.icon.color };
 }

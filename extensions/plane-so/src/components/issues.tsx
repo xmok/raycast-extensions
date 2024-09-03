@@ -31,9 +31,10 @@ export default function ViewIssues({ project }: { project: Project }) {
             subtitle={`${project.identifier} ${issue.sequence_id}`}
             detail={
               <List.Item.Detail
-                markdown={issue.description_html}
+                markdown={`# ${issue.name} \n\n --- \n\n ${issue.description_html}`}
                 metadata={
                   <List.Item.Detail.Metadata>
+                    <List.Item.Detail.Metadata.Label title={project.identifier} text={issue.sequence_id.toString()} />
                     {issue.labels.length ? <List.Item.Detail.Metadata.TagList title="Labels">
                       {issue.labels.map((label) => (
                         <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />
@@ -243,7 +244,7 @@ function UpdateIssue({
       name: initialIssue.name,
       description_html: initialIssue.description_html,
       labels: initialIssue.labels.map((label) => label.id),
-      state: initialIssue.state.id,
+      state: states ? initialIssue.state.id : undefined,
     },
     validation: {
       name: FormValidation.Required,

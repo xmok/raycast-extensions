@@ -9,11 +9,11 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-type Errors = { [key: string]: string[] };
+type Errors = Record<string, string[]>;
 
 type UsePlane<T> = {
   method: string;
-  body: { [key: string]: string | string[] };
+  body: Record<string, string | string[]>;
   execute: boolean;
   onData: (data: T) => void;
   onError: (error: { message: string; cause?: Errors }) => void;
@@ -69,6 +69,7 @@ export function usePlanePaginated<T>(endpoint: string, { expand = [], fields = [
       new URLSearchParams({ per_page: "20", expand: expand.join(), fields: fields.join() }).toString() +
       (options.cursor ? `&cursor=${options.cursor}` : ""),
     {
+      method: "GET",
       headers,
       mapResult(result: PaginatedResult<T>) {
         return {
