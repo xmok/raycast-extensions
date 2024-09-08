@@ -67,7 +67,7 @@ export async function deleteDomains({ domains }: DomainDelete) {
     `domains/batch/`,
     "DELETE",
     { domains },
-    `Deleting Domain${domains.length !== 1 ? "s" : ""}`
+    `Deleting Domain${domains.length !== 1 ? "s" : ""}`,
   )) as ErrorResponse | { message: string };
 }
 

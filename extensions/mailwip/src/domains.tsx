@@ -48,13 +48,12 @@ export default function Domains() {
       isLoading={isLoading}
       actions={
         <ActionPanel>
-          <Action title="Add New Local Domain" icon={Icon.PlusCircle} onAction={() => push(<AddLocalDomain />)} />
+          <Action.Push title="Add New Local Domain" icon={Icon.PlusCircle} target={<AddLocalDomain />} />
         </ActionPanel>
       }
     >
       <List.Section title={`${cachedDomains.length} ${cachedDomains.length === 1 ? "domain" : "domains"}`}>
-        {!isLoading &&
-          cachedDomains.map((domain) => (
+        {cachedDomains.map((domain) => (
             <List.Item
               key={domain}
               title={domain}
@@ -68,11 +67,10 @@ export default function Domains() {
                     onAction={() => confirmAndDelete(domain)}
                   />
                   <ActionPanel.Section>
-                    <Action
+                    <Action.Push
                       title="Add New Local Domain"
                       icon={Icon.PlusCircle}
-                      onAction={() => push(<AddLocalDomain />)}
-                      shortcut={{ modifiers: ["cmd"], key: "enter" }}
+                      target={<AddLocalDomain />}
                     />
                   </ActionPanel.Section>
                 </ActionPanel>
@@ -87,13 +85,15 @@ export default function Domains() {
 function AddLocalDomain() {
   const { pop } = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-  const [cachedDomains, setCachedDomains] = useCachedState<string[]>("domains", []);
+  const [, setCachedDomains] = useCachedState<string[]>("domains", []);
 
   const { handleSubmit, itemProps } = useForm<{ domain: string }>({
     async onSubmit(values) {
+      const toast = await showToast(Toast.Style.Animated, "Adding domain locally", values.domain);
       setIsLoading(true);
-      setCachedDomains([...cachedDomains, values.domain]);
-      showToast(Toast.Style.Success, `${values.domain} added locally`);
+      setCachedDomains(prev => [...prev, values.domain]);
+      toast.style = Toast.Style.Success;
+      toast.title = "Domain added locally";
       setIsLoading(false);
       pop();
     },

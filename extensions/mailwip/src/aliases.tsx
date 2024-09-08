@@ -14,9 +14,10 @@ import DomainSelector from "./components/DomainSelector";
 import { useEffect, useState } from "react";
 import { Alias, AliasCreate } from "./utils/types";
 import { createDomainAlias, deleteDomainAlias, getDomainAliases } from "./utils/api";
-import { FormValidation, useForm } from "@raycast/utils";
+import { FormValidation, useFetch, useForm } from "@raycast/utils";
 import { APP_URL } from "./utils/constants";
 import ErrorComponent from "./components/ErrorComponent";
+import { useAliases } from "./utils/hooks";
 
 export default function Aliases() {
   const { push } = useNavigation();
@@ -29,29 +30,34 @@ type AliasesIndexProps = {
 };
 function AliasesIndex({ domain }: AliasesIndexProps) {
   const { push, pop } = useNavigation();
-  const [aliases, setAliases] = useState<Alias[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const { isLoading: isLoadingAliases, data: aliases, error } = useAliases(domain);
+
+  // const [aliases, setAliases] = useState<Alias[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getDomainAliasesFromApi() {
-    setIsLoading(true);
-    const response = await getDomainAliases(domain);
-    if (!("errors" in response)) {
-      const numOfAliases = response.data.length;
-      await showToast({
-        title: "Success",
-        message: `Fetched ${numOfAliases} ${numOfAliases === 1 ? "Alias" : "Aliases"}`,
-        style: Toast.Style.Success,
-      });
-      setAliases(response.data);
-    } else {
-      pop();
-      push(<ErrorComponent error={response.errors} />);
-    }
-    setIsLoading(false);
+    // setIsLoading(true);
+    // const response = await getDomainAliases(domain);
+    // if (!("errors" in response)) {
+    //   const numOfAliases = response.data.length;
+    //   await showToast({
+    //     title: "Success",
+    //     message: `Fetched ${numOfAliases} ${numOfAliases === 1 ? "Alias" : "Aliases"}`,
+    //     style: Toast.Style.Success,
+    //   });
+    //   setAliases(response.data);
+    // } else {
+    //   pop();
+    //   push(<ErrorComponent error={response.errors} />);
+    // }
+    // setIsLoading(false);
   }
-  useEffect(() => {
-    getDomainAliasesFromApi();
-  }, []);
+  // useEffect(() => {
+  //   getDomainAliasesFromApi();
+  // }, []);
+
+  if (error) return <ErrorComponent error={error.message} />
 
   async function confirmAndDelete(alias: Alias) {
     if (
@@ -70,7 +76,7 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
   }
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder="Search alias...">
+    <List isLoading={isLoading || isLoadingAliases} searchBarPlaceholder="Search alias...">
       <List.Section title={`${domain} | ${aliases.length} ${aliases.length === 1 ? "alias" : "aliases"}`}>
         {!isLoading &&
           aliases.map((alias, aliasIndex) => (
