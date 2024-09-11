@@ -6,13 +6,14 @@ import { Alias } from "./types";
 const headers = API_HEADERS;
 async function parseResponse(response: Response) {
     if (!response.ok) {
-        if (response.headers.get("Content-Type")==="text/html") throw response.statusText;
+        const contentType = response.headers.get("Content-Type");
+        if (contentType==="text/html" || contentType==="application/json") throw response.statusText;
         const result = await response.json() as ({ errors: string[] } | { status: number; error: string });
         if ("errors" in result) throw result.errors.join(" | ");
         throw result.error;
-      }
-      const result = await response.json();
-      return result;
+    }
+    const result = await response.json();
+    return result;
 }
 const failureToastOptions = {
     title: "Mailwip Error"

@@ -12,6 +12,23 @@ import {
 import fetch from "node-fetch";
 import { API_HEADERS, API_URL } from "./constants";
 
+const callApi2 = async <T>(endpoint: string, method: APIMethod, body?: BodyRequest) => {
+  const response = await fetch(API_URL + endpoint, {
+    method,
+    headers: API_HEADERS,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!response.ok) {
+    const contentType = response.headers.get("Content-Type");
+    if (contentType==="text/html" || contentType==="application/json") throw response.statusText;
+    const result = await response.json() as ({ errors: string[] } | { status: number; error: string });
+    if ("errors" in result) throw result.errors.join(" | ");
+    throw result.error;
+  }
+  const result = await response.json();
+  return result as T;
+};
+
 const callApi = async (endpoint: string, method: APIMethod, body?: BodyRequest, animatedToastMessage = "") => {
   await showToast(Toast.Style.Animated, "Processing...", animatedToastMessage);
   try {
@@ -82,12 +99,14 @@ export async function createDomainAlias(domain: string, newAlias: AliasCreate) {
     | ErrorResponse
     | AliasCreateResponse;
 }
+// export async function deleteDomainAlias(domain: string, alias: Alias) {
+//   return (await callApi(`domains/${domain}/aliases/`, "DELETE", alias, "Deleting Alias")) as
+//     | ErrorResponse
+//     | { data: { success: true } };
+// }
 export async function deleteDomainAlias(domain: string, alias: Alias) {
-  return (await callApi(`domains/${domain}/aliases/`, "DELETE", alias, "Deleting Alias")) as
-    | ErrorResponse
-    | { data: { success: true } };
+  return (await callApi2<{ data: { success: true } }>(`domains/${domain}/aliases/`, "DELETE", alias));
 }
-
 // EMAILS
 export async function getEmails(domain: string, status: string, limit: number) {
   const searchParams =

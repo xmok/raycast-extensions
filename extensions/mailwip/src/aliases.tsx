@@ -4,6 +4,7 @@ import {
   Alert,
   Form,
   Icon,
+  Keyboard,
   List,
   Toast,
   confirmAlert,
@@ -29,55 +30,40 @@ type AliasesIndexProps = {
   domain: string;
 };
 function AliasesIndex({ domain }: AliasesIndexProps) {
-  const { push, pop } = useNavigation();
-
-  const { isLoading: isLoadingAliases, data: aliases, error } = useAliases(domain);
-
-  // const [aliases, setAliases] = useState<Alias[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function getDomainAliasesFromApi() {
-    // setIsLoading(true);
-    // const response = await getDomainAliases(domain);
-    // if (!("errors" in response)) {
-    //   const numOfAliases = response.data.length;
-    //   await showToast({
-    //     title: "Success",
-    //     message: `Fetched ${numOfAliases} ${numOfAliases === 1 ? "Alias" : "Aliases"}`,
-    //     style: Toast.Style.Success,
-    //   });
-    //   setAliases(response.data);
-    // } else {
-    //   pop();
-    //   push(<ErrorComponent error={response.errors} />);
-    // }
-    // setIsLoading(false);
-  }
-  // useEffect(() => {
-  //   getDomainAliasesFromApi();
-  // }, []);
+  const { isLoading, data: aliases, error, revalidate, mutate } = useAliases(domain);
 
   if (error) return <ErrorComponent error={error.message} />
 
   async function confirmAndDelete(alias: Alias) {
+    const message = `${alias.from}@${domain} -> ${alias.to}`;
     if (
       await confirmAlert({
-        title: `Delete '${alias.from}@${domain} -> ${alias.to}'?`,
+        title: `Delete '${message}`,
         primaryAction: { title: "Delete", style: Alert.ActionStyle.Destructive },
       })
     ) {
-      const response = await deleteDomainAlias(domain, alias);
-      if (!("errors" in response)) {
-        showToast(Toast.Style.Success, "Deleted Alias", `${alias.from} -> ${alias.to}`);
-        await getDomainAliasesFromApi();
+      const toast = await showToast(Toast.Style.Animated, "Deleting alias", message);
+      try {
+        await mutate(
+          deleteDomainAlias(domain, alias),
+          {
+            optimisticUpdate(data) {
+              return data.filter(a => a.from!==alias.from && a.to!==alias.to);
+            },
+          }
+        )
+        toast.style = Toast.Style.Success;
+        toast.title = "Deleted alias";
+      } catch (error) {
+        toast.style = Toast.Style.Failure;
+        toast.title = "Could not delete alias";
       }
-      setIsLoading(false);
     }
   }
 
   return (
-    <List isLoading={isLoading || isLoadingAliases} searchBarPlaceholder="Search alias...">
-      <List.Section title={`${domain} | ${aliases.length} ${aliases.length === 1 ? "alias" : "aliases"}`}>
+    <List isLoading={isLoading} searchBarPlaceholder="Search alias">
+      <List.Section title={`${domain}`} subtitle={`${aliases.length} ${aliases.length === 1 ? "alias" : "aliases"}`}>
         {!isLoading &&
           aliases.map((alias, aliasIndex) => (
             <List.Item
@@ -94,12 +80,13 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
                   />
                   <ActionPanel.Section>
                     <Action.OpenInBrowser title="View Aliases Online" url={`${APP_URL}domains/${domain}`} />
-                    <Action
+                    <Action.Push
                       title="Create New Alias"
                       icon={Icon.AddPerson}
-                      onAction={() => push(<AliasesCreate domain={domain} onAliasCreated={getDomainAliasesFromApi} />)}
+                      target={<AliasesCreate domain={domain} onAliasCreated={revalidate} />}
+                      shortcut={Keyboard.Shortcut.Common.New}
                     />
-                    <Action title="Reload Aliases" icon={Icon.Redo} onAction={getDomainAliasesFromApi} />
+                    <Action title="Reload Aliases" icon={Icon.Redo} onAction={revalidate} shortcut={Keyboard.Shortcut.Common.Refresh} />
                   </ActionPanel.Section>
                 </ActionPanel>
               }
@@ -113,10 +100,10 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
             icon={Icon.AddPerson}
             actions={
               <ActionPanel>
-                <Action
+                <Action.Push
                   title="Create New Alias"
                   icon={Icon.AddPerson}
-                  onAction={() => push(<AliasesCreate domain={domain} onAliasCreated={getDomainAliasesFromApi} />)}
+                  target={<AliasesCreate domain={domain} onAliasCreated={revalidate} />}
                 />
               </ActionPanel>
             }
@@ -126,7 +113,7 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
             icon={Icon.Redo}
             actions={
               <ActionPanel>
-                <Action title="Reload Aliases" icon={Icon.Redo} onAction={getDomainAliasesFromApi} />
+                <Action title="Reload Aliases" icon={Icon.Redo} onAction={revalidate} />
               </ActionPanel>
             }
           />
