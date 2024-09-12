@@ -95,15 +95,8 @@ export async function getDomainAliases(domain: string) {
     | { data: Alias[] };
 }
 export async function createDomainAlias(domain: string, newAlias: AliasCreate) {
-  return (await callApi(`domains/${domain}/aliases`, "POST", newAlias, "Creating Alias")) as
-    | ErrorResponse
-    | AliasCreateResponse;
+  return (await callApi2<AliasCreateResponse>(`domains/${domain}/aliases`, "POST", newAlias));
 }
-// export async function deleteDomainAlias(domain: string, alias: Alias) {
-//   return (await callApi(`domains/${domain}/aliases/`, "DELETE", alias, "Deleting Alias")) as
-//     | ErrorResponse
-//     | { data: { success: true } };
-// }
 export async function deleteDomainAlias(domain: string, alias: Alias) {
   return (await callApi2<{ data: { success: true } }>(`domains/${domain}/aliases/`, "DELETE", alias));
 }

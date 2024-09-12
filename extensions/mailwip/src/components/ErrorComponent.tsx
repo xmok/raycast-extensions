@@ -3,8 +3,11 @@ import { APP_URL } from "../utils/constants";
 
 type Props = {
   error: string;
+  errors?: string;
 };
-export default function ErrorComponent({ error }: Props) {
+export default function ErrorComponent({ error, errors }: Props) {
+  if (errors) return <Detail navigationTitle="Errors" markdown={`⚠️ ERRORS \n\n ${errors.replaceAll(" | ", `\n`)}`} />
+    
   if (error === "Missing Domains") {
     return (
       <Detail

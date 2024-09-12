@@ -2,6 +2,7 @@ import {
   Action,
   ActionPanel,
   Alert,
+  Color,
   Form,
   Icon,
   Keyboard,
@@ -15,7 +16,7 @@ import DomainSelector from "./components/DomainSelector";
 import { useEffect, useState } from "react";
 import { Alias, AliasCreate } from "./utils/types";
 import { createDomainAlias, deleteDomainAlias, getDomainAliases } from "./utils/api";
-import { FormValidation, useFetch, useForm } from "@raycast/utils";
+import { FormValidation, MutatePromise, useFetch, useForm } from "@raycast/utils";
 import { APP_URL } from "./utils/constants";
 import ErrorComponent from "./components/ErrorComponent";
 import { useAliases } from "./utils/hooks";
@@ -38,7 +39,9 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
     const message = `${alias.from}@${domain} -> ${alias.to}`;
     if (
       await confirmAlert({
-        title: `Delete '${message}`,
+        icon: { source: Icon.RemovePerson, tintColor: Color.Red },
+        title: "Delete alias?",
+        message,
         primaryAction: { title: "Delete", style: Alert.ActionStyle.Destructive },
       })
     ) {
@@ -79,11 +82,11 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
                     onAction={() => confirmAndDelete(alias)}
                   />
                   <ActionPanel.Section>
-                    <Action.OpenInBrowser title="View Aliases Online" url={`${APP_URL}domains/${domain}`} />
+                    <Action.OpenInBrowser title="View Aliases Online" url={`${APP_URL}domains/${domain}`} shortcut={Keyboard.Shortcut.Common.Open} />
                     <Action.Push
                       title="Create New Alias"
                       icon={Icon.AddPerson}
-                      target={<AliasesCreate domain={domain} onAliasCreated={revalidate} />}
+                      target={<AliasesCreate domain={domain} mutate={mutate} />}
                       shortcut={Keyboard.Shortcut.Common.New}
                     />
                     <Action title="Reload Aliases" icon={Icon.Redo} onAction={revalidate} shortcut={Keyboard.Shortcut.Common.Refresh} />
@@ -103,7 +106,7 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
                 <Action.Push
                   title="Create New Alias"
                   icon={Icon.AddPerson}
-                  target={<AliasesCreate domain={domain} onAliasCreated={revalidate} />}
+                  target={<AliasesCreate domain={domain} mutate={mutate} />}
                 />
               </ActionPanel>
             }
@@ -125,24 +128,36 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
 
 type AliasesCreateProps = {
   domain: string;
-  onAliasCreated: () => void;
+  mutate: MutatePromise<Alias[]>;
 };
-function AliasesCreate({ domain, onAliasCreated }: AliasesCreateProps) {
+function AliasesCreate({ domain, mutate }: AliasesCreateProps) {
   const { pop } = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
   const { handleSubmit, itemProps } = useForm<AliasCreate>({
     async onSubmit(values) {
       setIsLoading(true);
-
-      const newAlias = { ...values };
-      const response = await createDomainAlias(domain, newAlias);
-      if (!("errors" in response)) {
-        showToast(Toast.Style.Success, "Created Alias", `${response.from} -> ${response.to}`);
-        onAliasCreated();
+      const message = `${values.from}@${domain} -> ${values.to}`;
+      const toast = await showToast(Toast.Style.Animated, "Creating alias", message);
+      try {
+        await mutate(
+          createDomainAlias(domain, values),
+          {
+            optimisticUpdate(data) {
+              return [...data, values];
+            },
+            shouldRevalidateAfter: false
+          }
+        )
+        toast.style = Toast.Style.Success;
+        toast.title = "Created alias";
         pop();
+      } catch (error) {
+        toast.style = Toast.Style.Failure;
+        toast.title = "Could not create alias";
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     },
     validation: {
       from: FormValidation.Required,
