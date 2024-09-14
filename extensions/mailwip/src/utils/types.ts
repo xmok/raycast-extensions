@@ -51,7 +51,7 @@ export type FormAliasEdit = {
 
 export type BodyRequest = AliasCreate | AliasEdit | DomainDelete;
 export type ErrorResponse = {
-  errors: string;
-};
+  errors: string | string[];
+} | { status: number; error: string } | { message: string };
 
 export type APIMethod = "GET" | "POST" | "DELETE";

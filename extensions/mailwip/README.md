@@ -4,11 +4,11 @@ This is a Raycast extension for [Mailwip](https://mailwip.com/) (previously know
 
 ## 🚀 Getting Started
 
-1. **Install extensions**: Click the `Install Extension` button in the top right of [this page](https://www.raycast.com/xmok/mailwip)
+1. **Install extension**: Click the `Install Extension` button in the top right of [this page](https://www.raycast.com/xmok/mailwip)
 
 2. **Get your API Key**: The first time you use the extension, you'll need to enter your Mailwip API key:
 
-    a. `Sign in to your Mailwip Dashboard` at [this link](https://app.mailwip.com/users/sign_in) OR `Create an account` at [this link](https://app.mailwip.com/users/sign_up)
+    a. `Sign in` to your Mailwip Dashboard at [this link](https://app.mailwip.com/users/sign_in) OR `Create an account` at [this link](https://app.mailwip.com/users/sign_up)
 
     b. `Navigate` to [API Access](https://app.mailwip.com/api_keys)
 

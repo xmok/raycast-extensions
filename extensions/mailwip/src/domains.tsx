@@ -4,6 +4,7 @@ import {
   Alert,
   Form,
   Icon,
+  Keyboard,
   List,
   Toast,
   confirmAlert,
@@ -23,22 +24,25 @@ export default function Domains() {
   async function confirmAndDelete(domain: string) {
     if (
       await confirmAlert({
+        icon: getFavicon(`https://${domain}`),
         title: `Delete '${domain}'?`,
         message: "This will delete the domain from Mailwip Account (if it exists) as well as locally.",
         primaryAction: { title: "Delete", style: Alert.ActionStyle.Destructive },
       })
     ) {
-      setIsLoading(true);
-      const updatedDomains = cachedDomains.filter((item) => item !== domain);
-      setCachedDomains([...updatedDomains]);
-
-      const response = await deleteDomains({ domains: [domain] });
-      if (!("errors" in response)) {
-        showToast(Toast.Style.Success, response.message);
-      } else {
-        push(<ErrorComponent error={response.errors} />);
+      try {
+        setIsLoading(true);
+        const toast = await showToast(Toast.Style.Animated, "Deleting domain", domain);
+        const updatedDomains = cachedDomains.filter((item) => item !== domain);
+        setCachedDomains([...updatedDomains]);
+  
+        const result = await deleteDomains({ domains: [domain] });
+        toast.title = result.message;
+      } catch (error) {
+        push(<ErrorComponent error={String(error)} />);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }
   }
 
@@ -48,7 +52,7 @@ export default function Domains() {
       isLoading={isLoading}
       actions={
         <ActionPanel>
-          <Action.Push title="Add New Local Domain" icon={Icon.PlusCircle} target={<AddLocalDomain />} />
+          <Action.Push title="Add New Local Domain" icon={Icon.PlusCircle} target={<AddLocalDomain />} shortcut={Keyboard.Shortcut.Common.New} />
         </ActionPanel>
       }
     >
@@ -71,6 +75,7 @@ export default function Domains() {
                       title="Add New Local Domain"
                       icon={Icon.PlusCircle}
                       target={<AddLocalDomain />}
+                      shortcut={Keyboard.Shortcut.Common.New}
                     />
                   </ActionPanel.Section>
                 </ActionPanel>

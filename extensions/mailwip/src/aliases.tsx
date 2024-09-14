@@ -13,10 +13,10 @@ import {
   useNavigation,
 } from "@raycast/api";
 import DomainSelector from "./components/DomainSelector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alias, AliasCreate } from "./utils/types";
-import { createDomainAlias, deleteDomainAlias, getDomainAliases } from "./utils/api";
-import { FormValidation, MutatePromise, useFetch, useForm } from "@raycast/utils";
+import { createDomainAlias, deleteDomainAlias } from "./utils/api";
+import { FormValidation, MutatePromise, useForm } from "@raycast/utils";
 import { APP_URL } from "./utils/constants";
 import ErrorComponent from "./components/ErrorComponent";
 import { useAliases } from "./utils/hooks";
@@ -80,6 +80,10 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
                     icon={Icon.RemovePerson}
                     style={Action.Style.Destructive}
                     onAction={() => confirmAndDelete(alias)}
+                  />
+                  <Action.CopyToClipboard
+                    title="Copy Alias"
+                    content={`${alias.from}@${domain}`}
                   />
                   <ActionPanel.Section>
                     <Action.OpenInBrowser title="View Aliases Online" url={`${APP_URL}domains/${domain}`} shortcut={Keyboard.Shortcut.Common.Open} />
