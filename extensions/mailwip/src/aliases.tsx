@@ -15,11 +15,10 @@ import {
 import DomainSelector from "./components/DomainSelector";
 import { useState } from "react";
 import { Alias, AliasCreate } from "./utils/types";
-import { createDomainAlias, deleteDomainAlias } from "./utils/api";
-import { FormValidation, MutatePromise, useForm } from "@raycast/utils";
+import { createDomainAlias, deleteDomainAlias, getDomainAliases } from "./utils/api";
+import { FormValidation, MutatePromise, useCachedPromise, useForm } from "@raycast/utils";
 import { APP_URL } from "./utils/constants";
 import ErrorComponent from "./components/ErrorComponent";
-import { useAliases } from "./utils/hooks";
 
 export default function Aliases() {
   const { push } = useNavigation();
@@ -31,9 +30,35 @@ type AliasesIndexProps = {
   domain: string;
 };
 function AliasesIndex({ domain }: AliasesIndexProps) {
-  const { isLoading, data: aliases, error, revalidate, mutate } = useAliases(domain);
+  const {
+    isLoading,
+    data: aliases,
+    error,
+    revalidate,
+    mutate,
+  } = useCachedPromise(
+    async () => {
+      const aliases = await getDomainAliases(domain);
+      return aliases.data;
+    },
+    [],
+    {
+      async onData(data) {
+        const numOfAliases = data.length;
+        await showToast({
+          title: "Success",
+          message: `Fetched ${numOfAliases} ${numOfAliases === 1 ? "Alias" : "Aliases"}`,
+          style: Toast.Style.Success,
+        });
+      },
+      initialData: [],
+      failureToastOptions: {
+        title: "Mailwip Error",
+      },
+    },
+  );
 
-  if (error) return <ErrorComponent error={error.message} />
+  if (error) return <ErrorComponent error={error.message} />;
 
   async function confirmAndDelete(alias: Alias) {
     const message = `${alias.from}@${domain} -> ${alias.to}`;
@@ -47,14 +72,11 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
     ) {
       const toast = await showToast(Toast.Style.Animated, "Deleting alias", message);
       try {
-        await mutate(
-          deleteDomainAlias(domain, alias),
-          {
-            optimisticUpdate(data) {
-              return data.filter(a => a.from!==alias.from && a.to!==alias.to);
-            },
-          }
-        )
+        await mutate(deleteDomainAlias(domain, alias), {
+          optimisticUpdate(data) {
+            return data.filter((a) => a.from !== alias.from && a.to !== alias.to);
+          },
+        });
         toast.style = Toast.Style.Success;
         toast.title = "Deleted alias";
       } catch (error) {
@@ -81,19 +103,25 @@ function AliasesIndex({ domain }: AliasesIndexProps) {
                     style={Action.Style.Destructive}
                     onAction={() => confirmAndDelete(alias)}
                   />
-                  <Action.CopyToClipboard
-                    title="Copy Alias"
-                    content={`${alias.from}@${domain}`}
-                  />
+                  <Action.CopyToClipboard title="Copy Alias" content={`${alias.from}@${domain}`} />
                   <ActionPanel.Section>
-                    <Action.OpenInBrowser title="View Aliases Online" url={`${APP_URL}domains/${domain}`} shortcut={Keyboard.Shortcut.Common.Open} />
+                    <Action.OpenInBrowser
+                      title="View Aliases Online"
+                      url={`${APP_URL}domains/${domain}`}
+                      shortcut={Keyboard.Shortcut.Common.Open}
+                    />
                     <Action.Push
                       title="Create New Alias"
                       icon={Icon.AddPerson}
                       target={<AliasesCreate domain={domain} mutate={mutate} />}
                       shortcut={Keyboard.Shortcut.Common.New}
                     />
-                    <Action title="Reload Aliases" icon={Icon.Redo} onAction={revalidate} shortcut={Keyboard.Shortcut.Common.Refresh} />
+                    <Action
+                      title="Reload Aliases"
+                      icon={Icon.Redo}
+                      onAction={revalidate}
+                      shortcut={Keyboard.Shortcut.Common.Refresh}
+                    />
                   </ActionPanel.Section>
                 </ActionPanel>
               }
@@ -144,15 +172,12 @@ function AliasesCreate({ domain, mutate }: AliasesCreateProps) {
       const message = `${values.from}@${domain} -> ${values.to}`;
       const toast = await showToast(Toast.Style.Animated, "Creating alias", message);
       try {
-        await mutate(
-          createDomainAlias(domain, values),
-          {
-            optimisticUpdate(data) {
-              return [...data, values];
-            },
-            shouldRevalidateAfter: false
-          }
-        )
+        await mutate(createDomainAlias(domain, values), {
+          optimisticUpdate(data) {
+            return [...data, values];
+          },
+          shouldRevalidateAfter: false,
+        });
         toast.style = Toast.Style.Success;
         toast.title = "Created alias";
         pop();

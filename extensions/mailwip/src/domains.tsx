@@ -24,7 +24,7 @@ export default function Domains() {
   async function confirmAndDelete(domain: string) {
     if (
       await confirmAlert({
-        icon: getFavicon(`https://${domain}`),
+        icon: getFavicon(`https://${domain}`, { fallback: Icon.Trash }),
         title: `Delete '${domain}'?`,
         message: "This will delete the domain from Mailwip Account (if it exists) as well as locally.",
         primaryAction: { title: "Delete", style: Alert.ActionStyle.Destructive },
@@ -33,10 +33,10 @@ export default function Domains() {
       try {
         setIsLoading(true);
         const toast = await showToast(Toast.Style.Animated, "Deleting domain", domain);
+        const result = await deleteDomains({ domains: [domain] });
         const updatedDomains = cachedDomains.filter((item) => item !== domain);
         setCachedDomains([...updatedDomains]);
-  
-        const result = await deleteDomains({ domains: [domain] });
+        toast.style = Toast.Style.Success;
         toast.title = result.message;
       } catch (error) {
         push(<ErrorComponent error={String(error)} />);
@@ -52,36 +52,41 @@ export default function Domains() {
       isLoading={isLoading}
       actions={
         <ActionPanel>
-          <Action.Push title="Add New Local Domain" icon={Icon.PlusCircle} target={<AddLocalDomain />} shortcut={Keyboard.Shortcut.Common.New} />
+          <Action.Push
+            title="Add New Local Domain"
+            icon={Icon.PlusCircle}
+            target={<AddLocalDomain />}
+            shortcut={Keyboard.Shortcut.Common.New}
+          />
         </ActionPanel>
       }
     >
       <List.Section title={`${cachedDomains.length} ${cachedDomains.length === 1 ? "domain" : "domains"}`}>
         {cachedDomains.map((domain) => (
-            <List.Item
-              key={domain}
-              title={domain}
-              icon={getFavicon(`https://${domain}`)}
-              actions={
-                <ActionPanel>
-                  <Action
-                    title="Delete Domain From Mailwip"
-                    icon={Icon.Trash}
-                    style={Action.Style.Destructive}
-                    onAction={() => confirmAndDelete(domain)}
+          <List.Item
+            key={domain}
+            title={domain}
+            icon={getFavicon(`https://${domain}`)}
+            actions={
+              <ActionPanel>
+                <Action
+                  title="Delete Domain From Mailwip"
+                  icon={Icon.Trash}
+                  style={Action.Style.Destructive}
+                  onAction={() => confirmAndDelete(domain)}
+                />
+                <ActionPanel.Section>
+                  <Action.Push
+                    title="Add New Local Domain"
+                    icon={Icon.PlusCircle}
+                    target={<AddLocalDomain />}
+                    shortcut={Keyboard.Shortcut.Common.New}
                   />
-                  <ActionPanel.Section>
-                    <Action.Push
-                      title="Add New Local Domain"
-                      icon={Icon.PlusCircle}
-                      target={<AddLocalDomain />}
-                      shortcut={Keyboard.Shortcut.Common.New}
-                    />
-                  </ActionPanel.Section>
-                </ActionPanel>
-              }
-            />
-          ))}
+                </ActionPanel.Section>
+              </ActionPanel>
+            }
+          />
+        ))}
       </List.Section>
     </List>
   );
@@ -96,7 +101,7 @@ function AddLocalDomain() {
     async onSubmit(values) {
       const toast = await showToast(Toast.Style.Animated, "Adding domain locally", values.domain);
       setIsLoading(true);
-      setCachedDomains(prev => [...prev, values.domain]);
+      setCachedDomains((prev) => [...prev, values.domain]);
       toast.style = Toast.Style.Success;
       toast.title = "Domain added locally";
       setIsLoading(false);

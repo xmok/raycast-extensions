@@ -21,15 +21,15 @@ export default function Emails() {
       try {
         setIsLoading(true);
         const { domain, status, limit } = values;
-        const result = await getEmails(domain, status, Number(limit));
+        const result = await getEmails(domain, status, limit);
         await showToast({
           title: "Success",
           message: `Fetched ${result.length} email${result.length === 1 ? "" : "s"}`,
         });
         push(<EmailsList emails={result} domain={domain} status={status} />);
-    } catch (error) {
-      await showFailureToast(error);
-      } finally { 
+      } catch (error) {
+        await showFailureToast(error);
+      } finally {
         setIsLoading(false);
       }
     },
@@ -109,9 +109,7 @@ ${email.htmlbody}`;
   }
 
   const sectionTitle = `${domain === "all" ? "all domains" : domain}`;
-  const sectionSubtitle = `${emails.length} ${status} email${
-    emails.length === 1 ? "" : "s"
-  }`;
+  const sectionSubtitle = `${emails.length} ${status} email${emails.length === 1 ? "" : "s"}`;
   function getStatusTintColor(status: string) {
     if (status === "sent") return Color.Green;
     else if (status === "outgoing") return Color.Blue;

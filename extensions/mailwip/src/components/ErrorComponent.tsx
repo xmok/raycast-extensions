@@ -6,8 +6,8 @@ type Props = {
   errors?: string;
 };
 export default function ErrorComponent({ error, errors }: Props) {
-  if (errors) return <Detail navigationTitle="Errors" markdown={`⚠️ ERRORS \n\n ${errors.replaceAll(" | ", `\n`)}`} />
-    
+  if (errors) return <Detail navigationTitle="Errors" markdown={`⚠️ ERRORS \n\n ${errors.replaceAll(" | ", `\n`)}`} />;
+
   if (error === "Missing Domains") {
     return (
       <Detail
