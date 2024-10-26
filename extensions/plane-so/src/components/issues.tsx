@@ -88,9 +88,10 @@ function ViewIssueActivity({ project, issue }: { project: Project; issue: IssueW
   } = usePlanePaginated<IssueActivity>(`projects/${project.id}/issues/${issue.id}/activities`);
 
   function getActivityIcon(activity: IssueActivity) {
-    if (activity.verb === "created") return Icon.Plus;
+    if (activity.comment === "created the issue") return "issues.svg";
     if (activity.field === "labels") return Icon.Tag;
-    if (activity.field === "description") return Icon.SpeechBubble;
+    if (activity.field === "description" || activity.field === "link") return Icon.SpeechBubble;
+    if (activity.verb === "created") return Icon.Plus;
     return Icon.Ellipsis;
   }
 
