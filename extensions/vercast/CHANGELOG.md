@@ -1,5 +1,10 @@
 # Vercast Changelog
 
+## [2.7] - {PR_MERGE_DATE}
+
+- Update items in `Search Components`
+- Fix extension stuck loading when Token Length is invalid
+
 ## [2.6] - 2024-08-12
 
 - Add `Search Domains` command for quickly viewing your Domains
