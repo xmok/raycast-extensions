@@ -7,7 +7,7 @@ type ProductVariant = {
 };
 export type Product = {
   name: string;
-  preview_url: string;
+  preview_url: string | null;
   description: string;
   require_shipping: boolean;
   id: string;
@@ -20,6 +20,13 @@ export type Product = {
   deleted: boolean;
   is_tiered_membership: boolean;
   variants: ProductVariant[];
+};
+
+export type Sale = {
+  id: string;
+  timestamp: string;
+  product_name: string;
+  order_id: number;
 };
 
 export type ErrorResponse = {
