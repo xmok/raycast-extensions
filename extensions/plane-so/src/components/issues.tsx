@@ -4,6 +4,7 @@ import { usePlane, usePlanePaginated } from "../lib/use-plane";
 import { useState } from "react";
 import { FormValidation, getFavicon, useForm } from "@raycast/utils";
 import { STATE_GROUP_ICONS } from "../lib/config";
+import { NodeHtmlMarkdown } from "node-html-markdown";
 
 export default function ViewIssues({ project }: { project: Project }) {
   const {
@@ -23,7 +24,9 @@ export default function ViewIssues({ project }: { project: Project }) {
       pagination={pagination}
     >
       <List.Section title={`${project.name} > Issues (${issues.length})`}>
-        {issues.map((issue) => (
+        {issues.map((issue) => {
+          const uniqueLabels = [...new Map(issue.labels.map(label => [label.id, label])).values()]; // when updating labels via API, labels are sometimes repeated though they are not shown
+          return(
           <List.Item
             key={issue.id}
             icon={{ source: Icon.Circle, tintColor: issue.state.color }}
@@ -31,12 +34,12 @@ export default function ViewIssues({ project }: { project: Project }) {
             subtitle={`${project.identifier} ${issue.sequence_id}`}
             detail={
               <List.Item.Detail
-                markdown={`# ${issue.name} \n\n --- \n\n ${issue.description_html}`}
+                markdown={`# ${issue.name} \n\n --- \n\n ${NodeHtmlMarkdown.translate(issue.description_html)}`}
                 metadata={
                   <List.Item.Detail.Metadata>
                     <List.Item.Detail.Metadata.Label title={project.identifier} text={issue.sequence_id.toString()} />
                     {issue.labels.length ? <List.Item.Detail.Metadata.TagList title="Labels">
-                      {issue.labels.map((label) => (
+                      {uniqueLabels.map((label) => (
                         <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />
                       ))}
                     </List.Item.Detail.Metadata.TagList> : <List.Item.Detail.Metadata.Label title="Labels" icon={Icon.Minus} />}
@@ -74,7 +77,7 @@ export default function ViewIssues({ project }: { project: Project }) {
               </ActionPanel>
             }
           />
-        ))}
+        )})}
       </List.Section>
     </List>
   );
