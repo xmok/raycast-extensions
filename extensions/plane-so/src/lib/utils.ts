@@ -12,6 +12,6 @@ export function generateApiWorkspaceUrl() {
 }
 
 export function getProjectIcon(logo: LogoProps): Image.ImageLike {
-  if (logo.in_use==="emoji") return logo.emoji.url;
+  if (logo.in_use === "emoji") return logo.emoji.url;
   return { source: "briefcase.svg", tintColor: logo.icon.color };
 }

@@ -7,21 +7,21 @@ type Common = {
   updated_by: string;
 };
 
-export type LogoProps = 
-{
-  icon: {
-    name: string;
-    color: string;
-  };
-  in_use: "icon";
-} |
-{
-  emoji: {
-    url: string;
-    value: string;
-  };
-  in_use: "emoji";
-};
+export type LogoProps =
+  | {
+      icon: {
+        name: string;
+        color: string;
+      };
+      in_use: "icon";
+    }
+  | {
+      emoji: {
+        url: string;
+        value: string;
+      };
+      in_use: "emoji";
+    };
 export type Project = Common & {
   total_members: number;
   total_cycles: number;
@@ -49,7 +49,7 @@ export type Project = Common & {
   archive_in: number;
   close_in: number;
   logo_props: LogoProps;
-  archived_at: string | null,
+  archived_at: string | null;
   workspace: string;
   default_assignee: null;
   project_lead: null;
@@ -171,14 +171,14 @@ export type Module = Common & {
 };
 
 // COMBINED
-export type IssueWithLabelsAndState = Omit<Issue, "labels"|"state"> & {
+export type IssueWithLabelsAndState = Omit<Issue, "labels" | "state"> & {
   labels: Label[];
   state: {
     id: string;
     name: string;
     color: string;
     group: string;
-  }
+  };
 };
 
 export type PaginatedResult<T> = {

@@ -25,59 +25,68 @@ export default function ViewIssues({ project }: { project: Project }) {
     >
       <List.Section title={`${project.name} > Issues (${issues.length})`}>
         {issues.map((issue) => {
-          const uniqueLabels = [...new Map(issue.labels.map(label => [label.id, label])).values()]; // when updating labels via API, labels are sometimes repeated though they are not shown
-          return(
-          <List.Item
-            key={issue.id}
-            icon={{ source: Icon.Circle, tintColor: issue.state.color }}
-            title={issue.name}
-            subtitle={`${project.identifier} ${issue.sequence_id}`}
-            detail={
-              <List.Item.Detail
-                markdown={`# ${issue.name} \n\n --- \n\n ${NodeHtmlMarkdown.translate(issue.description_html)}`}
-                metadata={
-                  <List.Item.Detail.Metadata>
-                    <List.Item.Detail.Metadata.Label title={project.identifier} text={issue.sequence_id.toString()} />
-                    {issue.labels.length ? <List.Item.Detail.Metadata.TagList title="Labels">
-                      {uniqueLabels.map((label) => (
-                        <List.Item.Detail.Metadata.TagList.Item key={label.id} text={label.name} color={label.color} />
-                      ))}
-                    </List.Item.Detail.Metadata.TagList> : <List.Item.Detail.Metadata.Label title="Labels" icon={Icon.Minus} />}
-                    <List.Item.Detail.Metadata.TagList title="State">
-                      <List.Item.Detail.Metadata.TagList.Item text={issue.state.name} color={issue.state.color} />
-                    </List.Item.Detail.Metadata.TagList>
-                  </List.Item.Detail.Metadata>
-                }
-              />
-            }
-            actions={
-              <ActionPanel>
-                <Action.Push
-                  icon={Icon.Ellipsis}
-                  title="View Issue Activity"
-                  target={<ViewIssueActivity project={project} issue={issue} />}
+          const uniqueLabels = [...new Map(issue.labels.map((label) => [label.id, label])).values()]; // when updating labels via API, labels are sometimes repeated though they are not shown
+          return (
+            <List.Item
+              key={issue.id}
+              icon={{ source: Icon.Circle, tintColor: issue.state.color }}
+              title={issue.name}
+              subtitle={`${project.identifier} ${issue.sequence_id}`}
+              detail={
+                <List.Item.Detail
+                  markdown={`# ${issue.name} \n\n --- \n\n ${NodeHtmlMarkdown.translate(issue.description_html)}`}
+                  metadata={
+                    <List.Item.Detail.Metadata>
+                      <List.Item.Detail.Metadata.Label title={project.identifier} text={issue.sequence_id.toString()} />
+                      {uniqueLabels.length ? (
+                        <List.Item.Detail.Metadata.TagList title="Labels">
+                          {uniqueLabels.map((label) => (
+                            <List.Item.Detail.Metadata.TagList.Item
+                              key={label.id}
+                              text={label.name}
+                              color={label.color}
+                            />
+                          ))}
+                        </List.Item.Detail.Metadata.TagList>
+                      ) : (
+                        <List.Item.Detail.Metadata.Label title="Labels" icon={Icon.Minus} />
+                      )}
+                      <List.Item.Detail.Metadata.TagList title="State">
+                        <List.Item.Detail.Metadata.TagList.Item text={issue.state.name} color={issue.state.color} />
+                      </List.Item.Detail.Metadata.TagList>
+                    </List.Item.Detail.Metadata>
+                  }
                 />
-                <Action.Push
-                  icon={Icon.Link}
-                  title="View Issue Links"
-                  target={<ViewIssueLinks project={project} issue={issue} />}
-                />
-                <Action.Push
-                  icon={Icon.Pencil}
-                  title="Update Issue"
-                  target={<UpdateIssue project={project} initialIssue={issue} onUpdated={revalidate} />}
-                  shortcut={Keyboard.Shortcut.Common.Edit}
-                />
-                <Action.Push
-                  icon={Icon.Plus}
-                  title="Add Issue"
-                  target={<AddIssue project={project} onAdded={revalidate} />}
-                  shortcut={Keyboard.Shortcut.Common.New}
-                />
-              </ActionPanel>
-            }
-          />
-        )})}
+              }
+              actions={
+                <ActionPanel>
+                  <Action.Push
+                    icon={Icon.Ellipsis}
+                    title="View Issue Activity"
+                    target={<ViewIssueActivity project={project} issue={issue} />}
+                  />
+                  <Action.Push
+                    icon={Icon.Link}
+                    title="View Issue Links"
+                    target={<ViewIssueLinks project={project} issue={issue} />}
+                  />
+                  <Action.Push
+                    icon={Icon.Pencil}
+                    title="Update Issue"
+                    target={<UpdateIssue project={project} initialIssue={issue} onUpdated={revalidate} />}
+                    shortcut={Keyboard.Shortcut.Common.Edit}
+                  />
+                  <Action.Push
+                    icon={Icon.Plus}
+                    title="Add Issue"
+                    target={<AddIssue project={project} onAdded={revalidate} />}
+                    shortcut={Keyboard.Shortcut.Common.New}
+                  />
+                </ActionPanel>
+              }
+            />
+          );
+        })}
       </List.Section>
     </List>
   );
@@ -203,18 +212,23 @@ function AddIssue({ project, onAdded }: { project: Project; onAdded: () => void 
         ))}
       </Form.TagPicker>
       <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-        {Object.keys(STATE_GROUP_ICONS).map(group => 
+        {Object.keys(STATE_GROUP_ICONS).map((group) => (
           <Form.Dropdown.Section key={group} title={group}>
-            {states.filter(state=>state.group===group).map((state) => (
-              <List.Dropdown.Item
-                key={state.id}
-                icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
-                title={state.name}
-                value={state.id}
-              />
-            ))}
+            {states
+              .filter((state) => state.group === group)
+              .map((state) => (
+                <List.Dropdown.Item
+                  key={state.id}
+                  icon={{
+                    source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS],
+                    tintColor: state.color,
+                  }}
+                  title={state.name}
+                  value={state.id}
+                />
+              ))}
           </Form.Dropdown.Section>
-        )}
+        ))}
       </Form.Dropdown>
     </Form>
   );
@@ -302,18 +316,23 @@ function UpdateIssue({
         ))}
       </Form.TagPicker>
       <Form.Dropdown title="State" placeholder="State" {...itemProps.state}>
-        {Object.keys(STATE_GROUP_ICONS).map(group => 
+        {Object.keys(STATE_GROUP_ICONS).map((group) => (
           <Form.Dropdown.Section key={group} title={group}>
-            {states.filter(state=>state.group===group).map((state) => (
-              <List.Dropdown.Item
-                key={state.id}
-                icon={{ source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS], tintColor: state.color }}
-                title={state.name}
-                value={state.id}
-              />
-            ))}
+            {states
+              .filter((state) => state.group === group)
+              .map((state) => (
+                <List.Dropdown.Item
+                  key={state.id}
+                  icon={{
+                    source: STATE_GROUP_ICONS[state.group as keyof typeof STATE_GROUP_ICONS],
+                    tintColor: state.color,
+                  }}
+                  title={state.name}
+                  value={state.id}
+                />
+              ))}
           </Form.Dropdown.Section>
-        )}
+        ))}
       </Form.Dropdown>
     </Form>
   );

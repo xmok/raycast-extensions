@@ -21,11 +21,16 @@ export default function ViewProjects() {
       />
     );
 
-    const [isShowingDetail, setIsShowingDetail] = useCachedState("show-project-details", false);
+  const [isShowingDetail, setIsShowingDetail] = useCachedState("show-project-details", false);
   const { isLoading, data: projects, pagination } = usePlanePaginated<Project>("projects");
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder="Search project" pagination={pagination} isShowingDetail={isShowingDetail}>
+    <List
+      isLoading={isLoading}
+      searchBarPlaceholder="Search project"
+      pagination={pagination}
+      isShowingDetail={isShowingDetail}
+    >
       {projects.map((project) => (
         <List.Item
           key={project.id}
@@ -33,14 +38,30 @@ export default function ViewProjects() {
           title={project.name}
           subtitle={project.identifier}
           accessories={isShowingDetail ? undefined : [{ date: new Date(project.created_at) }]}
-          detail={<List.Item.Detail markdown={`![Cover](${project.cover_image}) \n\n ${project.description}`} metadata={<List.Item.Detail.Metadata>
-            <List.Item.Detail.Metadata.Label title="Identifier" text={project.identifier} />
-          </List.Item.Detail.Metadata>} />}
+          detail={
+            <List.Item.Detail
+              markdown={`![Cover](${project.cover_image}) \n\n ${project.description}`}
+              metadata={
+                <List.Item.Detail.Metadata>
+                  <List.Item.Detail.Metadata.Label title="Identifier" text={project.identifier} />
+                </List.Item.Detail.Metadata>
+              }
+            />
+          }
           actions={
             <ActionPanel>
-              <Action icon={Icon.AppWindowSidebarLeft} title="Toggle Project Details" onAction={() => setIsShowingDetail(prev => !prev)} />
+              <Action
+                icon={Icon.AppWindowSidebarLeft}
+                title="Toggle Project Details"
+                onAction={() => setIsShowingDetail((prev) => !prev)}
+              />
               <Action.Push icon={Icon.Circle} title="View Issues" target={<ViewIssues project={project} />} />
-              <Action.Push icon={Icon.Tag} title="View Labels" target={<ViewLabels project={project} />} shortcut={{ modifiers: ["cmd"], key: "l" }} />
+              <Action.Push
+                icon={Icon.Tag}
+                title="View Labels"
+                target={<ViewLabels project={project} />}
+                shortcut={{ modifiers: ["cmd"], key: "l" }}
+              />
               <Action.Push
                 icon={Icon.AppWindowGrid2x2}
                 title="View Modules"
