@@ -2,7 +2,7 @@
     <img src="./assets/plane@dark.png" width="200" height="200" />
 </p>
 
-# Wave
+# Plane
 
 This is a Raycast extension for [Plane](https://plane.so/). It allows you to:
 
@@ -25,7 +25,7 @@ This is a Raycast extension for [Plane](https://plane.so/). It allows you to:
 
     a. Plane URL - if you are using hosted Plane, use the default of `https://api.plane.so/` else it will be the instance URL e.g. `https://plane.example.com/`
 
-    b. Workspace Slug - the slug of the workspace you want to use
+    b. Workspace Slug - the slug is the part after Plane URL but before other items e.g. if the Home is at https://app.plane.so/slug/ then slug will be "slug"
 
     c. API Key
 

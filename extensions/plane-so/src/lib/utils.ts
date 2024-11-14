@@ -1,5 +1,5 @@
 import { getPreferenceValues, Image } from "@raycast/api";
-import { LogoProps } from "./types";
+import { Label, LogoProps } from "./types";
 
 export function generateApiWorkspaceUrl() {
   try {
@@ -14,4 +14,9 @@ export function generateApiWorkspaceUrl() {
 export function getProjectIcon(logo: LogoProps): Image.ImageLike {
   if (logo.in_use === "emoji") return logo.emoji.url;
   return { source: "briefcase.svg", tintColor: logo.icon.color };
+}
+
+export function getUniqueLabels(labels: Label[]) {
+  // when updating labels via API, labels are sometimes repeated though they are not shown
+  return [...new Map(labels.map((label) => [label.id, label])).values()];
 }

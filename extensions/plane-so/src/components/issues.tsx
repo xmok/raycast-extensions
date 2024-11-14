@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FormValidation, getFavicon, useForm } from "@raycast/utils";
 import { STATE_GROUP_ICONS } from "../lib/config";
 import { NodeHtmlMarkdown } from "node-html-markdown";
+import { getUniqueLabels } from "../lib/utils";
 
 export default function ViewIssues({ project }: { project: Project }) {
   const {
@@ -25,7 +26,7 @@ export default function ViewIssues({ project }: { project: Project }) {
     >
       <List.Section title={`${project.name} > Issues (${issues.length})`}>
         {issues.map((issue) => {
-          const uniqueLabels = [...new Map(issue.labels.map((label) => [label.id, label])).values()]; // when updating labels via API, labels are sometimes repeated though they are not shown
+          const uniqueLabels = getUniqueLabels(issue.labels);
           return (
             <List.Item
               key={issue.id}
@@ -261,7 +262,7 @@ function UpdateIssue({
     initialValues: {
       name: initialIssue.name,
       description_html: initialIssue.description_html,
-      labels: initialIssue.labels.map((label) => label.id),
+      labels: getUniqueLabels(initialIssue.labels).map((label) => label.id),
       state: states ? initialIssue.state.id : undefined,
     },
     validation: {
