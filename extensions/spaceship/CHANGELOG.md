@@ -1,5 +1,10 @@
 # Spaceship Changelog
 
+## [Domain + NS Enhancements] - {PR_MERGE_DATE}
+
+- View Lifecycle State of "Domain"
+- Change "Nameservers" of "Domain"
+
 ## [Enhancements] - 2025-07-07
 
 - In "Domains"
