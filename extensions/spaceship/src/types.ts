@@ -22,12 +22,6 @@ export type DomainInfo = {
     provider: "basic" | "custom";
     hosts: string[];
   };
-  contacts: {
-    registrant: string;
-    admin: string;
-    tech: string;
-    billing: string;
-  };
 };
 
 export type DomainAuthCode = {

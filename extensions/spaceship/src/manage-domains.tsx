@@ -21,7 +21,7 @@ import { useState } from "react";
 export default function ManageDomains() {
   const { push } = useNavigation();
   const [isShowingDetail, setIsShowingDetail] = useCachedState("show-details-domains", false);
-  const { isLoading, data: domains, mutate, revalidate } = useSpaceship<DomainInfo>("domains");
+  const { isLoading, data: domains, mutate } = useSpaceship<DomainInfo>("domains");
 
   function formatDate(date: string) {
     const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
@@ -169,17 +169,17 @@ export default function ManageDomains() {
               />
               {["grace1", "registered"].includes(domain.lifecycleStatus) && (
                 <>
-                  {}
                   <Action.Push
                     icon={Icon.Store}
-                    title="Manage Dns Records"
+                    // eslint-disable-next-line @raycast/prefer-title-case
+                    title="Manage DNS Records"
                     target={<ManageDNSRecords domain={domain} />}
                   />
                   <Action.Push
                     icon={Icon.Pencil}
                     title="Change Nameservers"
                     target={<ChangeNameservers domain={domain} />}
-                    onPop={revalidate}
+                    onPop={mutate}
                   />
                 </>
               )}
