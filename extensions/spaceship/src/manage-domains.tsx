@@ -11,7 +11,7 @@ import {
   Toast,
   useNavigation,
 } from "@raycast/api";
-import {  getFavicon, useCachedState, useForm } from "@raycast/utils";
+import { getFavicon, useCachedState, useForm } from "@raycast/utils";
 import { DomainInfo, DomainClientEPPStatus, DomainAuthCode } from "./types";
 import ManageDNSRecords from "./manage-dns-records";
 import { API_HEADERS, API_URL, parseResponse, useSpaceship } from "./spaceship";
@@ -35,29 +35,55 @@ export default function ManageDomains() {
 
   function generateAccessories(domain: DomainInfo) {
     const accessories: List.Item.Accessory[] = [];
-    
+
     const expiration = dayjs(domain.expirationDate);
     const today = dayjs();
     switch (domain.lifecycleStatus) {
-      case "registered": {
-        const differenceInDays = expiration.diff(today, "day");
-        const is30DaysOrLess = differenceInDays <= 30
-        const tooltip = `⚠️ Expires in ${differenceInDays} days.`;
-        if (is30DaysOrLess) accessories.push(!isShowingDetail ? {tag: {value: "EXPIRING", color: Color.Yellow}, tooltip } : {icon: {source:Icon.Warning, tintColor: Color.Yellow}, tooltip});
+      case "grace1": {
+        const days = expiration.add(7, "day").diff(today, "day");
+        const tooltip = `❗ Expired domain will go offline in ${days <= 1 ? "a day" : `${days} days`}.`;
+        accessories.push(
+          !isShowingDetail
+            ? { tag: { value: "GRACE", color: Color.Red }, tooltip }
+            : { icon: { source: Icon.Warning, tintColor: Color.Red }, tooltip },
+        );
         break;
       }
       case "grace2": {
         const days = expiration.add(30, "day").diff(today, "day");
         const tooltip = `❗ Expired domain will be removed in ${days} days.`;
-        accessories.push(!isShowingDetail ? {tag: {value:"GRACE", color: Color.Red}, tooltip} : {icon: {source: Icon.Warning, tintColor:Color.Red}, tooltip});
+        accessories.push(
+          !isShowingDetail
+            ? { tag: { value: "GRACE", color: Color.Red }, tooltip }
+            : { icon: { source: Icon.Warning, tintColor: Color.Red }, tooltip },
+        );
+        break;
+      }
+      case "redemption": {
+        const tooltip = `❗ Expired domain will be removed soon.`;
+        accessories.push(
+          !isShowingDetail
+            ? { tag: { value: "REDEMPTION", color: Color.Red }, tooltip }
+            : { icon: { source: Icon.Warning, tintColor: Color.Red }, tooltip },
+        );
+        break;
+      }
+      case "registered": {
+        const differenceInDays = expiration.diff(today, "day");
+        const is30DaysOrLess = differenceInDays <= 30;
+        const tooltip = `⚠️ Expires in ${differenceInDays} days.`;
+        if (is30DaysOrLess)
+          accessories.push(
+            !isShowingDetail
+              ? { tag: { value: "EXPIRING", color: Color.Yellow }, tooltip }
+              : { icon: { source: Icon.Warning, tintColor: Color.Yellow }, tooltip },
+          );
         break;
       }
     }
     if (isShowingDetail) return accessories;
 
-    accessories.push(
-      { tag: domain.privacyProtection.level === "high" ? "Private" : "Public", tooltip: "Privacy" },
-    )
+    accessories.push({ tag: domain.privacyProtection.level === "high" ? "Private" : "Public", tooltip: "Privacy" });
     accessories.push({
       tag: isLocked(domain) ? { value: "LOCKED", color: Color.Green } : { value: "UNLOCKED", color: Color.Red },
       tooltip: "Transfer lock",
@@ -141,11 +167,22 @@ export default function ManageDomains() {
                 title="Toggle Details"
                 onAction={() => setIsShowingDetail((show) => !show)}
               />
-              {["grace1", "registered"].includes(domain.lifecycleStatus) && <>
-              {/* eslint-disable-next-line @raycast/prefer-title-case */}
-              <Action.Push icon={Icon.Store} title="Manage DNS Records" target={<ManageDNSRecords domain={domain} />} />
-              <Action.Push icon={Icon.Pencil} title="Change Nameservers" target={<ChangeNameservers domain={domain} />} onPop={revalidate} />
-              </>}
+              {["grace1", "registered"].includes(domain.lifecycleStatus) && (
+                <>
+                  {}
+                  <Action.Push
+                    icon={Icon.Store}
+                    title="Manage Dns Records"
+                    target={<ManageDNSRecords domain={domain} />}
+                  />
+                  <Action.Push
+                    icon={Icon.Pencil}
+                    title="Change Nameservers"
+                    target={<ChangeNameservers domain={domain} />}
+                    onPop={revalidate}
+                  />
+                </>
+              )}
               <Action.OpenInBrowser
                 icon={getFavicon(`https://${domain.name}`, { fallback: Icon.Globe })}
                 title={`Go to ${domain.name}`}
@@ -181,10 +218,10 @@ export default function ManageDomains() {
   );
 }
 
-function ChangeNameservers({domain}: {domain: DomainInfo}) {
+function ChangeNameservers({ domain }: { domain: DomainInfo }) {
   const [isLoading, setIsLoading] = useState(false);
-    const { pop } = useNavigation();
-  const {handleSubmit, itemProps,values} = useForm<{
+  const { pop } = useNavigation();
+  const { handleSubmit, itemProps, values } = useForm<{
     provider: string;
     host1: string;
     host2: string;
@@ -202,14 +239,14 @@ function ChangeNameservers({domain}: {domain: DomainInfo}) {
     async onSubmit(values) {
       setIsLoading(true);
       const toast = await showToast(Toast.Style.Animated, "Changing");
-      const {provider, ...rest} = values;
-      const hosts = Object.values(rest).filter(host => !!host);
-      const body = provider==="basic" ? {provider} : {provider, hosts};
+      const { provider, ...rest } = values;
+      const hosts = Object.values(rest).filter((host) => !!host);
+      const body = provider === "basic" ? { provider } : { provider, hosts };
       try {
         await fetch(`${API_URL}domains/${domain.name}/nameservers`, {
           method: "PUT",
           headers: API_HEADERS,
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         }).then(parseResponse);
         toast.style = Toast.Style.Success;
         toast.title = "Changed";
@@ -239,36 +276,53 @@ function ChangeNameservers({domain}: {domain: DomainInfo}) {
     },
     validation: {
       host1(value) {
-        if (values.provider==="custom" && !value) return "The item is required";
+        if (values.provider === "custom" && !value) return "The item is required";
       },
       host2(value) {
-        if (values.provider==="custom" && !value) return "The item is required";
+        if (values.provider === "custom" && !value) return "The item is required";
       },
-    }
-  })
-  return <Form isLoading={isLoading} actions={<ActionPanel>
-    <Action.SubmitForm icon={Icon.Check} title="Save" onSubmit={handleSubmit} />
-  </ActionPanel>}>
-  <Form.Description text="Select either Spaceship or custom DNS for your nameserver location." />
-    <Form.Dropdown title="Provider" {...itemProps.provider}>
-      <Form.Dropdown.Item title="Spaceship nameservers" value="basic" />
-      <Form.Dropdown.Item title="Custom nameservers" value="custom" />
-    </Form.Dropdown>
-    <Form.Description text={values.provider==="basic" ? "Using Spaceship nameservers ensures that any connected products are automatically updated and can be customized with advanced DNS settings." : "Using custom nameservers means you manage your DNS setup at your external provider."} />
-    <Form.Separator />
-    {values.provider==="basic" ? <Form.Description title="Nameservers" text={`launch1.spaceship.net\nlaunch2.spaceship.net`} /> : <>
-    <Form.TextField title="" placeholder="ns1.example.com" {...itemProps.host1} />
-    <Form.TextField title="" placeholder="ns2.example.com" {...itemProps.host2} />
-    <Form.TextField title="" placeholder="ns3.example.com" {...itemProps.host3} />
-    <Form.TextField title="" placeholder="ns4.example.com" {...itemProps.host4} />
-    <Form.TextField title="" placeholder="ns5.example.com" {...itemProps.host5} />
-    <Form.TextField title="" placeholder="ns6.example.com" {...itemProps.host6} />
-    <Form.TextField title="" placeholder="ns7.example.com" {...itemProps.host7} />
-    <Form.TextField title="" placeholder="ns8.example.com" {...itemProps.host8} />
-    <Form.TextField title="" placeholder="ns9.example.com" {...itemProps.host9} />
-    <Form.TextField title="" placeholder="ns10.example.com" {...itemProps.host10} />
-    <Form.TextField title="" placeholder="ns11.example.com" {...itemProps.host11} />
-    <Form.TextField title="" placeholder="ns12.example.com" {...itemProps.host12} />
-    </>}
-  </Form>
+    },
+  });
+  return (
+    <Form
+      isLoading={isLoading}
+      actions={
+        <ActionPanel>
+          <Action.SubmitForm icon={Icon.Check} title="Save" onSubmit={handleSubmit} />
+        </ActionPanel>
+      }
+    >
+      <Form.Description text="Select either Spaceship or custom DNS for your nameserver location." />
+      <Form.Dropdown title="Provider" {...itemProps.provider}>
+        <Form.Dropdown.Item title="Spaceship nameservers" value="basic" />
+        <Form.Dropdown.Item title="Custom nameservers" value="custom" />
+      </Form.Dropdown>
+      <Form.Description
+        text={
+          values.provider === "basic"
+            ? "Using Spaceship nameservers ensures that any connected products are automatically updated and can be customized with advanced DNS settings."
+            : "Using custom nameservers means you manage your DNS setup at your external provider."
+        }
+      />
+      <Form.Separator />
+      {values.provider === "basic" ? (
+        <Form.Description title="Nameservers" text={`launch1.spaceship.net\nlaunch2.spaceship.net`} />
+      ) : (
+        <>
+          <Form.TextField title="" placeholder="ns1.example.com" {...itemProps.host1} />
+          <Form.TextField title="" placeholder="ns2.example.com" {...itemProps.host2} />
+          <Form.TextField title="" placeholder="ns3.example.com" {...itemProps.host3} />
+          <Form.TextField title="" placeholder="ns4.example.com" {...itemProps.host4} />
+          <Form.TextField title="" placeholder="ns5.example.com" {...itemProps.host5} />
+          <Form.TextField title="" placeholder="ns6.example.com" {...itemProps.host6} />
+          <Form.TextField title="" placeholder="ns7.example.com" {...itemProps.host7} />
+          <Form.TextField title="" placeholder="ns8.example.com" {...itemProps.host8} />
+          <Form.TextField title="" placeholder="ns9.example.com" {...itemProps.host9} />
+          <Form.TextField title="" placeholder="ns10.example.com" {...itemProps.host10} />
+          <Form.TextField title="" placeholder="ns11.example.com" {...itemProps.host11} />
+          <Form.TextField title="" placeholder="ns12.example.com" {...itemProps.host12} />
+        </>
+      )}
+    </Form>
+  );
 }
