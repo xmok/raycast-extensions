@@ -1,5 +1,13 @@
 # Todo List Changelog
 
+## [Added Tooltip to Title] - {PR_MERGE_DATE}
+
+- Added `tooltip` to to-do list items so longer titles easier to read.
+- Added `metadata` images.
+- Modernized to use latest Raycast config.
+
+## [Added Windows Support] - 2025-06-18
+
 ## [Chore: Moved contributor] - 2025-03-18
 
 ## [Chore: Moved contributor] - 2025-03-17
