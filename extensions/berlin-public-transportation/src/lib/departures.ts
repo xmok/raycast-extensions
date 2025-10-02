@@ -7,8 +7,12 @@ export async function getDepartures(id: string) {
   if (!id || typeof id !== "string") {
     return [];
   }
+  // id must be an IBNR so we will parse accordingly e.g. if ID=de:11000:900100003 THEN IBNR=900100003
+  const stopID = id.split(":").pop();
 
-  return axios.get<IDeparture[]>(API_URL + `/stops/${id}/departures`).then((res) => res.data);
+  return axios
+    .get<{ departures: IDeparture[] }>(API_URL + `/stops/${stopID}/departures`)
+    .then((res) => res.data.departures);
 }
 
 export function getDepartureAccessories(departure: IDeparture): List.Item.Accessory[] {

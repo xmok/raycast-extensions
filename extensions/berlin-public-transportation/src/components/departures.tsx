@@ -28,7 +28,7 @@ export default function Departures({ station }: StationProps) {
           style: Toast.Style.Failure,
         });
       },
-    }
+    },
   );
 
   return (

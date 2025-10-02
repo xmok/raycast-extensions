@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
 
-export const API_URL = "https://v5.bvg.transport.rest";
+export const API_URL = "https://v6.bvg.transport.rest";
 
 export const TRANSPORT_MODE_TO_ICON: Record<string, Icon> = {
   SUBWAY: Icon.Train,

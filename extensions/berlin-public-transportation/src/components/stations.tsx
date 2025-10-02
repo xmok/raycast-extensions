@@ -5,11 +5,7 @@ import { List, Toast, showToast, Icon } from "@raycast/api";
 import { ReactNode, useState } from "react";
 import { addStationToFavorites, getFavoritStations, getStations, removeStationFromFavorites } from "../lib/stations";
 
-interface StationsProps {
-  onSelectStation: (station: IStation) => ReactNode;
-}
-
-export default function Stations({ onSelectStation }: StationsProps) {
+export default function Stations() {
   // Local state
   const [search, setSearch] = useState<string>("");
 
@@ -52,7 +48,6 @@ export default function Stations({ onSelectStation }: StationsProps) {
             return (
               <Station
                 key={[station.name, station.location?.id, station.id, i].join("-")}
-                onSelect={onSelectStation}
                 onToggleFavorite={isFavorite ? removeStationFromFavorites : addStationToFavorites}
                 isFavorite={isFavorite}
                 station={station}
@@ -68,7 +63,6 @@ export default function Stations({ onSelectStation }: StationsProps) {
             <Station
               isFavorite
               key={["favorites", station.name, station.location?.id, station.id].join("-")}
-              onSelect={onSelectStation}
               onToggleFavorite={removeStationFromFavorites}
               station={station}
             />
