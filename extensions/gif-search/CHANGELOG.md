@@ -1,5 +1,10 @@
 # GIF Search Changelog
 
+## [Modernize] - {PR_MERGE_DATE}
+
+- Modernize extension to use latest Raycast config
+- Removed `node-fetch` and polyfill to allow better proxy handling
+
 ## [Enhancement] - 2025-09-29
 
 - Add a new action to paste a GIF into the front-most application

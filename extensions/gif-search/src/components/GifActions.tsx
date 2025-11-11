@@ -23,6 +23,7 @@ import { removeGifFromCache } from "../lib/cachedGifs";
 import { getAllFavIds, getAllRecentIds, remove, save } from "../lib/localGifs";
 import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { getServiceFromUrl } from "../lib/getServiceFromUrl";
+import { JSX } from "react";
 
 interface GifActionsProps {
   item: IGif;
@@ -148,7 +149,7 @@ export function GifActions({ item, showViewDetails, visitGifItem, mutate }: GifA
           },
         });
       }
-    } catch (error) {
+    } catch {
       await showToast({
         style: Toast.Style.Failure,
         title: "Could not download GIF",

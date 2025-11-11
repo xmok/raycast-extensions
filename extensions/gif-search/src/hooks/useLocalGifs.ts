@@ -62,7 +62,8 @@ export default function useLocalGifs(service?: ServiceName, itemSize?: ItemSize)
   );
 
   async function mutate() {
-    isAllFavsOrRecents ? mutateAllGifs() : mutateLocalGifs();
+    if (isAllFavsOrRecents) mutateAllGifs();
+    else mutateLocalGifs();
   }
 
   return {

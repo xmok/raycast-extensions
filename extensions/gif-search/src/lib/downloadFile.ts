@@ -1,10 +1,12 @@
 import { getPreferenceValues } from "@raycast/api";
 import { copyFileSync, createWriteStream, existsSync } from "fs";
-import fetch from "node-fetch";
 import { homedir } from "os";
 import { getGifFromCache } from "./cachedGifs";
 import { getHideFilename } from "../preferences";
 import path from "path";
+import { pipeline } from "stream/promises";
+import { Readable } from "stream";
+import { ReadableStream } from "stream/web";
 
 const { downloadPath } = getPreferenceValues();
 const basePath = downloadPath || `${homedir()}/Downloads`;
@@ -44,13 +46,10 @@ export default async function downloadFile(url: string, name: string) {
       filePath = `${basePath}/${fileNameWithoutExtension} (${counter}).${fileExtension}`;
       counter++;
     } while (existsSync(filePath));
-  } else {
-    const fileStream = createWriteStream(filePath);
-    await response.body?.pipe(fileStream);
   }
 
   const fileStream = createWriteStream(filePath);
-  response.body?.pipe(fileStream);
+  pipeline(Readable.fromWeb(response.body as ReadableStream<Uint8Array>), fileStream);
 
   return new Promise((resolve, reject) => {
     fileStream.on("finish", () => {

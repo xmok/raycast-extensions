@@ -1,4 +1,8 @@
-Elevat your Mac workflow with the GIF Search extension. This extension searches for animated GIFs from the internet using [Giphy](https://giphy.com), [Tenor](https://tenor.com), or [The Finer Gifs Club](https://thefinergifs.club). Switch between the various services using the search bar dropdown.
+<p align="center">
+    <img src="./assets/command-icon.png" width="150" height="150" />
+</p>
+
+Elevate your Mac workflow with the GIF Search extension. This extension searches for animated GIFs from the internet using [Giphy](https://giphy.com), [Tenor](https://tenor.com), or [The Finer Gifs Club](https://thefinergifs.club). Switch between the various services using the search bar dropdown.
 
 ## **Discover the Perfect GIF in Seconds**
 
