@@ -3,7 +3,7 @@
   "name": "immich",
   "title": "Immich",
   "description": "",
-  "icon": "extension-icon.png",
+  "icon": "immich_new.png",
   "author": "xmok",
   "platforms": [
     "macOS",
@@ -35,6 +35,12 @@
     {
       "name": "api-keys",
       "title": "API Keys",
+      "description": "",
+      "mode": "view"
+    },
+    {
+      "name": "search",
+      "title": "Search",
       "description": "",
       "mode": "view"
     }
