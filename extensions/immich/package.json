@@ -39,9 +39,9 @@
       "mode": "view"
     },
     {
-      "name": "search",
-      "title": "Search",
-      "description": "",
+      "name": "explore",
+      "title": "Explore",
+      "description": "Search your photos",
       "mode": "view"
     }
   ],
