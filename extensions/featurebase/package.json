@@ -26,6 +26,18 @@
       "title": "Manage Changelogs",
       "description": "",
       "mode": "view"
+    },
+    {
+      "name": "manage-help-center",
+      "title": "Manage Help Center",
+      "description": "",
+      "mode": "view"
+    },
+    {
+      "name": "manage-posts",
+      "title": "Manage Posts",
+      "description": "",
+      "mode": "view"
     }
   ],
   "dependencies": {

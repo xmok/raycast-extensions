@@ -1,31 +1,23 @@
 import { FormValidation, useCachedPromise, useForm } from "@raycast/utils";
 import { featurebase } from "./featurebase";
-import { Action, ActionPanel, Alert, Color, confirmAlert, Form, Grid, Icon, Keyboard, showToast, Toast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Alert, Color, confirmAlert, Form, Grid, Icon, Keyboard, List, showToast, Toast, useNavigation } from "@raycast/api";
 import { ChangelogState, CreateChangelogRequest } from "./types";
 import { useState } from "react";
 
-export default function ManageChangelogs() {
-    const [state, setState] = useState("live");
-    const {isLoading, data: changelogs, pagination,mutate}  = useCachedPromise((state) => async(options) => {
-        const result =  await featurebase.changelog.list({page: options.page+1, state})
+export default function ManagePosts() {
+    const {isLoading, data: posts, pagination,mutate}  = useCachedPromise(() => async(options) => {
+        const result =  await featurebase.posts.list({page: options.page+1})
             return {
              data: result.results,
              hasMore: result.totalPages>0 && result.page < result.totalPages
             };
     }
-    , [state], {initialData: []})
+    , [], {initialData: []})
     
-    return <Grid isLoading={isLoading} pagination={pagination} columns={4} searchBarAccessory={<Grid.Dropdown tooltip="State" onChange={setState} storeValue>
-        <Grid.Dropdown.Item icon={Icon.Livestream} title="Published" value="live" />
-        <Grid.Dropdown.Item icon={Icon.Bookmark} title="Draft" value="draft" />
-    </Grid.Dropdown>}>
-{!isLoading && !changelogs.length ? <Grid.EmptyView title="Get started with the Changelog" actions={<ActionPanel>
-    <Action.Push icon={Icon.Plus} title="New Changelog" target={<NewChangelog />} onPop={mutate} />
-</ActionPanel>} /> : changelogs.map(changelog=> <Grid.Item key={changelog.id} content={changelog.featuredImage || "#24283880"} title={changelog.title} subtitle={new Date(changelog.date).toDateString()} accessory={{icon: changelog.state===ChangelogState.Draft ? Icon.Bookmark
-    : Icon.Livestream
-}} actions={<ActionPanel>
-    <Action.OpenInBrowser url={`https://${changelog.organization}.featurebase.app/dashboard/changelog/${changelog.id}`} />
-    <Action.Push icon={Icon.Plus} title="New Changelog" target={<NewChangelog />} onPop={mutate} />
+    return <List isLoading={isLoading} pagination={pagination}>
+{!isLoading && !posts.length ? <List.EmptyView icon={Icon.Tray} title="New messages will appear here" /> : posts.map(post=> <List.Item key={post.id} title={post.title} actions={<ActionPanel>
+    {/* <Action.OpenInBrowser url={`https://${post.organization}.featurebase.app/dashboard/changelog/${changelog.id}`} /> */}
+    {/* <Action.Push icon={Icon.Plus} title="New Changelog" target={<NewChangelog />} onPop={mutate} />
 <Action icon={Icon.Trash} title="Delete Changelog" onAction={() => confirmAlert({
     icon: {source: Icon.Warning, tintColor: Color.Red},
     title: "Are you sure you want to delete this changelog?",
@@ -53,9 +45,9 @@ export default function ManageChangelogs() {
             }
         },
     }
-})} style={Action.Style.Destructive} shortcut={Keyboard.Shortcut.Common.Remove} />
+})} style={Action.Style.Destructive} shortcut={Keyboard.Shortcut.Common.Remove} /> */}
 </ActionPanel>} />)}
-    </Grid>
+    </List>
 }
 
 function NewChangelog() {
