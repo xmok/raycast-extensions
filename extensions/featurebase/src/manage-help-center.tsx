@@ -10,7 +10,7 @@ export default function ManageHelpCenter() {
         const result =  await featurebase.helpCenter.articles.list({page: options.page+1, state})
             return {
              data: result.results,
-             hasMore: result.totalPages>0 && result.page < result.totalPages
+             hasMore: result.totalResults > result.page * result.limit
             };
     }
     , [state], {initialData: []})
@@ -58,11 +58,11 @@ function NewArticle() {
     const {pop} =useNavigation()
     const {handleSubmit,itemProps} = useForm<CreateArticleRequest>({
         async onSubmit(values) {
-            const toast = await showToast(Toast.Style.Animated, "Creating", values.title)
+            const toast = await showToast(Toast.Style.Animated, "Creating article", values.title)
             try {
                 const result = await featurebase.helpCenter.articles.create(values);
                 toast.style = Toast.Style.Success
-                toast.title = "Created"
+                toast.title = "Article created successfully"
                 toast.message = result.title
                 pop()
             } catch (error) {

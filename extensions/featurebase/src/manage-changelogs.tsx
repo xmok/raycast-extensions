@@ -10,7 +10,7 @@ export default function ManageChangelogs() {
         const result =  await featurebase.changelog.list({page: options.page+1, state})
             return {
              data: result.results,
-             hasMore: result.totalPages>0 && result.page < result.totalPages
+             hasMore: result.totalResults > result.page * result.limit
             };
     }
     , [state], {initialData: []})
