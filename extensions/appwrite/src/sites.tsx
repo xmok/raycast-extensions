@@ -8,6 +8,7 @@ import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { filesize } from "filesize";
 import Variables from "./sites/variables";
+import CopyIDAction from "./common/CopyIDAction";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -49,6 +50,7 @@ export default function Sites() {
               <ActionPanel>
                 <Action.Push icon={Icon.Airplane} title="Deployments" target={<Deployments siteId={site.$id} />} />
                 <Action.Push icon={Icon.Code} title="Variables" target={<Variables siteId={site.$id} />} />
+                <CopyIDAction item={site} />
               </ActionPanel>
             }
           />
@@ -91,6 +93,11 @@ function Deployments({ siteId }: { siteId: string }) {
             { text: `Total size: ${filesize(deployment.totalSize)}` },
             deployment.type === "manual" ? { icon: Icon.Code, text: "Manual" } : { text: deployment.type },
           ]}
+          actions={
+            <ActionPanel>
+              <CopyIDAction item={deployment} />
+            </ActionPanel>
+          }
         />
       ))}
     </List>

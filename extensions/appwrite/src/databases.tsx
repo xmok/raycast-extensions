@@ -2,6 +2,8 @@ import { Action, ActionPanel, Icon, List } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { sdk, SDKContext } from "./sdk";
 import { useContext } from "react";
+import { sortItems } from "./utils";
+import CopyIDAction from "./common/CopyIDAction";
 
 export default function Databases() {
   const sdks = useContext(SDKContext);
@@ -34,7 +36,7 @@ export default function Databases() {
             actions={
               <ActionPanel>
                 <Action.Push icon={Icon.Box} title="Collections" target={<Collections databaseId={database.$id} />} />
-                <Action.CopyToClipboard title="Copy ID to Clipboard" content={database.$id} />
+                <CopyIDAction item={database} />
               </ActionPanel>
             }
           />
@@ -71,6 +73,8 @@ function Collections({ databaseId }: { databaseId: string }) {
           actions={
             <ActionPanel>
               <Action.Push icon={Icon.Document} title="Documents" target={<Documents collection={collection} />} />
+                              <CopyIDAction item={collection} />
+              
             </ActionPanel>
           }
         />
@@ -84,7 +88,7 @@ function Documents({ collection }: { collection: sdk.Models.Collection }) {
   const { isLoading, data: documents } = useCachedPromise(
     async () => {
       const res = await databases.listDocuments(collection.databaseId, collection.$id);
-      return res.documents;
+      return sortItems(res.documents);
     },
     [],
     {
@@ -113,6 +117,12 @@ ${Object.entries(document)
             icon={Icon.Document}
             title={document.$id}
             detail={<List.Item.Detail markdown={buildMetadata(document)} />}
+            actions={
+              <ActionPanel>
+                <Action.CopyToClipboard title="Copy Document as JSON" content={JSON.stringify(document)} />
+                <CopyIDAction item={document} />
+              </ActionPanel>
+            }
           />
         ))
       )}
