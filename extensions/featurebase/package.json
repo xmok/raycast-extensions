@@ -35,24 +35,28 @@
     {
       "name": "manage-changelogs",
       "title": "Manage Changelogs",
+      "subtitle": "Featurebase",
       "description": "Manage Featurebase Changelogs",
       "mode": "view"
     },
     {
       "name": "manage-help-center",
       "title": "Manage Help Center",
+      "subtitle": "Featurebase",
       "description": "Manage Featurebase Help Center",
       "mode": "view"
     },
     {
       "name": "manage-feedback",
       "title": "Manage Feedback",
+      "subtitle": "Featurebase",
       "description": "Manage Featurebase Feedback",
       "mode": "view"
     },
     {
       "name": "manage-users",
       "title": "Manage Users",
+      "subtitle": "Featurebase",
       "description": "Manage Featurebase Users",
       "mode": "view"
     }

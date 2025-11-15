@@ -223,7 +223,7 @@ function ViewComments({ post }: { post: Post }) {
             <ActionPanel>
               <Action
                 icon={Icon.Trash}
-                title="Delete Post"
+                title="Delete Comment"
                 onAction={() =>
                   confirmAlert({
                     icon: { source: Icon.Warning, tintColor: Color.Red },
