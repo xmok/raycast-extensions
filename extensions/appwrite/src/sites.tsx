@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { filesize } from "filesize";
 import Variables from "./sites/variables";
 import CopyIDAction from "./common/CopyIDAction";
+import { sortItems } from "./utils";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -21,7 +22,7 @@ export default function Sites() {
   } = useCachedPromise(
     async () => {
       const res = await sdks.sites.list();
-      return res.sites;
+      return sortItems(res.sites);
     },
     [],
     {
@@ -73,7 +74,7 @@ function Deployments({ siteId }: { siteId: string }) {
   const { isLoading, data: deployments } = useCachedPromise(
     async () => {
       const res = await sites.listDeployments({ siteId });
-      return res.deployments;
+      return sortItems(res.deployments);
     },
     [],
     {

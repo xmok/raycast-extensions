@@ -89,8 +89,8 @@ export default function Variables({ siteId }: { siteId: string }) {
               <ActionPanel>
                 <Action.CopyToClipboard title="Copy Key to Clipboard" content={variable.key} />
                 <Action.CopyToClipboard title="Copy Value to Clipboard" content={variable.value} />
-                                <CopyIDAction item={variable} />
-                
+                <CopyIDAction item={variable} />
+
                 <Action.Push
                   icon={Icon.PlusCircle}
                   title="Create Variable"

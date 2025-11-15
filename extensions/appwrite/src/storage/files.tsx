@@ -39,8 +39,7 @@ export default function Files({ bucket }: { bucket: sdk.Models.Bucket }) {
             title={file.$id}
             actions={
               <ActionPanel>
-                                <CopyIDAction item={file} />
-
+                <CopyIDAction item={file} />
               </ActionPanel>
             }
           />

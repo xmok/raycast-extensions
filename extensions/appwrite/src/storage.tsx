@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { sdk, SDKContext } from "./sdk";
 import Files from "./storage/files";
 import CopyIDAction from "./common/CopyIDAction";
+import { sortItems } from "./utils";
 
 export default function Storage() {
   const { storage } = useContext(SDKContext);
@@ -15,7 +16,7 @@ export default function Storage() {
   } = useCachedPromise(
     async () => {
       const res = await storage.listBuckets();
-      return res.buckets;
+      return sortItems(res.buckets);
     },
     [],
     {

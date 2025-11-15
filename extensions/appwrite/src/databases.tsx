@@ -10,7 +10,7 @@ export default function Databases() {
   const { isLoading, data: databases } = useCachedPromise(
     async () => {
       const res = await sdks.databases.list();
-      return res.databases;
+      return sortItems(res.databases);
     },
     [],
     {
@@ -51,7 +51,7 @@ function Collections({ databaseId }: { databaseId: string }) {
   const { isLoading, data: collections } = useCachedPromise(
     async () => {
       const res = await databases.listCollections(databaseId);
-      return res.collections;
+      return sortItems(res.collections);
     },
     [],
     {
@@ -73,8 +73,7 @@ function Collections({ databaseId }: { databaseId: string }) {
           actions={
             <ActionPanel>
               <Action.Push icon={Icon.Document} title="Documents" target={<Documents collection={collection} />} />
-                              <CopyIDAction item={collection} />
-              
+              <CopyIDAction item={collection} />
             </ActionPanel>
           }
         />

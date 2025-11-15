@@ -123,7 +123,7 @@ export default function Projects() {
                   />
                 </ActionPanel.Section>
                 <ActionPanel.Section>
-                <CopyIDAction item={{$id: project.id}} />
+                  <CopyIDAction item={{ $id: project.id }} />
                 </ActionPanel.Section>
               </ActionPanel>
             }
