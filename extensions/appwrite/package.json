@@ -26,7 +26,7 @@
               "value": "updated_at_asc"
             },
             {
-              "title": "Updated At (DES)",
+              "title": "Updated At (DESC)",
               "value": "updated_at_des"
             }
           ],
