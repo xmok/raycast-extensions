@@ -11,6 +11,34 @@ export type Link = {
 "visit_count": number
 }
 
+export type CreateLinkRequest = {
+  "target": string
+  "description": string
+  "expire_in": string
+  "password": string
+  "customurl": string
+}
+
+type Item = {
+    name: string;
+    value: number;
+}
+export type StatsItem = {
+    stats: {
+        browser: Item[]
+        os: Item[]
+        country: Item[]
+        referrer: Item[]
+    }
+    view: number[]
+}
+export type LinkStats ={
+    lastYear: StatsItem
+    lastDay: StatsItem
+    lastMonth: StatsItem
+    lastWeek: StatsItem
+}
+
 export type PaginatedResult<T> = {
     limit: number,
     skip: number,
