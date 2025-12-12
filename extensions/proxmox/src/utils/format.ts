@@ -1,3 +1,5 @@
+import { getPreferenceValues } from "@raycast/api";
+
 export function formatShortTime(time: number): string {
   const units = "smhdy";
   const rates = [60, 60, 24, 365];
@@ -26,7 +28,11 @@ export function formatPercentage(value: number): string {
   return `${(value * 100).toFixed(2)} %`;
 }
 
-export function formatStorageSize(size: number): string {
+export function formatStorageSize(size?: number): string {
+  if (size === undefined) {
+    return "Unknown";
+  }
+
   const units = ["K", "M", "G", "T", "P"];
   let unitIndex = -1;
 
@@ -41,3 +47,16 @@ export function formatStorageSize(size: number): string {
 
   return `${size.toFixed(2)} ${units[unitIndex]}iB`;
 }
+
+export function formatCPU(maxcpu: number): string {
+  return Math.round(maxcpu) + " CPU(s)";
+}
+
+export const formatNumberAsBoolean = (value: number | undefined): string =>
+  typeof value === "number" ? (value === 1 ? "Yes" : "No") : "Unknown";
+
+export const formatBrowserUrl = (suffix: string) => {
+  const preferences = getPreferenceValues<Preferences>();
+  const url = new URL(suffix, preferences.serverUrl).toString();
+  return url;
+};
