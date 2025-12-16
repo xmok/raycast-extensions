@@ -1,43 +1,68 @@
 import { Clipboard } from "@raycast/api";
-import { runAppleScript } from "@raycast/utils";
-import { existsSync } from "fs";
-import os from "os";
+import { runAppleScript, showFailureToast } from "@raycast/utils";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { tmpdir, platform } from "node:os";
+import path from "node:path";
 
-function toSvg(path: string, width: number, height: number, color: string): string {
+const osPlatform = platform();
+const isWindows = osPlatform === "win32";
+const isMac = osPlatform === "darwin";
+if (!isWindows && !isMac) {
+  throw new Error("Unsupported operating system");
+}
+
+export function toSvg(path: string, width: number, height: number, color: string): string {
   //  replace all currentColor pattern with the provided color
   path = path.replace(/currentColor/g, color);
 
   return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">${path}</svg>`;
 }
 
-function toDataURI(svg: string): string {
+export function toDataURI(svg: string): string {
   return `data:image/svg+xml,${svg}`;
 }
 
-function toURL(setId: string, id: string): string {
+export function toURL(setId: string, id: string): string {
   return `https://api.iconify.design/${setId}/${id}.svg`;
 }
 
-async function copyToClipboard(svgString: string, id: string) {
-  const osTempDirectory = os.tmpdir();
-  const fileTempDirectory = `${osTempDirectory}/raycast-iconify`;
+export async function copyToClipboard(svgString: string, id: string): Promise<boolean> {
+  const osTempDirectory = tmpdir();
+  const fileTempDirectory = path.join(osTempDirectory, "/raycast-iconify");
 
   if (!existsSync(fileTempDirectory)) {
-    await runAppleScript(`
+    if (isWindows) {
+      try {
+        mkdirSync(fileTempDirectory, { recursive: true });
+      } catch (e) {
+        showFailureToast(e, { title: "Unable to create temporary directory" });
+        return false;
+      }
+    } else {
+      await runAppleScript(`
         set file_path to "${fileTempDirectory}"
         set file_path to do shell script "echo " & quoted form of file_path & " | iconv -f utf-8 -t utf-8"
         set file_path to file_path as text
 
         do shell script "mkdir -p " & quoted form of file_path
       `);
+    }
   }
   const selectedPath = fileTempDirectory;
   const fixedPathName = selectedPath.endsWith("/") ? `${selectedPath}${id}.svg` : `${selectedPath}/${id}.svg`;
 
   const actualPath = fixedPathName;
 
-  const fixedSvgString = svgString.replace(/"/g, '\\"');
-  await runAppleScript(`
+  if (isWindows) {
+    try {
+      writeFileSync(actualPath, svgString, { encoding: "utf-8" });
+    } catch (e) {
+      showFailureToast(e, { title: "Unable to write file to disk" });
+      return false;
+    }
+  } else {
+    const fixedSvgString = svgString.replace(/"/g, '\\"');
+    await runAppleScript(`
         set svg to "${fixedSvgString}"
         set svg to do shell script "echo " & quoted form of svg & " | iconv -f utf-8 -t utf-8"
         set svg to svg as text
@@ -50,10 +75,11 @@ async function copyToClipboard(svgString: string, id: string) {
         write svg to fileRef
         close access fileRef
       `);
+  }
 
   await Clipboard.copy({
     file: actualPath,
   });
-}
 
-export { toSvg, toDataURI, toURL, copyToClipboard };
+  return true;
+}
