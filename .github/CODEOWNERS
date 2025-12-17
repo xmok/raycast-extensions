@@ -1359,7 +1359,7 @@
 /extensions/nix-flake-templates                                     @lex-unix
 /extensions/nixpkgs-search                                          @aiotter @xmok @0xdhrv
 /extensions/nl-news-headlines                                       @namzo
-/extensions/nmbs-planner                                            @SamuelVanhaecke
+/extensions/nmbs-planner                                            @SamuelVanhaecke @0xdhrv
 /extensions/node-js-evaluate                                        @selfish
 /extensions/node-release-notes                                      @filipszczepanski
 /extensions/node-version-manager                                    @AndresMorelos @pernielsentikaer @LeOndaz
