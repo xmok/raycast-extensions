@@ -1,5 +1,11 @@
 # Google Workspace Changelog
 
+## [Thumbnail Previews] - 2025-12-17
+
+### Changed
+
+- 🖼️ **File previews now show real content** instead of generic icons - see thumbnails of documents, images, videos, and PDFs directly in the list
+
 ## [Enhanced File Details and Improved Search] - 2025-12-15
 
 ### Added
