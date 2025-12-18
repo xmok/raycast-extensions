@@ -1868,6 +1868,7 @@
 /extensions/script-commands                                         @unnamedd
 /extensions/script-kit                                              @pomdtr
 /extensions/scss-compile                                            @SuoweiHu
+/extensions/seafile                                                 @xmok
 /extensions/search-astro-docs                                       @ElianCodes @pernielsentikaer
 /extensions/search-blockchain                                       @gutenye
 /extensions/search-chatwork                                         @nagauta @xmok
