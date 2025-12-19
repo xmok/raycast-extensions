@@ -2,8 +2,8 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "infomaniak",
   "title": "Infomaniak",
-  "description": "",
-  "icon": "extension-icon.png",
+  "description": "Sovereign Cloud Service Provider",
+  "icon": "k-icon.png",
   "author": "xmok",
   "platforms": [
     "macOS",
@@ -18,50 +18,39 @@
     {
       "name": "user-management",
       "title": "User Management",
-      "description": "",
+      "description": "Manage your Infomaniak account",
       "mode": "view"
     },
     {
-      "name": "web-domains",
-      "title": "Web & Domains",
-      "description": "",
-      "mode": "view",
-      "arguments": [
-        {
-          "name": "item",
-          "placeholder": "ITEM",
-          "type": "dropdown",
-          "data": [
-            {
-              "title": "Domains",
-              "value": "domains"
-            }
-          ]
-        }
-      ]
-    }
-  ,
-    {
       "name": "kdrive",
       "title": "kDrive",
-      "description": "",
+      "description": "Manage your kDrive files",
       "mode": "view",
-      "icon": "kdrive.svg"
+      "icon": "kdrive.png"
     }
-      ],
+  ],
   "preferences": [
     {
       "name": "api_token",
       "title": "API Token",
-      "placeholder": "",
+      "placeholder": "XXX...xxX",
       "description": "API Token from Infomaniak Dashboard",
+      "required": true,
+      "type": "password"
+    },
+    {
+      "name": "account_id",
+      "title": "Account ID",
+      "placeholder": "xxxxxxx",
+      "description": "The default Account ID to use",
       "required": true,
       "type": "password"
     }
   ],
   "dependencies": {
     "@raycast/api": "^1.104.1",
-    "@raycast/utils": "^1.17.0"
+    "@raycast/utils": "^2.2.2",
+    "filesize": "^11.0.13"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^2.0.4",
