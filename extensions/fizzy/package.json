@@ -20,6 +20,18 @@
       "title": "Manage Boards",
       "description": "Manage your boards",
       "mode": "view"
+    },
+    {
+      "name": "manage-users",
+      "title": "Manage Users",
+      "description": "Manage your users",
+      "mode": "view"
+    },
+    {
+      "name": "my-notifications",
+      "title": "My Notifications",
+      "description": "Manage your notifications",
+      "mode": "view"
     }
   ],
   "preferences": [

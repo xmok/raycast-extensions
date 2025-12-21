@@ -9,3 +9,40 @@ export type CreateBoardRequest = {
     name: string
     auto_postpone_period: number
 }
+
+export type Card = {
+    "id": string
+    "number": number
+    "title": string
+    "status": string
+    "description": string
+    "description_html": string
+    "image_url": string |null,
+    "closed": boolean,
+    "golden": boolean,
+    "last_active_at": string
+    "created_at": string
+    "url": string
+    "board": Board
+}
+
+export type Notification = {
+    "id": string
+    read: boolean;
+    title: string;
+    body: string;
+    creator: User;
+    card: Pick<Card, "id" | "title" | "status" | "url">;
+    url: string
+}
+
+
+export type User = {
+    "id": string
+    "name": string
+    "role": "owner" | "member"
+    "active": boolean
+    "email_address": string
+    "created_at": string
+    "url": string
+}

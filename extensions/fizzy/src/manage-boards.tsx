@@ -1,14 +1,46 @@
 import { FormValidation, useCachedPromise, useForm } from "@raycast/utils";
 import { fizzy } from "./fizzy";
-import { Action, ActionPanel, Color, environment, Form, Grid, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Alert, Color, confirmAlert, environment, Form, Grid, Icon, Keyboard, showToast, Toast, useNavigation } from "@raycast/api";
+import Cards from "./cards";
 
 export default function ManageBoards() {
   const {isLoading, data: boards,mutate} = useCachedPromise(fizzy.boards.list, [], {initialData:[]})
 
   return <Grid isLoading={isLoading}>
     {boards.map(board => <Grid.Item key={board.id} content={{source: "board.svg", tintColor: environment.appearance==="dark" ?  Color.PrimaryText : undefined}} title={board.name} actions={<ActionPanel>
+        <Action.Push icon={Icon.CreditCard} title="Cards" target={<Cards board={board} />} />
         <Action.OpenInBrowser url={board.url} />
-        <Action.Push icon={Icon.Plus} title="Add Board" target={<AddBoard />} onPop={mutate} />
+        <Action.Push icon={Icon.Plus} title="Add Board" target={<AddBoard />} onPop={mutate} shortcut={Keyboard.Shortcut.Common.New} />
+        <Action icon={Icon.Trash} title="Delete Board" onAction={() => confirmAlert(
+          {
+            icon: {source: Icon.Trash, tintColor: Color.Red},
+            title: "Delete board?",
+            message: "Are you sure you want to permanently delete this board and all the cards on it? This can't be undone.",
+            primaryAction: {
+              style: Alert.ActionStyle.Destructive,
+              title: "Delete",
+              async onAction() {
+                const toast = await showToast(Toast.Style.Animated, "Deleting", board.name);
+                try {
+                  await mutate(
+                    fizzy.boards.delete(board.id), {
+                      optimisticUpdate(data) {
+                        return data.filter(b => b.id !== board.id)
+                      },
+                      shouldRevalidateAfter: false
+                    }
+                  );
+                  toast.style = Toast.Style.Success;
+                  toast.title = "Deleted";
+                } catch (error) {
+                  toast.style = Toast.Style.Failure;
+                  toast.title = "Failed";
+                  toast.message = `${error}`
+                }  
+              },
+            }
+          }
+        )} shortcut={Keyboard.Shortcut.Common.Remove} style={Action.Style.Destructive} />
     </ActionPanel>} />)}
   </Grid>
 }
