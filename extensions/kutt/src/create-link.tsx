@@ -1,9 +1,37 @@
-import { useNavigation, showToast, Toast, Form, ActionPanel, Action, Icon } from "@raycast/api";
+import {
+  useNavigation,
+  showToast,
+  Toast,
+  Form,
+  ActionPanel,
+  Action,
+  Icon,
+  Detail,
+  openExtensionPreferences,
+} from "@raycast/api";
 import { useForm, FormValidation } from "@raycast/utils";
 import { buildApiUrl, API_HEADERS, parseApiResponse } from "./kutt";
 import { CreateLinkRequest, Link } from "./types";
 
-export default function CreateLink() {
+export default function Command() {
+  try {
+    buildApiUrl();
+    return <CreateLink />;
+  } catch {
+    return (
+      <Detail
+        markdown={"# ERROR \n\n Invalid URL in `Preferences`"}
+        actions={
+          <ActionPanel>
+            <Action icon={Icon.Gear} title="Open Extension Preferences" onAction={openExtensionPreferences} />
+          </ActionPanel>
+        }
+      />
+    );
+  }
+}
+
+function CreateLink() {
   const { pop } = useNavigation();
   const { handleSubmit, itemProps } = useForm<CreateLinkRequest>({
     async onSubmit(values) {
