@@ -34,7 +34,9 @@ export default function ManageUsers() {
             <ActionPanel>
               <Action.Push icon={Icon.Pencil} title="Update User" target={<UpdateUser user={user} />} onPop={mutate} />
               <Action.OpenInBrowser url={user.url} />
-              {!isLoading && me?.accounts.find((account) => account.id === ACCOUNT_SLUG)?.user.id !== user.id && (
+              {!isLoading &&
+              me?.accounts.length &&
+              me.accounts.find((account) => account.id === ACCOUNT_SLUG)?.user.id !== user.id ? (
                 <Action
                   icon={Icon.RemovePerson}
                   title="Deactivate User"
@@ -68,7 +70,7 @@ export default function ManageUsers() {
                   }
                   style={Action.Style.Destructive}
                 />
-              )}
+              ) : undefined}
             </ActionPanel>
           }
         />
