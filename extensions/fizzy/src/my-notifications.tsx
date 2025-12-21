@@ -53,7 +53,7 @@ export default function MyNotifications() {
                     try {
                       await mutate(fizzy.notifications.markAllAsRead(), {
                         optimisticUpdate(data) {
-                          return data.map((notification) => ({ ...notification, read: true }));
+                          return data.map((n) => ({ ...n, read: true }));
                         },
                         shouldRevalidateAfter: false,
                       });
@@ -89,9 +89,7 @@ export default function MyNotifications() {
                     try {
                       await mutate(fizzy.notifications.markAsUnread(notification.id), {
                         optimisticUpdate(data) {
-                          return data.map((notification) =>
-                            notification.id === notification.id ? { ...notification, read: false } : notification,
-                          );
+                          return data.map((n) => (n.id === notification.id ? { ...n, read: false } : n));
                         },
                         shouldRevalidateAfter: false,
                       });

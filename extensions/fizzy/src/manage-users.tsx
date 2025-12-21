@@ -51,7 +51,7 @@ export default function ManageUsers() {
                           try {
                             await mutate(fizzy.users.deactivate(user.id), {
                               optimisticUpdate(data) {
-                                return data.map((item) => (item.id === user.id ? { ...item, active: false } : item));
+                                return data.filter((u) => u.id !== user.id);
                               },
                               shouldRevalidateAfter: false,
                             });
