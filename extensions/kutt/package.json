@@ -2,7 +2,7 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "kutt",
   "title": "Kutt",
-  "description": "",
+  "description": "Free & Open Source Modern URL Shortener",
   "icon": "kutt.png",
   "author": "xmok",
   "platforms": [
@@ -34,9 +34,15 @@
   ],
   "commands": [
     {
+      "name": "create-link",
+      "title": "Create Link",
+      "description": "Create a new Kutt link",
+      "mode": "view"
+    },
+    {
       "name": "search-links",
       "title": "Search Links",
-      "description": "",
+      "description": "Search, View, Delete, and Edit Kutt Links",
       "mode": "view"
     }
   ],
