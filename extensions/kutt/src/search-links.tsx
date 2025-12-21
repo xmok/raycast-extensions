@@ -40,6 +40,7 @@ function SearchLinks() {
   const {
     isLoading,
     data: links,
+    pagination,
     mutate,
   } = useCachedPromise(
     () => async (options) => {
@@ -57,7 +58,7 @@ function SearchLinks() {
   );
 
   return (
-    <List isLoading={isLoading}>
+    <List isLoading={isLoading} pagination={pagination}>
       {!isLoading && !links.length ? (
         <List.EmptyView
           title="No links."
