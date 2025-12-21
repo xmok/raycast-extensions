@@ -55,7 +55,7 @@
     {
       "name": "account_slug",
       "title": "Account Slug",
-      "placeholder": "123456",
+      "placeholder": "1234567",
       "description": "Your Fizzy Account Slug",
       "type": "textfield",
       "required": true
