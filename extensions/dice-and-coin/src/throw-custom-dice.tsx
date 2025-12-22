@@ -19,6 +19,7 @@ export default async function Command() {
     toast.title = `🎲 ${result}`;
     await wait(1000);
   } catch (error) {
+    await updateCommandMetadata({ subtitle: "Dice & Coin" });
     toast.style = Toast.Style.Failure;
     toast.title = `${error}`;
     toast.message = "Please check your preferences and try again.";
