@@ -1,5 +1,9 @@
 # HetrixTools Changelog
 
+## [Fix: Crash in Uptime Monitors] - {PR_MERGE_DATE}
+
+Issue Reference: [Issue #23879](https://github.com/raycast/extensions/issues/23879)
+
 ## [View Status Pages] - 2025-06-11
 
 - New "Status Pages" command shows you status pages with basic info
