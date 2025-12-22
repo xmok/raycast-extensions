@@ -67,20 +67,26 @@ export default function TranslateForm() {
             <Action.CopyToClipboard title="Copy Text" content={text ?? ""} />
             <Action.CopyToClipboard
               title="Copy Pronunciation"
-              shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
+              shortcut={{
+                macOS: { modifiers: ["cmd", "shift"], key: "p" },
+                Windows: { modifiers: ["ctrl", "shift"], key: "p" },
+              }}
               content={translated?.pronunciationText ?? ""}
             />
             <OpenOnGoogleTranslateWebsiteAction translationText={text} translation={{ langFrom, langTo }} />
             <Action.Push
               icon={Icon.Pencil}
-              title="Manage language sets..."
-              shortcut={{ modifiers: ["cmd"], key: "l" }}
+              title="Manage Language Sets…"
+              shortcut={{ macOS: { modifiers: ["cmd"], key: "l" }, Windows: { modifiers: ["ctrl"], key: "l" } }}
               target={<LanguagesManagerList />}
             />
           </ActionPanel.Section>
           <ActionPanel.Section title="Settings">
             <Action
-              shortcut={{ modifiers: ["cmd", "shift"], key: "s" }}
+              shortcut={{
+                macOS: { modifiers: ["cmd", "shift"], key: "s" },
+                Windows: { modifiers: ["ctrl", "shift"], key: "s" },
+              }}
               onAction={() => {
                 if (autoDetectedLanguage?.code) {
                   setSelectedLanguageSet({
@@ -94,15 +100,21 @@ export default function TranslateForm() {
               title={`${autoDetectedLanguage?.name ?? fromLangObj.name} <-> ${toLangObj.name}`}
             />
             <Action
-              shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
-              title="Change From Language"
+              shortcut={{
+                macOS: { modifiers: ["cmd", "shift"], key: "f" },
+                Windows: { modifiers: ["ctrl", "shift"], key: "f" },
+              }}
+              title="Change from Language"
               onAction={() => {
                 fromLangInputRef.current?.focus();
               }}
             />
             <Action
-              shortcut={{ modifiers: ["cmd", "shift"], key: "t" }}
-              title="Change To Language"
+              shortcut={{
+                macOS: { modifiers: ["cmd", "shift"], key: "t" },
+                Windows: { modifiers: ["ctrl", "shift"], key: "t" },
+              }}
+              title="Change to Language"
               onAction={() => {
                 toLangInputRef.current?.focus();
               }}
