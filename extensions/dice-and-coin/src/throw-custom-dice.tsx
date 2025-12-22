@@ -9,8 +9,7 @@ export default async function Command() {
     if (isNaN(min)) throw new Error("Invalid min value");
     const max = +preferences.max;
     if (isNaN(max)) throw new Error("Invalid max value");
-    if (min > max) throw new Error("Min value must be less than or equal to max value");
-    if (min === max) throw new Error("Min value must be less than max value");
+    if (min >= max) throw new Error("Min value must be less than max value");
 
     await updateCommandMetadata({ subtitle: `Dice & Coin: ${min} to ${max}` });
 
