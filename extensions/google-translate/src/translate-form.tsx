@@ -1,5 +1,5 @@
 import React from "react";
-import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 import { useDebouncedValue, useSelectedLanguagesSet, useTextState, usePreferences } from "./hooks";
 import { LanguageCode, supportedLanguagesByCode, languages, english } from "./languages";
@@ -67,10 +67,7 @@ export default function TranslateForm() {
             <Action.CopyToClipboard title="Copy Text" content={text ?? ""} />
             <Action.CopyToClipboard
               title="Copy Pronunciation"
-              shortcut={{
-                macOS: { modifiers: ["cmd", "shift"], key: "p" },
-                Windows: { modifiers: ["ctrl", "shift"], key: "p" },
-              }}
+              shortcut={Keyboard.Shortcut.Common.Pin}
               content={translated?.pronunciationText ?? ""}
             />
             <OpenOnGoogleTranslateWebsiteAction translationText={text} translation={{ langFrom, langTo }} />

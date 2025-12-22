@@ -5,6 +5,7 @@
 - Make `Shortcut`s cross-platform
 - Modernize to latest Raycast configuration with updated `React` (ref: [Issue #23410](https://github.com/raycast/extensions/issues/23410))
 - Fix "Javanese" language code
+- Add README.md
 
 ## [Feature] - 2025-10-02
 

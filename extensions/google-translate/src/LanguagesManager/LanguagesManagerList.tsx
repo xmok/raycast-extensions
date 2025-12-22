@@ -75,6 +75,7 @@ export const LanguagesManagerList: React.FC = () => {
         actions={
           <ActionPanel>
             <Action.Push
+              icon={Icon.Plus}
               title="Add New Language Set…"
               target={
                 <AddLanguageForm
