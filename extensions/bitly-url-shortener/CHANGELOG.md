@@ -1,6 +1,12 @@
 # Bitly Changelog
 
+## [List Links] - {PR_MERGE_DATE}
+- List Links in a Bitly group
+- Modernize extension to use latest Raycast configuration
+- Add `metadata` image
+
 ## [Update] - 2024-05-26
+
 - Fallback to clipboard text when selected text fails with `Unable to get selected text from frontmost application`
 
 ## [Update] - 2024-04-13
