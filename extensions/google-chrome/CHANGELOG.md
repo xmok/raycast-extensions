@@ -1,5 +1,10 @@
 # Google Chrome Changelog
 
+## [Fixes] - {PR_MERGE_DATE}
+
+- Fix infinite rendering with depth bug in new tab `Action`
+- Handle error in "new tab" `Command`
+
 ## [Support for Guest Profile] - 2025-11-17
 
 - Add support for Guest profile in all commands
