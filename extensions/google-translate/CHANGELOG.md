@@ -1,6 +1,6 @@
 # Google Translate Changelog
 
-## [Cross Platform Shortcuts + Modernize] - {PR_MERGE_DATE}
+## [Cross Platform Shortcuts + Modernize] - 2025-12-24
 
 - Make `Shortcut`s cross-platform
 - Modernize to latest Raycast configuration with updated `React` (ref: [Issue #23410](https://github.com/raycast/extensions/issues/23410))
