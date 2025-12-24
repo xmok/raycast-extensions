@@ -63,6 +63,7 @@ function Users({ account }: { account: Account }) {
             icon={getAvatarIcon(`${user.first_name[0]} ${user.first_name[1]}`)}
             title={user.display_name}
             subtitle={user.email}
+            accessories={[{ text: user.role_type === "owner" ? "Legal representative" : user.role_type }]}
             actions={
               <ActionPanel>
                 <Action.Push
@@ -139,11 +140,19 @@ function Teams({ account }: { account: Account }) {
   );
   return (
     <List isLoading={isLoading}>
-      <List.Section subtitle={`${teams.length}`}>
-        {teams.map((team) => (
-          <List.Item key={team.id} icon={Icon.TwoPeople} title={team.name} />
-        ))}
-      </List.Section>
+      {!isLoading && !teams.length ? (
+        <List.EmptyView
+          icon="empty-table.svg"
+          title="No work team"
+          description={`Organise the users of ${account.name} into work teams`}
+        />
+      ) : (
+        <List.Section subtitle={`${teams.length}`}>
+          {teams.map((team) => (
+            <List.Item key={team.id} icon={Icon.TwoPeople} title={team.name} />
+          ))}
+        </List.Section>
+      )}
     </List>
   );
 }
