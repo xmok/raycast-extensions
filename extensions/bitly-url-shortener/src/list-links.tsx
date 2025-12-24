@@ -30,7 +30,7 @@ export default function ListLinks() {
   return (
     <List isLoading={isLoading} searchBarPlaceholder="Search links" onSearchTextChange={setSearchText} throttle>
       {!isLoading && !bitlinks.length ? (
-        searchText ? (
+        !searchText ? (
           <List.EmptyView
             icon="links-list-empty.png"
             title="More clicks are just a link away"
