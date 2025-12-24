@@ -1,6 +1,7 @@
 # Bitly Changelog
 
 ## [List Links] - {PR_MERGE_DATE}
+
 - List Links in a Bitly group
 - Modernize extension to use latest Raycast configuration
 - Add `metadata` image

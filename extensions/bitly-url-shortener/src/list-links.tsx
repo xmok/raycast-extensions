@@ -67,6 +67,10 @@ export default function ListLinks() {
             actions={
               <ActionPanel>
                 <Action.CopyToClipboard title="Copy Bitlink" content={bitlink.link} />
+                <Action.OpenInBrowser
+                  title="Open in Bitly"
+                  url={`https://app.bitly.com/${group_guid}/links/${bitlink.link}/details`}
+                />
               </ActionPanel>
             }
           />
