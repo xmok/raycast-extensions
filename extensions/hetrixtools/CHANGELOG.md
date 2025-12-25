@@ -1,6 +1,6 @@
 # HetrixTools Changelog
 
-## [Fix: Crash in Uptime Monitors] - {PR_MERGE_DATE}
+## [Fix: Crash in Uptime Monitors] - 2025-12-25
 
 Issue Reference: [Issue #23879](https://github.com/raycast/extensions/issues/23879)
 
