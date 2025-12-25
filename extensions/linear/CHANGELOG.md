@@ -1,5 +1,10 @@
 # Linear Changelog
 
+## [Update Shortcuts] - {PR_MERGE_DATE}
+
+- Updated shortcuts to make them cross-platform
+- Updated README with information
+
 ## [Notification improvements] - 2025-10-29
 
 - Improved notification display to support all notification types by reading directly from the API

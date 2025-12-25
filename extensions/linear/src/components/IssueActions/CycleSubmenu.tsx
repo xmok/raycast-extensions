@@ -76,7 +76,10 @@ export default function CycleSubmenus({
       <ActionPanel.Submenu
         title="Move to Cycle"
         icon={{ source: { light: "light/cycle.svg", dark: "dark/cycle.svg" } }}
-        shortcut={{ modifiers: ["cmd", "shift"], key: "c" }}
+        shortcut={{
+          macOS: { modifiers: ["cmd", "shift"], key: "c" },
+          Windows: { modifiers: ["ctrl", "shift"], key: "c" },
+        }}
         onOpen={() => setLoad(true)}
       >
         <Action
@@ -104,7 +107,10 @@ export default function CycleSubmenus({
         <Action
           title="Move to Active Cycle"
           icon={{ source: { light: "light/active-cycle.svg", dark: "dark/active-cycle.svg" } }}
-          shortcut={{ modifiers: ["ctrl", "shift"], key: "c" }}
+          shortcut={{
+            macOS: { modifiers: ["cmd", "shift"], key: "c" },
+            Windows: { modifiers: ["ctrl", "shift"], key: "c" },
+          }}
           onAction={() => moveToActiveCycle()}
         />
       ) : null}
@@ -113,7 +119,10 @@ export default function CycleSubmenus({
         <Action
           title="Move to Next Cycle"
           icon={{ source: { light: "light/cycle.svg", dark: "dark/cycle.svg" } }}
-          shortcut={{ modifiers: ["cmd", "shift"], key: "n" }}
+          shortcut={{
+            macOS: { modifiers: ["cmd", "shift"], key: "n" },
+            Windows: { modifiers: ["ctrl", "shift"], key: "n" },
+          }}
           onAction={() => moveToNextCycle()}
         />
       ) : null}
