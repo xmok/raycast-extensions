@@ -149,7 +149,7 @@ export default function CreateIssueForm(props: CreateIssueFormProps) {
 
           toast.primaryAction = {
             title: "Open Issue",
-            shortcut: { modifiers: ["cmd", "shift"], key: "o" },
+            shortcut: Keyboard.Shortcut.Common.OpenWith,
             onAction: async () => {
               push(<IssueDetail issue={issue} priorities={props.priorities} me={props.me} />);
               await toast.hide();
@@ -157,7 +157,7 @@ export default function CreateIssueForm(props: CreateIssueFormProps) {
           };
 
           toast.secondaryAction = {
-            shortcut: { modifiers: ["cmd", "shift"], key: "c" },
+            shortcut: Keyboard.Shortcut.Common.Copy,
             ...getCopyToastAction(copyToastAction, issue),
           };
 
@@ -363,10 +363,7 @@ export default function CreateIssueForm(props: CreateIssueFormProps) {
                 title="Focus Cycle"
                 icon={{ source: { light: "light/cycle.svg", dark: "dark/cycle.svg" } }}
                 onAction={() => focus("cycleId")}
-                shortcut={{
-                  macOS: { modifiers: ["cmd", "shift"], key: "c" },
-                  Windows: { modifiers: ["ctrl", "shift"], key: "c" },
-                }}
+                shortcut={Keyboard.Shortcut.Common.Copy}
               />
             ) : null}
             {hasProjects ? (

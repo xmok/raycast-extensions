@@ -208,10 +208,7 @@ export function DocumentActions({ doc, ...rest }: DocumentActionsProps) {
           icon={Icon.Link}
           content={doc.url}
           title="Copy Link"
-          shortcut={{
-            macOS: { modifiers: ["cmd", "shift"], key: "," },
-            Windows: { modifiers: ["ctrl", "shift"], key: "," },
-          }}
+          shortcut={Keyboard.Shortcut.Common.CopyPath}
         />
 
         <Action.CopyToClipboard

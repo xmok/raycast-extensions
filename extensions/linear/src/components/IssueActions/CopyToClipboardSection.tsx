@@ -1,4 +1,4 @@
-import { ActionPanel, Action, getPreferenceValues } from "@raycast/api";
+import { ActionPanel, Action, getPreferenceValues, Keyboard } from "@raycast/api";
 
 import { IssueResult } from "../../api/getIssues";
 
@@ -27,10 +27,7 @@ export default function CopyToClipboardSection({ issue }: { issue: IssueResult }
           text: issue.url,
         }}
         title="Copy Formatted Issue URL"
-        shortcut={{
-          macOS: { modifiers: ["cmd", "shift"], key: "," },
-          Windows: { modifiers: ["ctrl", "shift"], key: "," },
-        }}
+        shortcut={Keyboard.Shortcut.Common.CopyPath}
       />
       <Action.CopyToClipboard content={issue.url} title="Copy Issue URL" />
       <Action.CopyToClipboard
@@ -44,10 +41,7 @@ export default function CopyToClipboardSection({ issue }: { issue: IssueResult }
       <Action.CopyToClipboard
         content={issue.branchName}
         title="Copy Git Branch Name"
-        shortcut={{
-          macOS: { modifiers: ["cmd", "shift"], key: "." },
-          Windows: { modifiers: ["ctrl", "shift"], key: "." },
-        }}
+        shortcut={Keyboard.Shortcut.Common.CopyName}
       />
       {issueCustomCopyAction && issueCustomCopyAction !== "" ? (
         <Action.CopyToClipboard

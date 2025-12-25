@@ -130,10 +130,7 @@ export default function IssueComments({ issue }: IssueCommentsProps) {
                     icon={Icon.Clipboard}
                     content={comment.url}
                     title="Copy Comment URL"
-                    shortcut={{
-                      macOS: { modifiers: ["cmd", "shift"], key: "," },
-                      Windows: { modifiers: ["ctrl", "shift"], key: "," },
-                    }}
+                    shortcut={Keyboard.Shortcut.Common.CopyPath}
                   />
 
                   <Action.CopyToClipboard

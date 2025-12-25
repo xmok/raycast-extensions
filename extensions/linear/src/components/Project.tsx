@@ -164,10 +164,7 @@ export default function Project({ project, priorities, me, mutateProjects }: Pro
               icon={Icon.Clipboard}
               content={project.url}
               title="Copy Project URL"
-              shortcut={{
-                macOS: { modifiers: ["cmd", "shift"], key: "," },
-                Windows: { modifiers: ["ctrl", "shift"], key: "," },
-              }}
+              shortcut={Keyboard.Shortcut.Common.CopyPath}
             />
 
             <Action.CopyToClipboard

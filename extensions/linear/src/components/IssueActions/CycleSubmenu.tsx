@@ -1,4 +1,4 @@
-import { Action, ActionPanel } from "@raycast/api";
+import { Action, ActionPanel, Keyboard } from "@raycast/api";
 import { useState } from "react";
 
 import { IssueResult } from "../../api/getIssues";
@@ -76,10 +76,7 @@ export default function CycleSubmenus({
       <ActionPanel.Submenu
         title="Move to Cycle"
         icon={{ source: { light: "light/cycle.svg", dark: "dark/cycle.svg" } }}
-        shortcut={{
-          macOS: { modifiers: ["cmd", "shift"], key: "c" },
-          Windows: { modifiers: ["ctrl", "shift"], key: "c" },
-        }}
+        shortcut={Keyboard.Shortcut.Common.Copy}
         onOpen={() => setLoad(true)}
       >
         <Action
@@ -107,10 +104,7 @@ export default function CycleSubmenus({
         <Action
           title="Move to Active Cycle"
           icon={{ source: { light: "light/active-cycle.svg", dark: "dark/active-cycle.svg" } }}
-          shortcut={{
-            macOS: { modifiers: ["cmd", "shift"], key: "c" },
-            Windows: { modifiers: ["ctrl", "shift"], key: "c" },
-          }}
+          shortcut={Keyboard.Shortcut.Common.Copy}
           onAction={() => moveToActiveCycle()}
         />
       ) : null}

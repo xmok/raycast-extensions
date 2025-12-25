@@ -53,10 +53,7 @@ export default function ProjectUpdates({ project }: ProjectUpdatesProps) {
                     icon={Icon.Clipboard}
                     content={update.url}
                     title="Copy Update URL"
-                    shortcut={{
-                      macOS: { modifiers: ["cmd", "shift"], key: "," },
-                      Windows: { modifiers: ["ctrl", "shift"], key: "," },
-                    }}
+                    shortcut={Keyboard.Shortcut.Common.CopyPath}
                   />
 
                   <Action.CopyToClipboard

@@ -314,10 +314,7 @@ function Notifications() {
                             title="Open Issue in Raycast"
                             target={<IssueDetail issue={notification.issue} priorities={priorities} me={me} />}
                             icon={Icon.RaycastLogoNeg}
-                            shortcut={{
-                              macOS: { modifiers: ["cmd", "shift"], key: "o" },
-                              Windows: { modifiers: ["ctrl", "shift"], key: "o" },
-                            }}
+                            shortcut={Keyboard.Shortcut.Common.OpenWith}
                           />
                         ) : null}
 
@@ -340,10 +337,7 @@ function Notifications() {
                             icon={Icon.Clipboard}
                             content={url}
                             title="Copy URL"
-                            shortcut={{
-                              macOS: { modifiers: ["cmd", "shift"], key: "," },
-                              Windows: { modifiers: ["ctrl", "shift"], key: "," },
-                            }}
+                            shortcut={Keyboard.Shortcut.Common.CopyPath}
                           />
                         </ActionPanel.Section>
                       ) : null}
