@@ -1,17 +1,19 @@
 import { LaunchProps } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
-import { applicationToFinder, clipboardToApplication, finderToApplication, Terminal } from "./utils";
+import { applicationToFinder, clipboardToApplication, finderToApplication, isTerminal } from "./utils";
 
 export default async function (props: LaunchProps<{ arguments: Arguments.Index }>) {
   const { from, to } = props.arguments;
   try {
-    if (from === to) throw new Error("Cannot open in the same place");
-    if ((from === "Finder" && to === "Clipboard") || (from !== "Finder" && from !== "Clipboard" && to !== "Clipboard"))
+    if (from === "Clipboard" && isTerminal(to)) {
+      await clipboardToApplication(to);
+    } else if (from === "Finder" && isTerminal(to)) {
+      await finderToApplication(to);
+    } else if (isTerminal(from) && to === "Finder") {
+      await applicationToFinder(from);
+    } else {
       throw new Error("Invalid combination");
-
-    if (from === "Clipboard") await clipboardToApplication(to as Terminal);
-    else if (from === "Finder") await finderToApplication(to as Terminal);
-    else await applicationToFinder(from);
+    }
   } catch (error) {
     await showFailureToast(error);
   }

@@ -192,8 +192,8 @@
           "required": true,
           "data": [
             {
-              "title": "Clipboard",
-              "value": "Clipboard"
+              "title": "Finder",
+              "value": "Finder"
             },
             {
               "title": "Ghostty",

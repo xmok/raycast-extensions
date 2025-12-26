@@ -16,6 +16,8 @@ export async function runAppleScript(script: string) {
 }
 
 export type Terminal = Exclude<Arguments.Index["to"], "Clipboard">;
+export const isTerminal = (val: string): val is Terminal => val !== "Clipboard" && val !== "Finder";
+
 async function checkApplication(name: Terminal) {
   const applications = await getApplications();
   const app = applications.find((app) => app.name === name);
@@ -58,14 +60,14 @@ export async function finderToApplication(name: Terminal) {
     end if
 
     tell application "Finder"
-        set pathList to (quoted form of POSIX path of (folder of the front window as alias))
+        set pathList to POSIX path of (folder of the front window as alias)
         return pathList
     end tell
   `;
   try {
     const directory = await runAppleScript(script);
     await checkApplication(name);
-    await open(directory, name);
+    await open(directory.trim(), name);
     await showToast(Toast.Style.Success, "Done");
   } catch (err) {
     await showFailureToast(err);
