@@ -36,7 +36,7 @@ export async function clipboardToApplication(name: Terminal) {
 export async function applicationToFinder(name: Terminal) {
   const script = `
     if application "${name}" is not running then
-      return "${name} is not running"
+      error "${name} is not running"
     end if
 
     tell application "Finder" to activate
