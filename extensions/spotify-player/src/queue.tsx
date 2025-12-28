@@ -12,7 +12,7 @@ function Queue() {
     return (
       <List isLoading={queueIsLoading}>
         <List.EmptyView
-          title="Unable to load devices"
+          title="Unable to load queue"
           description={getErrorMessage(queueError)}
           actions={
             <ActionPanel>

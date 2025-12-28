@@ -2,8 +2,9 @@
 
 ## [Show Error View in Queue] - {PR_MERGE_DATE}
 
-- When an error occurs in queue, show the error view
 - Add "queue" to README and mark as premium-only
+- When an error occurs in queue, show the error view
+- When an error occurs in devices, show the error view
 
 ## [Generate Playlist Improvements] - 2025-12-05
 
