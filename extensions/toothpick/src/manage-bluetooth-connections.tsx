@@ -29,7 +29,7 @@ export default function ManageBluetoothConnectionsView() {
   }, [devicesService]);
 
   return (
-    <List isLoading={loading}>
+    <List isLoading={loading && !error}>
       {error ? (
         <List.EmptyView
           icon={{ source: Icon.Warning, tintColor: Color.Red }}

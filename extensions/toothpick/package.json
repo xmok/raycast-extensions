@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@raycast/api": "^1.104.1",
-    "@raycast/utils": "^2.2.2",
     "fuzzball": "^2.1.2",
     "run-applescript": "^6.1.0"
   },
