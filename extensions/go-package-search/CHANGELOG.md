@@ -1,6 +1,6 @@
 # Go Package Search Changelog
 
-## [Caching + Copy Shortcuts] - {PR_MERGE_DATE}
+## [Caching + Copy Shortcuts] - 2025-12-28
 
 - `useCachedPromise` ensures repeated queries give immediate results
 - Added "Copy" `Keyboard` `Shortcut`s for package path and command
