@@ -1,5 +1,11 @@
 # Toothpick Changelog
 
+## [Keyboard Shortcuts to Copy] - {PR_MERGE_DATE}
+
+- Added `Keyboard` `Shortcut`s to copy `Action`s
+- Added error handling in manage command to account for missing `blueutil`
+- Modernized extension to use latest Raycast config
+
 ## [AI Tools] - 2025-02-21
 
 - Added AI tools for viewing, connecting and disconnecting Bluetooth devices.

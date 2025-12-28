@@ -22,7 +22,7 @@ export default async (props: { arguments: { nameOrMacAddress: string | undefined
   const device = devices.find(
     (device) =>
       ratio(device.name, props.arguments.nameOrMacAddress || "") > parseInt(fuzzyRatio) ||
-      device.macAddress === props.arguments.nameOrMacAddress
+      device.macAddress === props.arguments.nameOrMacAddress,
   );
 
   if (!device) {
