@@ -41,7 +41,8 @@
     "kartheesan05",
     "joshkat",
     "CaffeineCat",
-    "AdrianKokot"
+    "AdrianKokot",
+    "xmok"
   ],
   "pastContributors": [
     "bkeys818",
@@ -573,8 +574,8 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.103.0",
-    "@raycast/utils": "^2.2.1",
+    "@raycast/api": "^1.104.1",
+    "@raycast/utils": "^2.2.2",
     "@types/async-retry": "^1.4.9",
     "@types/node-fetch": "^2.6.13",
     "async-retry": "^1.3.3",
