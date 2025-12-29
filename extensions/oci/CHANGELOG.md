@@ -1,5 +1,12 @@
 # Oracle Cloud Changelog
 
+## [Manage Vaults, Secrets, Versions and Bundle] - {PR_MERGE_DATE}
+
+- view vaults
+    - view secrets
+        - view versions
+            - view bundle
+
 ## [Manage Bucket Objects + View NoSQL Database] - 2025-09-15
 
 - view NoSQL Databases
