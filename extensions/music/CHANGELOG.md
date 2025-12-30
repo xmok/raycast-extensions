@@ -1,5 +1,11 @@
 # Apple Music Changelog
 
+## [New Menu Bar Command] - {PR_MERGE_DATE}
+
+- Added a new menu bar command to see currently playing track (inspired by **Spotify**)
+- Fix "Play Library" command always loading when there is no current track
+- Modernized to use latest Raycast configuration
+
 ## [New Command] - 2025-08-04
 
 - Added a new command that removes the currently playing track from the Library.
