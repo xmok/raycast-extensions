@@ -50,22 +50,23 @@ export default function CurrentlyPlayingMenuBarCommand() {
   const isRunning = !isLoadingCurrentTrack && !!currentTrack;
   const isPlaying = playerState === PlayerState.PLAYING;
   const isLoading = isLoadingCurrentTrack || isLoadingPlayerState;
+
   if (!isRunning) {
-    return <OpenMusic isLoading={isLoading} />;
+    return <NothingPlaying title="Music needs to be opened" isLoading={isLoading} />;
   }
 
   if (!currentTrack) {
     return <NothingPlaying isLoading={isLoading} />;
   }
 
-  const currentlyPlayingData = currentTrack;
-  const item = currentlyPlayingData;
-  const { name, artist } = item;
+  const title = formatTitle({
+    name: currentTrack.name,
+    artistName: currentTrack.artist,
+    hideArtistName,
+    maxTextLength,
+    cleanupTitle,
+  });
 
-  let title = "";
-
-  const artistName = artist;
-  title = formatTitle({ name, artistName, hideArtistName, maxTextLength, cleanupTitle });
   return (
     <MenuBarExtra isLoading={isLoading} icon="icon.png" title={title} tooltip={title}>
       {isPlaying && (
@@ -120,7 +121,6 @@ export default function CurrentlyPlayingMenuBarCommand() {
           pipe(music.player.previous, handleTaskEitherError("Failed to rewind track", "Track rewinded"))()
         }
       />
-
       <MenuBarExtra.Section>
         <MenuBarExtra.Item
           icon="icon.png"
@@ -128,26 +128,6 @@ export default function CurrentlyPlayingMenuBarCommand() {
           shortcut={Keyboard.Shortcut.Common.Open}
           onAction={() => open("music://")}
         />
-      </MenuBarExtra.Section>
-      <MenuBarExtra.Section>
-        <MenuBarExtra.Item
-          title="Configure Command"
-          shortcut={{ macOS: { modifiers: ["cmd"], key: "," }, Windows: { modifiers: ["ctrl"], key: "," } }}
-          onAction={openCommandPreferences}
-        />
-      </MenuBarExtra.Section>
-    </MenuBarExtra>
-  );
-}
-
-function OpenMusic({ isLoading }: { title?: string; isLoading: boolean }) {
-  return hideIconWhenIdle ? null : (
-    <MenuBarExtra icon="icon.png" isLoading={isLoading}>
-      <MenuBarExtra.Section>
-        <MenuBarExtra.Item title="Music needs to be opened" />
-      </MenuBarExtra.Section>
-      <MenuBarExtra.Section>
-        <MenuBarExtra.Item title="Open Music" icon="icon.png" onAction={() => open("music:")} />
       </MenuBarExtra.Section>
       <MenuBarExtra.Section>
         <MenuBarExtra.Item
