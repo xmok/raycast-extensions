@@ -2,7 +2,7 @@
 
 ## [New Menu Bar Command] - {PR_MERGE_DATE}
 
-- Added a new menu bar command to see currently playing track (inspired by **Spotify**)
+- Added a new menu bar command to see currently playing track (inspired by **Spotify**) (ref: [Issue #24042](https://github.com/raycast/extensions/issues/24042))
 - Fix "Play Library" command always loading when there is no current track
 - Modernized to use latest Raycast configuration
 
