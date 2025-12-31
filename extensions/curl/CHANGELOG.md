@@ -1,5 +1,10 @@
 # cURL Changelog
 
+## [Fix: Valid POST Failing] - {PR_MERGE_DATE}
+
+- Fixed an issue where valid POST requests were failing (ref: [Issue #24065](https://github.com/raycast/extensions/issues/24065))
+- Updated more shortcuts
+
 ## [Fix: Windows Shortcuts] - 2025-09-18
 
 - Updated `@raycast/api` to the latest version
