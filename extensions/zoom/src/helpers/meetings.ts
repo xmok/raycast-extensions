@@ -94,7 +94,7 @@ export function getMeetingsSections(meetings?: Meeting[]) {
       acc[title].meetings.push(meeting);
 
       return acc;
-    }, {})
+    }, {}),
   );
 
   sections.sort((a, b) => compareAsc(a.date, b.date));

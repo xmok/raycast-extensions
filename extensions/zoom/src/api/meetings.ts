@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { getOAuthToken } from "../components/withZoomAuth";
 
 type BaseMeeting = {

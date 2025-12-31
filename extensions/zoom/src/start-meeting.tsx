@@ -1,13 +1,13 @@
 import { open, closeMainWindow, Clipboard, popToRoot, showToast, Toast, showHUD } from "@raycast/api";
 import { createInstantMeeting } from "./api/meetings";
 import { zoom } from "./components/withZoomAuth";
+import { getErrorMessage } from "./helpers/errors";
 
 export default async function Command() {
   const token = await zoom.authorize();
 
+  const toast = await showToast({ style: Toast.Style.Animated, title: "Creating meeting" });
   try {
-    await showToast({ style: Toast.Style.Animated, title: "Creating meeting" });
-
     const meeting = await createInstantMeeting(token);
 
     await open(meeting.join_url);
@@ -18,6 +18,8 @@ export default async function Command() {
     await closeMainWindow();
     await popToRoot();
   } catch (error) {
-    await showToast({ style: Toast.Style.Failure, title: "Failed to create meeting" });
+    toast.style = Toast.Style.Failure;
+    toast.title = "Failed to create meeting";
+    toast.message = getErrorMessage(error);
   }
 }

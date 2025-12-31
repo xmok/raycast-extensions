@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, open, Toast, Clipboard, showToast } from "@raycast/api";
+import { Action, ActionPanel, Form, open, Toast, Clipboard, showToast, Keyboard } from "@raycast/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { format } from "date-fns";
 import { createScheduledMeeting } from "../api/meetings";
@@ -37,7 +37,7 @@ export default function MeetingForm({ enableDrafts = false, draftValues }: Meeti
 
         toast.primaryAction = {
           title: "Open Meeting",
-          shortcut: { modifiers: ["cmd", "shift"], key: "o" },
+          shortcut: Keyboard.Shortcut.Common.OpenWith,
           onAction: () => {
             open(meeting.join_url);
             return toast.hide();
@@ -46,7 +46,7 @@ export default function MeetingForm({ enableDrafts = false, draftValues }: Meeti
 
         toast.secondaryAction = {
           title: "Copy Join URL",
-          shortcut: { modifiers: ["cmd", "shift"], key: "c" },
+          shortcut: Keyboard.Shortcut.Common.Copy,
           onAction: () => {
             Clipboard.copy(meeting.join_url);
             toast.title = "Copied to clipboard";

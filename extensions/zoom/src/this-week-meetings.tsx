@@ -11,7 +11,7 @@ function ThisWeekMeetings() {
 
   const sections = useMemo(() => {
     const thisWeekMeetings = data?.meetings?.filter(
-      (meeting) => "start_time" in meeting && isThisWeek(new Date(meeting.start_time))
+      (meeting) => "start_time" in meeting && isThisWeek(new Date(meeting.start_time)),
     );
     return getMeetingsSections(thisWeekMeetings);
   }, [data]);
