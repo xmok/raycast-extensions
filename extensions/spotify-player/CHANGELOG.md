@@ -1,6 +1,6 @@
 # Spotify Player Changelog
 
-## [Show Error View in Queue] - {PR_MERGE_DATE}
+## [Show Error View in Queue] - 2026-01-01
 
 - Add "queue" to README and mark as premium-only
 - When an error occurs in queue, show the error view
