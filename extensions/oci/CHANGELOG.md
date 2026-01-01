@@ -1,6 +1,6 @@
 # Oracle Cloud Changelog
 
-## [Manage Vaults, Secrets, Versions and Bundle] - {PR_MERGE_DATE}
+## [Manage Vaults, Secrets, Versions and Bundle] - 2026-01-01
 
 - view vaults
     - view secrets
