@@ -36,12 +36,14 @@
     {
       "name": "create-link",
       "title": "Create Link",
+      "subtitle": "Kutt",
       "description": "Create a new Kutt link",
       "mode": "view"
     },
     {
       "name": "search-links",
       "title": "Search Links",
+      "subtitle": "Kutt",
       "description": "Search, View, Delete, and Edit Kutt Links",
       "mode": "view"
     }
