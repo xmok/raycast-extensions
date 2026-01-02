@@ -1067,6 +1067,7 @@
 /extensions/kubernetes                                              @justin0u0
 /extensions/kubernetes-docs                                         @rpvsilva
 /extensions/kusto-reference                                         @olafhartong
+/extensions/kutt                                                    @xmok
 /extensions/laby-net                                                @niklaswa
 /extensions/lacinka                                                 @colorage
 /extensions/laliga                                                  @anhthang @pernielsentikaer
