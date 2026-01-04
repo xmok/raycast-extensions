@@ -125,6 +125,7 @@ function Command() {
               (m) => m.documentId !== memory.documentId,
             );
           },
+          shouldRevalidateAfter: false,
         });
       } catch (error) {
         console.error(error);
@@ -141,11 +142,11 @@ function Command() {
       throttle
       searchBarAccessory={
         <List.Dropdown tooltip="Filter" onChange={setFilter}>
-          <List.Dropdown.Item title="All" value="" />
+          <List.Dropdown.Item icon="extension-icon.png" title="All" value="" />
           {projects?.map((project) => (
             <List.Dropdown.Item
               key={project.id}
-              icon="command-icon.png"
+              icon="extension-icon.png"
               title={project.name}
               value={project.containerTag}
             />
