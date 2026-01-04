@@ -1,5 +1,10 @@
 # Keygen Changelog
 
+## [List & Add Environments + Environment Preference] - {PR_MERGE_DATE}
+
+- List Environments and Add new ones
+- Enter an optional Environment in `Preferences` (e.g. if you are using an Environment Token or want to target a specific environment)
+
 ## [List & Revoke API Tokens + Windows Support] - 2025-09-09
 
 - List API Tokens and Revoke old ones
