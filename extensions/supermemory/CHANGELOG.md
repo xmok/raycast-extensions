@@ -1,6 +1,6 @@
 # Supermemory Changelog
 
-## [Delete Memories + Filter by Project] - {PR_MERGE_DATE}
+## [Delete Memories + Filter by Project] - 2026-01-04
 
 - Delete memories via new `Action`
 - Filter memories by project (containerTag)
