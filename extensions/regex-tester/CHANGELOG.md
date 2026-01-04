@@ -1,6 +1,6 @@
 # Regex Tester Changelog
 
-## [Modernize] - {PR_MERGE_DATE}
+## [Modernize] - 2026-01-04
 
 - add icons
 - update `metadata` images
