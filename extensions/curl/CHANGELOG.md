@@ -1,6 +1,6 @@
 # cURL Changelog
 
-## [Fix: Valid POST Failing] - {PR_MERGE_DATE}
+## [Fix: Valid POST Failing] - 2026-01-05
 
 - Fixed an issue where valid POST requests were failing (ref: [Issue #24065](https://github.com/raycast/extensions/issues/24065))
 - Updated more shortcuts
