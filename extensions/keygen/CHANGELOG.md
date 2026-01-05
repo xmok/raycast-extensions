@@ -1,6 +1,6 @@
 # Keygen Changelog
 
-## [List & Add Environments + Environment Preference] - {PR_MERGE_DATE}
+## [List & Add Environments + Environment Preference] - 2026-01-05
 
 - List Environments and Add new ones
 - Enter an optional Environment in `Preferences` (e.g. if you are using an Environment Token or want to target a specific environment)
