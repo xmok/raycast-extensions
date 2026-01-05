@@ -1,6 +1,6 @@
 # Installed Extensions Changelog
 
-## [Cross-plaform Keyboard Shortcuts] - {PR_MERGE_DATE}
+## [Cross-plaform Keyboard Shortcuts] - 2026-01-05
 
 - Update `shortcut`s to be cross-platform
 
