@@ -1,6 +1,6 @@
 # Google Chrome Changelog
 
-## [Fixes] - {PR_MERGE_DATE}
+## [Fixes] - 2026-01-05
 
 - Fix infinite rendering with depth bug in new tab `Action`
 - Handle error in "new tab" `Command`
