@@ -1,5 +1,10 @@
 # Raindrop.io Extension Changelog
 
+## [Windows/Linux Compatibility] - 2026-01-06
+
+- Add platform check to skip AppleScript fallback on non-macOS systems
+- Show helpful error message directing users to install Raycast Browser Extension
+
 ## [Enhancements] - 2026-01-06
 
 - Added support for Dia browser.
