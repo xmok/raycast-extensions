@@ -1,6 +1,6 @@
 # Sourcetree Changelog
 
-## [Enhancements] - {PR_MERGE_DATE}
+## [Enhancements] - 2026-01-06
 
 - Modernize extension to use latest Raycast configuration
 - Fix crash when Sourcetree is not in default location on start
