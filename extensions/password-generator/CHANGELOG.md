@@ -1,5 +1,9 @@
 # Password Generator Changelog
 
+## [Remember numbers and characters] - {PR_MERGE_DATE}
+
+- Added `Preference` to remember the last used settings for "Use numbers?" and "Use special characters?" in `Generate Random Password`
+
 ## [Windows Support & Dependency Updates] - 2025-09-02
 
 - Added support for Raycast on Windows.
