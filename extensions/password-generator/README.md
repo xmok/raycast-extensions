@@ -6,7 +6,7 @@
 
 > Globally, you can enable "Hide Raycast after copy" in `Preferences`.
 
-## Generate Random Password
+## Generate Memorable Password
 
 Generates a password from 5–64 characters in length with options for case, numbers, special characters, and more.
 
@@ -14,7 +14,7 @@ Generates a password from 5–64 characters in length with options for case, num
 | --- | --- |
 | Remember custom format | Enable this to remember the last custom format between runs |
 
-## Generate Memorable Password
+## Generate Random Password
 
 Generates a password with a specified format, with options for words, special characters, and random characters and numbers.
 
