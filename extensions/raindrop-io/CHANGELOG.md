@@ -1,5 +1,9 @@
 # Raindrop.io Extension Changelog
 
+## [Enhancements] - 2026-01-06
+
+- Added support for Dia browser.
+
 ## [Quick Add Bookmark] - 2026-01-01
 
 - Added Quick Add Bookmark command for saving URLs instantly without opening a form
