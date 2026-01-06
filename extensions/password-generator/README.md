@@ -8,7 +8,7 @@
 
 ## Generate Memorable Password
 
-Generates a password from 5–64 characters in length with options for case, numbers, special characters, and more.
+Generates a password with a specified format, with options for words, special characters, and random characters and numbers.
 
 | Preference | Description |
 | --- | --- |
@@ -16,7 +16,7 @@ Generates a password from 5–64 characters in length with options for case, num
 
 ## Generate Random Password
 
-Generates a password with a specified format, with options for words, special characters, and random characters and numbers.
+Generates a password from 5–64 characters in length with options for case, numbers, special characters, and more.
 
 | Preference | Description |
 | --- | --- |
