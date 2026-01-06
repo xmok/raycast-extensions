@@ -1,5 +1,16 @@
 # Granola Changelog
 
+## [2.0.1] - 2026-01-06
+
+### ✨ Enhancements
+- Added "Open in Granola" action (⌘O) to open notes directly in the Granola app using deeplinks
+- Updated API client version from 6.72.0 to 6.476.0
+
+### 🧹 Cleanup
+- Updated README.md to reflect 2.0.0 changes
+- Removed deprecated `ai-notes.ts` tool (replaced by `get-note-content` in 2.0.0)
+- Removed unused `getCache.ts` utility (replaced by API-based fetching in 2.0.0)
+
 ## 2.0.0 - 2026-01-06
 
 ### 🚀 Exports & Notion
