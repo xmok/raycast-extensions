@@ -1,6 +1,6 @@
 # Linear Changelog
 
-## [Update Shortcuts] - {PR_MERGE_DATE}
+## [Update Shortcuts] - 2026-01-06
 
 - Updated shortcuts to make them cross-platform
 - Updated README with information
