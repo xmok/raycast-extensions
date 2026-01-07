@@ -1,17 +1,102 @@
-import { useCachedPromise } from "@raycast/utils";
+import { FormValidation, getFavicon, useCachedPromise, useForm } from "@raycast/utils";
 import { makeRequest } from "./mxroute";
-import { EmailAccount } from "./types";
-import { Color, Icon, List } from "@raycast/api";
+import { Domain, EmailAccount } from "./types";
+import { Action, ActionPanel, Alert, Color, confirmAlert, Form, Icon, List, showToast, Toast, useNavigation } from "@raycast/api";
+import { useState } from "react";
 
-export default function EmailAccounts({domain}:{domain:string}) {
-    const {isLoading,data: accounts} = useCachedPromise(async(domain: string) => {
+export default function EmailAccounts({selectedDomainName, domains}:{selectedDomainName:string, domains:Domain[]}) {
+    const [domain, setDomain] = useState(selectedDomainName);
+    const {isLoading,data: accounts, mutate} = useCachedPromise(async(domain: string) => {
         const accounts = await makeRequest<EmailAccount[]>(`domains/${domain}/email-accounts`);
         return accounts;
     },[domain],{
         initialData: []
     })
 
-    return <List isLoading={isLoading}>
-        {!isLoading && !accounts.length ? <List.EmptyView icon="📨" title="No email accounts found for this domain." /> : accounts.map(account => <List.Item key={account.username} icon={Icon.Envelope} title={account.username} subtitle={account.email} accessories={[{tag: account.suspended ? {value: "Suspended", color: Color.Red} : {value: "Active", color: Color.Green}}]} />)}
+    return <List isLoading={isLoading} searchBarPlaceholder="Search email accounts" searchBarAccessory={<List.Dropdown tooltip="Domain" onChange={setDomain} value={domain}>
+        {domains.map(domain => <List.Dropdown.Item key={domain.domain} icon={getFavicon(`https://${domain.domain}`, {fallback: Icon.Globe})} title={domain.domain} value={domain.domain} />)}
+    </List.Dropdown>}>
+        {!isLoading && !accounts.length ? <List.EmptyView icon="📨" title="No email accounts found for this domain." /> : accounts.map(account => <List.Item key={account.username} icon={Icon.Envelope} title={account.username} subtitle={account.email} accessories={[{tag: account.suspended ? {value: "Suspended", color: Color.Red} : {value: "Active", color: Color.Green}}]} actions={<ActionPanel>
+            <Action.Push icon={Icon.Plus} title="Add New Email Account" target={<AddEmailAccount domain={domain} />} />
+            <Action icon={Icon.Trash} title="Delete Email Account" onAction={() => confirmAlert({
+                icon: {source: Icon.Trash, tintColor: Color.Red},
+                title: "Delete Email Account",
+                message: `Are you sure you want to delete ${account.email}?`,
+                primaryAction: {
+                    style: Alert.ActionStyle.Destructive,
+                    title: "Delete",
+                    async onAction() {
+                        const toast = await showToast(Toast.Style.Animated, "Deleting", account.email)
+                        try {
+                            await mutate(
+                                makeRequest(`domains/${domain}/email-accounts/${account.username}`, {method: "DELETE"}), {
+                                    optimisticUpdate(data) {
+                                        return data.filter(e => e.username !== account.username);
+                                    },
+                                    shouldRevalidateAfter : false
+                                }
+                            )
+                            toast.style = Toast.Style.Success;
+                            toast.title = "Deleted";
+                        } catch (error) {
+                            toast.style = Toast.Style.Failure;
+                            toast.title = "Failed";
+                            toast.message = `${error}`
+                        }  
+                    },}
+            })} style={Action.Style.Destructive} />
+        </ActionPanel>} />)}
     </List>
+}
+
+function AddEmailAccount({domain}:{domain:string}) {
+    type FormValues = {
+        username: string,
+        password: string,
+        quota: string,
+        limit: string
+    }
+    const {pop} = useNavigation()
+    const {handleSubmit, itemProps} = useForm<FormValues>({
+        async onSubmit(values) {
+              const toast = await showToast(Toast.Style.Animated, "Adding", values.username)
+              try {
+                await makeRequest(`domains/${domain}/email-accounts`, {method: "POST", body: JSON.stringify(values)});
+                toast.style = Toast.Style.Success;
+                toast.title = "Added";
+                pop();
+              } catch (error) {
+                toast.style = Toast.Style.Failure;
+                toast.title = "Failed";
+                toast.message = `${error}`
+              }
+            },
+        initialValues: {
+            quota: "1024",
+            limit: "9600"
+        },
+        validation: {
+            username: FormValidation.Required,
+            password: FormValidation.Required,
+            quota(value) {
+                if (!value) return "The item is required";
+                if (!Number(value) || Number(value) < 0) return "Must be greater than 0";
+            },
+            limit(value) {
+                if (!value) return "The item is required";
+                if (!Number(value) || Number(value) < 0) return "Must be greater than 0";
+            },
+        }
+    })
+
+    return <Form actions={<ActionPanel>
+        <Action.SubmitForm icon={Icon.Plus} title="Create Account" onSubmit={handleSubmit} />
+    </ActionPanel>}>
+    <Form.TextField title="Username" placeholder="username" info="Local part of email (the part before @)
+" {...itemProps.username} />
+    <Form.Description text={`@${domain}`} />
+    <Form.PasswordField title="Password" placeholder="Minimum 6 characters" {...itemProps.password} />
+    <Form.TextField title="Quota (MB)" info="0 for unlimited" {...itemProps.quota} />
+    <Form.TextField title="Send Limit/Day" info="Max 9600/day (400/hr)" {...itemProps.limit} />
+    </Form>
 }

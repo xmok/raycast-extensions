@@ -14,6 +14,7 @@ export const makeRequest = async<T,>(endpoint: string, options?: RequestInit) =>
     },
     body: options?.body
   })
+  if (response.status===204)  return undefined as T
   const result = await response.json() as SuccessResponse<string[]> | ErrorResponse;
   if (!result.success) throw new Error(result.error.message);
   return result.data as T;

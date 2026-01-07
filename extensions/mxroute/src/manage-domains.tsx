@@ -19,7 +19,7 @@ export default function ManageDomains() {
       {tag: {value: "Mail", color: domain.mail_hosting ? Color.Green : Color.Red}},
       {tag: {value: "SSL", color: domain.ssl_enabled ? Color.Green : Color.Red}}
     ]} actions={<ActionPanel>
-      <Action.Push icon={Icon.Envelope} title="Email Accounts" target={<EmailAccounts domain={domain.domain} />} />
+      <Action.Push icon={Icon.Envelope} title="Email Accounts" target={<EmailAccounts selectedDomainName={domain.domain} domains={domains} />} />
       <Action.Push icon={Icon.Plus} title="Add New Domain" target={<AddDomain />} onPop={mutate} shortcut={Keyboard.Shortcut.Common.New} />
     </ActionPanel>} />)}
   </List>
