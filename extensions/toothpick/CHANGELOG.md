@@ -1,6 +1,6 @@
 # Toothpick Changelog
 
-## [Keyboard Shortcuts to Copy] - {PR_MERGE_DATE}
+## [Keyboard Shortcuts to Copy] - 2026-01-08
 
 - Added `Keyboard` `Shortcut`s to copy `Action`s
 - Added error handling in manage command to account for missing `blueutil`

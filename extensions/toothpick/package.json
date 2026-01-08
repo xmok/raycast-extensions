@@ -423,5 +423,8 @@
     "System"
   ],
   "license": "MIT",
-  "icon": "icon.png"
+  "icon": "icon.png",
+  "platforms": [
+    "macOS"
+  ]
 }
