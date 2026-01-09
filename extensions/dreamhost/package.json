@@ -2,8 +2,8 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "dreamhost",
   "title": "DreamHost",
-  "description": "",
-  "icon": "extension-icon.png",
+  "description": "Manage DreamHost DNS Records",
+  "icon": "dreamhost.png",
   "author": "xmok",
   "platforms": [
     "macOS",
@@ -24,9 +24,9 @@
   ],
   "commands": [
     {
-      "name": "search-domains",
-      "title": "Search Domains",
-      "description": "",
+      "name": "manage-dns-records",
+      "title": "Manage DNS Records",
+      "description": "Search for domains and manage DNS records",
       "mode": "view"
     }
   ],
