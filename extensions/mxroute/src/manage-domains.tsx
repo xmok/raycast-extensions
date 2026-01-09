@@ -3,6 +3,7 @@ import { FormValidation, getFavicon, useCachedPromise, useForm } from "@raycast/
 import { Domain } from "./types";
 import { makeRequest } from "./mxroute";
 import EmailAccounts from "./email-accounts";
+import EmailForwarders from "./email-forwarders";
 
 export default function ManageDomains() {
   const {isLoading, data:domains, mutate} = useCachedPromise(async() => {
@@ -20,6 +21,7 @@ export default function ManageDomains() {
       {tag: {value: "SSL", color: domain.ssl_enabled ? Color.Green : Color.Red}}
     ]} actions={<ActionPanel>
       <Action.Push icon={Icon.Envelope} title="Email Accounts" target={<EmailAccounts selectedDomainName={domain.domain} domains={domains} />} />
+      <Action.Push icon={Icon.Forward} title="Email Forwarders" target={<EmailForwarders selectedDomainName={domain.domain} domains={domains} />} />
       <Action.Push icon={Icon.Plus} title="Add New Domain" target={<AddDomain />} onPop={mutate} shortcut={Keyboard.Shortcut.Common.New} />
     </ActionPanel>} />)}
   </List>

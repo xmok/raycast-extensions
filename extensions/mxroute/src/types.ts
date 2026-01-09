@@ -15,6 +15,13 @@ export type EmailAccount = {
       "suspended": boolean
 }
 
+export type EmailForwarder = {
+    alias: string
+    email: string
+    destinations: string[]
+
+}
+
 export type SuccessResponse<T> = {
     success: true;
     data: T;
