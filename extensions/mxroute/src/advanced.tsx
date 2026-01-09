@@ -1,0 +1,49 @@
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { useCachedPromise, useForm } from "@raycast/utils";
+import { CatchAll, CatchAllType } from "./types";
+import { makeRequest } from "./mxroute";
+
+export default function Advanced({selectedDomainName}:{selectedDomainName:string}) {
+    type FormValues = {
+        type: string
+        address?: string
+    }
+        const {pop} = useNavigation()
+    const {isLoading,data: catchAll} = useCachedPromise(async(domain: string) => {
+        const catchAll = await makeRequest<CatchAll>(`domains/${domain}/catch-all`);
+        return catchAll;
+    },[selectedDomainName],{
+        initialData: []
+    })
+    const {handleSubmit, itemProps,values} = useForm<FormValues>({
+        async onSubmit(values) {
+            const toast = await showToast(Toast.Style.Animated, "Saving")
+            try {
+                await makeRequest(`domains/${selectedDomainName}/catch-all`, {method: "PATCH", body: JSON.stringify(values)});
+                toast.style = Toast.Style.Success;
+                toast.title = "Saved";
+                pop();
+            } catch (error) {
+                toast.style = Toast.Style.Failure;
+                toast.title = "Failed";
+                toast.message = `${error}`
+            }
+        },
+        initialValues: {
+            type: catchAll?.type,
+            address: catchAll?.address || undefined
+        }
+    })
+    return <Form isLoading={isLoading} actions={<ActionPanel>
+        <Action.SubmitForm icon={Icon.SaveDocument} title="Save Changes" onSubmit={handleSubmit} />
+    </ActionPanel>}>
+
+        {catchAll && <>
+        <Form.Dropdown title="Catch-All Email" info={`Configure what happens when an email is sent to a non-existent address at ${selectedDomainName}.`} {...itemProps.type}>
+            <Form.Dropdown.Item title="Reject (Recommended)" value={CatchAllType.Reject} />
+            <Form.Dropdown.Item title="Discard Silently" value={CatchAllType.DiscardSilently} />
+            <Form.Dropdown.Item title="Forward to Address" value={CatchAllType.Forward} />
+        </Form.Dropdown>
+        {values.type===CatchAllType.Forward && <Form.TextField title="Forward to Address" placeholder="catchall@example.com" info="All emails to non-existent addresses are forwarded to a specific email address." {...itemProps.address} />}</>}
+    </Form>
+}

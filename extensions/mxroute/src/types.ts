@@ -1,3 +1,14 @@
+export enum CatchAllType {
+    Reject="fail",
+    DiscardSilently="blackhole",
+    Forward="address",
+}
+export type CatchAll = {
+    type: CatchAllType
+address: string | null
+description: string
+}
+
 export type Domain = {
     "domain": string,
     "mail_hosting": boolean

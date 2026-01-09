@@ -3,7 +3,7 @@
   "name": "mxroute",
   "title": "MXroute",
   "description": "",
-  "icon": "extension-icon.png",
+  "icon": "mxroute.png",
   "author": "xmok",
   "platforms": [
     "macOS",

@@ -4,6 +4,7 @@ import { Domain } from "./types";
 import { makeRequest } from "./mxroute";
 import EmailAccounts from "./email-accounts";
 import EmailForwarders from "./email-forwarders";
+import Advanced from "./advanced";
 
 export default function ManageDomains() {
   const {isLoading, data:domains, mutate} = useCachedPromise(async() => {
@@ -22,6 +23,7 @@ export default function ManageDomains() {
     ]} actions={<ActionPanel>
       <Action.Push icon={Icon.Envelope} title="Email Accounts" target={<EmailAccounts selectedDomainName={domain.domain} domains={domains} />} />
       <Action.Push icon={Icon.Forward} title="Email Forwarders" target={<EmailForwarders selectedDomainName={domain.domain} domains={domains} />} />
+      <Action.Push icon={Icon.Gear} title="Advanced" target={<Advanced selectedDomainName={domain.domain} />} />
       <Action.Push icon={Icon.Plus} title="Add New Domain" target={<AddDomain />} onPop={mutate} shortcut={Keyboard.Shortcut.Common.New} />
     </ActionPanel>} />)}
   </List>
