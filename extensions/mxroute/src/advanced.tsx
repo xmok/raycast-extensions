@@ -34,6 +34,11 @@ export default function Advanced({ selectedDomainName }: { selectedDomainName: s
       type: catchAll?.type,
       address: catchAll?.address || undefined,
     },
+    validation: {
+      address(value) {
+        if (values.type === CatchAllType.Forward && !value) return "The item is required";
+      },
+    },
   });
 
   return !catchAll ? (

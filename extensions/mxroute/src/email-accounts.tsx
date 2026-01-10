@@ -156,11 +156,13 @@ function AddEmailAccount({ domain }: { domain: string }) {
       password: FormValidation.Required,
       quota(value) {
         if (!value) return "The item is required";
-        if (!Number(value) || Number(value) < 0) return "Must be greater than 0";
+        const num = Number(value);
+        if (isNaN(num) || num < 0) return "Must be 0 or greater";
       },
       limit(value) {
         if (!value) return "The item is required";
-        if (!Number(value) || Number(value) < 0) return "Must be greater than 0";
+        const num = Number(value);
+        if (isNaN(num) || num < 0) return "Must be 0 or greater";
       },
     },
   });
@@ -176,8 +178,7 @@ function AddEmailAccount({ domain }: { domain: string }) {
       <Form.TextField
         title="Username"
         placeholder="username"
-        info="Local part of email (the part before @)
-"
+        info="Local part of email (the part before @)"
         {...itemProps.username}
       />
       <Form.Description text={`@${domain}`} />

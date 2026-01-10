@@ -43,7 +43,7 @@ export default function ManageDomains() {
           title={domain.domain}
           icon={getFavicon(`https://${domain.domain}`, { fallback: Icon.Globe })}
           accessories={[
-            { icon: Icon[`Number${String(domain.pointers).padStart(2, "0")}` as keyof typeof Icon] },
+            { icon: Icon[`Number${String(domain.pointers.length).padStart(2, "0")}` as keyof typeof Icon] },
             { tag: { value: "Mail", color: domain.mail_hosting ? Color.Green : Color.Red } },
             { tag: { value: "SSL", color: domain.ssl_enabled ? Color.Green : Color.Red } },
           ]}

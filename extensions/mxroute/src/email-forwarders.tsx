@@ -133,7 +133,14 @@ function AddEmailForwarder({ domain }: { domain: string }) {
       try {
         const { alias, type } = values;
         const destinations =
-          type === "address" ? values.destinations.split(",") : type === "fail" ? [":fail:"] : [":blackhole:"];
+          type === "address"
+            ? values.destinations
+                .split(/[,\n]+/)
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : type === "fail"
+              ? [":fail:"]
+              : [":blackhole:"];
         await mxroute.domains.forwarders.create(domain, {
           alias,
           destinations,
@@ -149,6 +156,9 @@ function AddEmailForwarder({ domain }: { domain: string }) {
     },
     validation: {
       alias: FormValidation.Required,
+      destinations(value) {
+        if (values.type === "address" && !value) return "The item is required";
+      },
     },
   });
 
