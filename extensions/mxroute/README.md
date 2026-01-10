@@ -24,9 +24,10 @@ This is a [Raycast](https://raycast.com/) extension for managing [MXroute](https
 
 ---
 
-### Looking for more emal extensions? Try these:
+### Looking for more email extensions? Try these:
 
 <a title="Install inbound Raycast Extension" href="https://www.raycast.com/xmok/inbound"><img src="https://www.raycast.com/xmok/inbound/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
+<a title="Install mailersend Raycast Extension" href="https://www.raycast.com/xmok/mailersend"><img src="https://www.raycast.com/xmok/mailersend/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
 <a title="Install migadu Raycast Extension" href="https://www.raycast.com/xmok/migadu"><img src="https://www.raycast.com/xmok/migadu/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
 <a title="Install purelymail Raycast Extension" href="https://www.raycast.com/xmok/purelymail"><img src="https://www.raycast.com/xmok/purelymail/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
 <a title="Install resend Raycast Extension" href="https://www.raycast.com/xmok/resend"><img src="https://www.raycast.com/xmok/resend/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
@@ -36,3 +37,7 @@ This is a [Raycast](https://raycast.com/) extension for managing [MXroute](https
 
 <a title="Install cpanel Raycast Extension" href="https://www.raycast.com/xmok/cpanel"><img src="https://www.raycast.com/xmok/cpanel/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
 <a title="Install directadmin-reseller Raycast Extension" href="https://www.raycast.com/xmok/directadmin-reseller"><img src="https://www.raycast.com/xmok/directadmin-reseller/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
+
+### Interested in self-hosting? Try this:
+
+<a title="Install sendportal Raycast Extension" href="https://www.raycast.com/xmok/sendportal"><img src="https://www.raycast.com/xmok/sendportal/install_button@2x.png?v=1.1" height="64" alt="" style="height: 64px;"></a>
