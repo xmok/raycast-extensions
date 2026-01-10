@@ -7,6 +7,8 @@ import {
   EmailAccount,
   CreateEmailAccountRequest,
   EmailForwarder,
+  CreateEmailForwarderRequest,
+  CatchAll,
 } from "./types";
 
 const { api_key, server, username } = getPreferenceValues<Preferences>();
@@ -40,14 +42,19 @@ export const mxroute = {
         makeRequest(`domains/${domain}/email-accounts/${username}`, { method: "DELETE" }),
       list: (domain: string) => makeRequest<EmailAccount[]>(`domains/${domain}/email-accounts`),
     },
+    catchAll: {
+      get: (domain: string) => makeRequest<CatchAll>(`domains/${domain}/catch-all`),
+      set: (domain: string, values: { type: string; address?: string }) =>
+        makeRequest(`domains/${domain}/catch-all`, { method: "POST", body: JSON.stringify(values) }),
+    },
     dns: {
       get: (domain: string) => makeRequest<DNSInfo>(`domains/${domain}/dns`),
     },
     forwarders: {
-      create: (domain: string, values: CreateEmailAccountRequest) =>
-        makeRequest(`domains/${domain}/email-accounts`, { method: "POST", body: JSON.stringify(values) }),
-      delete: (domain: string, username: string) =>
-        makeRequest(`domains/${domain}/email-accounts/${username}`, { method: "DELETE" }),
+      create: (domain: string, values: CreateEmailForwarderRequest) =>
+        makeRequest(`domains/${domain}/forwarders`, { method: "POST", body: JSON.stringify(values) }),
+      delete: (domain: string, alias: string) =>
+        makeRequest(`domains/${domain}/forwarders/${alias}`, { method: "DELETE" }),
       list: (domain: string) => makeRequest<EmailForwarder[]>(`domains/${domain}/forwarders`),
     },
   },

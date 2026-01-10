@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Detail, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { useCachedPromise, useForm } from "@raycast/utils";
 import { CatchAllType } from "./types";
 import { mxroute } from "./mxroute";
@@ -35,7 +35,10 @@ export default function Advanced({ selectedDomainName }: { selectedDomainName: s
       address: catchAll?.address || undefined,
     },
   });
-  return (
+
+  return !catchAll ? (
+    <Detail isLoading={isLoading} markdown="Fetching Catch All Settings" />
+  ) : (
     <Form
       isLoading={isLoading}
       actions={
@@ -44,28 +47,25 @@ export default function Advanced({ selectedDomainName }: { selectedDomainName: s
         </ActionPanel>
       }
     >
-      {catchAll && (
-        <>
-          <Form.Description title="Description" text={catchAll.description} />
-          <Form.Separator />
-          <Form.Dropdown
-            title="Catch-All Email"
-            info={`Configure what happens when an email is sent to a non-existent address at ${selectedDomainName}.`}
-            {...itemProps.type}
-          >
-            <Form.Dropdown.Item title="Reject (Recommended)" value={CatchAllType.Reject} />
-            <Form.Dropdown.Item title="Discard Silently" value={CatchAllType.DiscardSilently} />
-            <Form.Dropdown.Item title="Forward to Address" value={CatchAllType.Forward} />
-          </Form.Dropdown>
-          {values.type === CatchAllType.Forward && (
-            <Form.TextField
-              title="Forward to Address"
-              placeholder="catchall@example.com"
-              info="All emails to non-existent addresses are forwarded to a specific email address."
-              {...itemProps.address}
-            />
-          )}
-        </>
+      <Form.Description text={selectedDomainName} />
+      <Form.Description title="Description" text={catchAll.description} />
+      <Form.Separator />
+      <Form.Dropdown
+        title="Catch-All Email"
+        info={`Configure what happens when an email is sent to a non-existent address at ${selectedDomainName}.`}
+        {...itemProps.type}
+      >
+        <Form.Dropdown.Item title="Reject (Recommended)" value={CatchAllType.Reject} />
+        <Form.Dropdown.Item title="Discard Silently" value={CatchAllType.DiscardSilently} />
+        <Form.Dropdown.Item title="Forward to Address" value={CatchAllType.Forward} />
+      </Form.Dropdown>
+      {values.type === CatchAllType.Forward && (
+        <Form.TextField
+          title="Forward to Address"
+          placeholder="catchall@example.com"
+          info="All emails to non-existent addresses are forwarded to a specific email address."
+          {...itemProps.address}
+        />
       )}
     </Form>
   );

@@ -65,8 +65,8 @@
   ],
   "commands": [
     {
-      "name": "manage-domains",
-      "title": "Manage Domains",
+      "name": "index",
+      "title": "Manage MXroute",
       "description": "Manage your MXroute domains, accounts, forwarders",
       "mode": "view"
     }

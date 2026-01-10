@@ -133,7 +133,7 @@ function AddEmailForwarder({ domain }: { domain: string }) {
       try {
         const { alias, type } = values;
         const destinations =
-          type === "email" ? values.destinations.split(",") : type === "reject" ? [":fail:"] : ["blackhole"];
+          type === "address" ? values.destinations.split(",") : type === "fail" ? [":fail:"] : [":blackhole:"];
         await mxroute.domains.forwarders.create(domain, {
           alias,
           destinations,
@@ -170,11 +170,11 @@ function AddEmailForwarder({ domain }: { domain: string }) {
       <Form.Description text={`@${domain}`} />
 
       <Form.Dropdown title="Destination Type" {...itemProps.type}>
-        <Form.Dropdown.Item title="Forward to Email(s)" value="email" />
-        <Form.Dropdown.Item title="Reject" value="reject" />
-        <Form.Dropdown.Item title="Discard Silently" value="discard" />
+        <Form.Dropdown.Item title="Forward to Email(s)" value="address" />
+        <Form.Dropdown.Item title="Reject" value="fail" />
+        <Form.Dropdown.Item title="Discard Silently" value="blackhole" />
       </Form.Dropdown>
-      {values.type === "email" && (
+      {values.type === "address" && (
         <Form.TextArea
           title="Recipients"
           placeholder="Enter email addresses (one per line or comma-separated)"
