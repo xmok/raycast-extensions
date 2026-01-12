@@ -1,8 +1,8 @@
 # Terminal Finder Changelog
 
-## [Better "Finder Not Open" Error] - {PR_MERGE_DATE}
+## [Better "Finder" Errors] - {PR_MERGE_DATE}
 
-- Show a better error message when no **Finder** window open (ref: [Issue #24386](https://github.com/raycast/extensions/issues/24386))
+- Show a better error message when no **Finder** window open or when trying to pass non-filesystem folder (e.g. **Recents**) (ref: [Issue #24386](https://github.com/raycast/extensions/issues/24386))
 
 ## [Fix Kitty Casing] - 2026-01-12
 
