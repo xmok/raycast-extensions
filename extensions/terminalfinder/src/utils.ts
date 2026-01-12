@@ -61,12 +61,11 @@ export async function finderToApplication(name: Terminal) {
 
     tell application "Finder"
       if (count of Finder windows) = 0 then error "No Finder window open"
-      
       try
         set pathList to POSIX path of (folder of the front window as alias)
         return pathList
       on error
-        error "Front window is not a real filesystem folder"
+        error "Could not access Finder window path"
       end try
     end tell
   `;
