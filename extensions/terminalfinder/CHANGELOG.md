@@ -1,5 +1,9 @@
 # Terminal Finder Changelog
 
+## [Better "Finder Not Open" Error] - {PR_MERGE_DATE}
+
+- Show a better error message when no **Finder** window open (ref: [Issue #24386](https://github.com/raycast/extensions/issues/24386))
+
 ## [Fix Kitty Casing] - 2026-01-12
 
 - Fix "Kitty" terminal not working due to different casing (ref: [Issue #24377](https://github.com/raycast/extensions/issues/24377))
