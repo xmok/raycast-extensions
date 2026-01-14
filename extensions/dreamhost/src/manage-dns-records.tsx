@@ -54,7 +54,7 @@ export default function ManageDNSRecords() {
   const {
     isLoading,
     data: records,
-    revalidate,
+    mutate,
   } = useFetch(buildApiUrl({ cmd: "dns-list_records", params: {} }), {
     parseResponse: parseApiResponse<DNSRecord[]>,
     initialData: [],
@@ -86,7 +86,7 @@ export default function ManageDNSRecords() {
                     icon={Icon.Plus}
                     title="Add Record"
                     target={<AddRecord zones={Object.keys(grouped)} />}
-                    onPop={revalidate}
+                    onPop={mutate}
                   />
                   <Action
                     icon={Icon.Trash}
@@ -101,18 +101,29 @@ export default function ManageDNSRecords() {
                           title: "Remove",
                           async onAction() {
                             const toast = await showToast(Toast.Style.Animated, "Removing");
+                            console.log(record, records);
                             try {
-                              const response = await fetch(
-                                buildApiUrl({
-                                  cmd: "dns-remove_record",
-                                  params: { record: record.record, type: record.type, value: record.value },
-                                }),
+                              const result: "record_removed" = await mutate(
+                                fetch(
+                                  buildApiUrl({
+                                    cmd: "dns-remove_record",
+                                    params: { record: "record.record", type: record.type, value: record.value },
+                                  }),
+                                ).then(parseApiResponse),
+                                {
+                                  optimisticUpdate(data) {
+                                    return data.filter(
+                                      (r) =>
+                                        r.record === record.record &&
+                                        r.type === record.type &&
+                                        r.value === record.value,
+                                    );
+                                  },
+                                },
                               );
-                              const result = await parseApiResponse<"record_removed">(response);
                               toast.style = Toast.Style.Success;
                               toast.title = "Removed";
                               toast.message = result;
-                              revalidate();
                             } catch (error) {
                               toast.style = Toast.Style.Failure;
                               toast.title = "Failed";
@@ -188,7 +199,7 @@ function AddRecord({ zones }: { zones: string[] }) {
         </ActionPanel>
       }
     >
-      <Form.TextField title="Host" {...itemProps.host} />
+      <Form.TextField title="Host" placeholder="@" {...itemProps.host} />
       <Form.Dropdown title="Zone" {...itemProps.zone}>
         {zones.map((zone) => (
           <Form.Dropdown.Item
@@ -199,7 +210,7 @@ function AddRecord({ zones }: { zones: string[] }) {
           />
         ))}
       </Form.Dropdown>
-      <Form.Description title="" text={`${values.host || "@"}.${values.zone}`} />
+      <Form.Description title="" text={`${(values.host || "@") === "@" ? "" : values.host + "."}${values.zone}`} />
       <Form.Dropdown title="Type" info={TYPES[values.type]} {...itemProps.type}>
         {Object.keys(TYPES).map((type) => (
           <Form.Dropdown.Item key={type} title={type} value={type} />
