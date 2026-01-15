@@ -1,5 +1,11 @@
 # Changelog
 
+## [Fixes] - 2026-01-15
+
+### Fixed
+
+- **Request Timeout**: Fixed error where request to get window list would timeout after 5 seconds.
+
 ## [Encoding Fixes] - 2026-01-15
 
 ### Fixed
