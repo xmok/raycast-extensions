@@ -5,7 +5,13 @@
   "description": "Find and use self-hosted icons from selfh.st service",
   "icon": "icon.png",
   "author": "greirson",
-  "categories": ["Design Tools", "Developer Tools"],
+  "contributors": [
+    "xmok"
+  ],
+  "categories": [
+    "Design Tools",
+    "Developer Tools"
+  ],
   "license": "MIT",
   "version": "1.0.0",
   "keywords": [
@@ -29,8 +35,8 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.97.0",
-    "@raycast/utils": "^1.19.1",
+    "@raycast/api": "^1.104.1",
+    "@raycast/utils": "^2.2.2",
     "react": "^19.1.0"
   },
   "devDependencies": {
