@@ -1,6 +1,6 @@
 # Selfh.st Icons Changelog
 
-## [1.0.1] - {PR_MERGE_DATE}
+## [1.0.1] - 2026-01-17
 
 - Fix icons not loading (ref: [Issue #24545](https://github.com/raycast/extensions/issues/24545))
 
