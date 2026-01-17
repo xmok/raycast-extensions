@@ -1,6 +1,6 @@
 # Postiz Changelog
 
-## [Yearly Display + Content Search] - {PR_MERGE_DATE}
+## [Yearly Display + Content Search] - 2026-01-17
 
 In Search Posts **v2**:
 - Searching now does a simple content inclusion search in post content rather than title
