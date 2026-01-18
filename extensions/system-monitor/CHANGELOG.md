@@ -2,9 +2,9 @@
 
 ## [Toggle Display Mode + Modernize + Add README] - {PR_MERGE_DATE}
 
-- Add a preference to toggle between free and used display modes for CPU, Memory and more.
+- Add a preference to toggle between free and used display modes for CPU, Memory and more (ref: [Issue #24612](https://github.com/raycast/extensions/issues/24612)).
 - Modernize extension to use latest Raycast configuration.
-- Add README.md
+- Add README.md.
 
 ## [New Additions] - 2025-08-05
 
