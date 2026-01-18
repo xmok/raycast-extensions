@@ -109,6 +109,24 @@ function BusinessInvoices({ business }: { business: Business }) {
           {filteredInvoices.map((invoice) => {
             const title = `${invoice.title} - ${invoice.invoiceNumber}`;
             const markdown = `# ${title}
+| BILL TO | - | - | - |
+| ------- | - | - | - |
+| **${invoice.customer.name}** | | **Invoice Date** | ${new Date(invoice.invoiceDate).toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric", })} |
+| **${invoice.customer.name}** | | **Payment Due** | ${new Date(invoice.dueDate).toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric", })} |
+| **${invoice.customer.name}** | | **Amount Due** (${invoice.amountDue.currency.code}) | ${invoice.amountDue.currency.symbol}${invoice.amountDue.value}
+
+
+### Invoice Date: ${invoice.invoiceDate}
+### Payment Due: ${invoice.dueDate}
+### Amount Due (${invoice.amountDue.currency.code}): ${invoice.amountDue.currency.symbol}${invoice.amountDue.value}
+
+| - | - |
+| - | - |
+| Invoice Date | ${invoice.invoiceDate} |
+| Payment Due | ${invoice.dueDate} |
+| Amount Due (${invoice.amountDue.currency.code}) | ${invoice.amountDue.currency.symbol}${invoice.amountDue.value}
+
+
 | ${invoice.itemTitle} | ${invoice.unitTitle} | ${invoice.priceTitle} | ${invoice.amountTitle} |
 |----------------------|----------------------|-----------------------|------------------------|
 ${invoice.items.map((item) => `| ${item.product.name} | ${item.quantity} | ${item.unitPrice} | ${item.subtotal.currency.symbol}${calculateInvoiceItemAmount(item)}`).join(`\n`)}
