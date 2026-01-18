@@ -64,6 +64,7 @@ export default function ManageDNSRecords() {
     (acc, item) => {
       if (!acc[item.zone]) acc[item.zone] = [];
       acc[item.zone].push(item);
+      // console.log(item)
       return acc;
     },
     {} as { [zone: string]: DNSRecord[] },
@@ -76,7 +77,7 @@ export default function ManageDNSRecords() {
           {grouped[zone].map((record, index) => (
             <List.Item
               key={index}
-              icon={Icon.Text}
+              icon={getFavicon(`https://${record.zone}`)}
               title={record.record === record.zone ? "@" : record.record.split(".")[0]}
               subtitle={record.zone}
               accessories={[{ text: record.value }, { tag: record.type }]}
@@ -101,22 +102,22 @@ export default function ManageDNSRecords() {
                           title: "Remove",
                           async onAction() {
                             const toast = await showToast(Toast.Style.Animated, "Removing");
-                            console.log(record, records);
                             try {
                               const result: "record_removed" = await mutate(
                                 fetch(
                                   buildApiUrl({
                                     cmd: "dns-remove_record",
-                                    params: { record: "record.record", type: record.type, value: record.value },
+                                    params: { record: record.record, type: record.type, value: record.value },
                                   }),
                                 ).then(parseApiResponse),
                                 {
                                   optimisticUpdate(data) {
                                     return data.filter(
                                       (r) =>
-                                        r.record === record.record &&
+                                        !(r.record === record.record &&
                                         r.type === record.type &&
-                                        r.value === record.value,
+                                        r.zone === record.zone &&
+                                        r.value === record.value),
                                     );
                                   },
                                 },
