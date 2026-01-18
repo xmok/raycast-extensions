@@ -1,6 +1,10 @@
 # System Monitor Changelog
 
-## [Toggle Display Mode + Modernize] - {PR_MERGE_DATE}
+## [Toggle Display Mode + Modernize + Add README] - {PR_MERGE_DATE}
+
+- Add a preference to toggle between free and used display modes for CPU, Memory and more.
+- Modernize extension to use latest Raycast configuration.
+- Add README.md
 
 ## [New Additions] - 2025-08-05
 

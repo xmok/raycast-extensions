@@ -55,7 +55,7 @@ function SystemInfoDetail() {
                 text={
                   displayMode === "free"
                     ? `${disk.totalAvailableStorage} GB available of ${disk.totalSize} GB`
-                    : `${+disk.totalSize - +disk.totalAvailableStorage} GB used of ${disk.totalSize} GB`
+                    : `${disk.usedStorage} GB used of ${disk.totalSize} GB`
                 }
               />
             );
