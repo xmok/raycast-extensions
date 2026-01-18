@@ -64,7 +64,6 @@ export default function ManageDNSRecords() {
     (acc, item) => {
       if (!acc[item.zone]) acc[item.zone] = [];
       acc[item.zone].push(item);
-      // console.log(item)
       return acc;
     },
     {} as { [zone: string]: DNSRecord[] },
@@ -114,10 +113,12 @@ export default function ManageDNSRecords() {
                                   optimisticUpdate(data) {
                                     return data.filter(
                                       (r) =>
-                                        !(r.record === record.record &&
-                                        r.type === record.type &&
-                                        r.zone === record.zone &&
-                                        r.value === record.value),
+                                        !(
+                                          r.record === record.record &&
+                                          r.type === record.type &&
+                                          r.zone === record.zone &&
+                                          r.value === record.value
+                                        ),
                                     );
                                   },
                                 },
