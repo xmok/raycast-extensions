@@ -122,7 +122,7 @@ export default function Command() {
           <MenuBarExtra.Item
             key={index}
             title={disk.diskName}
-            subtitle={`${disk.totalAvailableStorage} GB available of ${disk.totalSize} GB` || "Loading..."}
+            subtitle={`${disk.totalAvailableStorage} GB available of ${disk.totalSize} GB`}
             icon={Icon.HardDrive}
             onAction={() => runAppleScript(openActivityMonitorAppleScript(4))}
           />
@@ -141,7 +141,7 @@ export default function Command() {
       <MenuBarExtra.Section title="Memory">
         <MenuBarExtra.Item
           title="Memory Usage"
-          subtitle={`${memoryUsage?.freeMemPercentage} % (~ ${memoryUsage?.freeMem} GB)` || "Loading..."}
+          subtitle={`${memoryUsage?.freeMemPercentage} % (~ ${memoryUsage?.freeMem} GB)`}
           icon={Icon.MemoryChip}
           onAction={() => runAppleScript(openActivityMonitorAppleScript(2))}
         />
@@ -150,11 +150,9 @@ export default function Command() {
       <MenuBarExtra.Section title="Network">
         <MenuBarExtra.Item
           title="Network Usage"
-          subtitle={
-            `↓ ${networkUsage?.download !== undefined ? formatBytes(networkUsage.download) : "0 B"}/s ↑ ${
-              networkUsage?.upload !== undefined ? formatBytes(networkUsage.upload) : "0 B"
-            }/s` || "Loading..."
-          }
+          subtitle={`↓ ${networkUsage?.download !== undefined ? formatBytes(networkUsage.download) : "0 B"}/s ↑ ${
+            networkUsage?.upload !== undefined ? formatBytes(networkUsage.upload) : "0 B"
+          }/s`}
           icon={Icon.Network}
           onAction={() => runAppleScript(openActivityMonitorAppleScript(5))}
         />
