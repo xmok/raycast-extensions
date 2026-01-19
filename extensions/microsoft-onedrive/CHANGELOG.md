@@ -5,6 +5,7 @@
 ### Changed
 
 - Updated the checkmark icon used in the **Sort Search Results By** action to improve design consistency.
+- Adopted the default icon for the **Create Quicklink** action.
 
 ## [Improvement] - 2026-01-15
 
