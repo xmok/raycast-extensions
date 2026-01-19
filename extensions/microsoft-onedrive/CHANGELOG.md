@@ -1,5 +1,11 @@
 # Microsoft OneDrive Changelog
 
+## [Improvement] - 2026-01-19
+
+### Changed
+
+- Updated the checkmark icon used in the **Sort Search Results By** action to improve design consistency.
+
 ## [Improvement] - 2026-01-15
 
 ### Added
