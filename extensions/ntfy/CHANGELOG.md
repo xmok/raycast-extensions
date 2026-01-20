@@ -1,6 +1,6 @@
 # Ntfy Changelog
 
-## [Optional Access Token] - {PR_MERGE_DATE}
+## [Optional Access Token] - 2026-01-20
 
 - Configuration for access token
 
