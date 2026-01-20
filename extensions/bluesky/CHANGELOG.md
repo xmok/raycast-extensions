@@ -1,6 +1,6 @@
 # Bluesky Changelog
 
-## [Maintenance Release + Fix Menubar Icon] - {PR_MERGE_DATE}
+## [Maintenance Release + Fix Menubar Icon] - 2026-01-20
 
 - fix: menu bar icon was not showing
 - chore: modernize extension to use latest Raycast configuration
