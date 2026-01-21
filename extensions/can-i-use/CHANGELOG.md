@@ -1,6 +1,6 @@
 # Can I Use Changelog
 
-## [Windows Supoprt] - {PR_MERGE_DATE}
+## [Windows Support] - {PR_MERGE_DATE}
 
 - Add Windows support
 - Modernize extension to use latest Raycast config
