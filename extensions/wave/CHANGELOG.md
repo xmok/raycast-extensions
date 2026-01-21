@@ -1,5 +1,9 @@
 # Wave Changelog
 
+## [More Invoice Enhancements] - {PR_MERGE_DATE}
+
+- In **Invoices**, Show Customer Name, Invoice Date, Invoice Due Date and Amount Due
+
 ## [Create Draft Invoice + Show Discounts] - 2026-01-08
 
 - Add new draft invoice
