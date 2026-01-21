@@ -74,7 +74,6 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.104.1",
-    "@raycast/utils": "^2.2.2",
     "browserslist": "^4.23.0",
     "caniuse-api": "^3.0.0",
     "caniuse-lite": "^1.0.30001608"
