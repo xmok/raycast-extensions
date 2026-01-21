@@ -4,7 +4,10 @@ const raycastConfig = require("@raycast/eslint-config");
 module.exports = defineConfig([
   ...raycastConfig,
   {
-    "rules": {
+    plugins: {
+      import: require("eslint-plugin-import")
+    },
+    rules: {
       "import/order": [
         "error",
         {
