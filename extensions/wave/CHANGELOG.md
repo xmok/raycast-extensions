@@ -1,6 +1,6 @@
 # Wave Changelog
 
-## [More Invoice Enhancements] - {PR_MERGE_DATE}
+## [More Invoice Enhancements] - 2026-01-21
 
 - In **Invoices**, Show Customer Name, Invoice Date, Invoice Due Date and Amount Due
 
