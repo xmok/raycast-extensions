@@ -1,6 +1,6 @@
 # Font Sniper Changelog
 
-## [Modernize + Windows Compatible Shortcut] - {PR_MERGE_DATE}
+## [Modernize + Windows Compatible Shortcut] - 2026-01-22
 
 - Added Windows compatible shortcut for "Select All" / "Deselect All"
 - Modernized extension to use latest Raycast configuration
