@@ -1,6 +1,6 @@
 # Porkbun Changelog
 
-## [Mention "Opt In All Domains"] - {PR_MERGE_DATE}
+## [Mention "Opt In All Domains"] - 2026-01-23
 
 - Inform user they can use "Opt In All Domains" setting
 
