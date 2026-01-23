@@ -1,6 +1,6 @@
 # Plane Changelog
 
-## [Show State Color in Search Projects > Work Items] - {PR_MERGE_DATE}
+## [Show State Color in Search Projects > Work Items] - 2026-01-23
 
 - In "Search Projects" > "Work Items", the `Icon` is colored and has `tooltip` of the _state_ name
 
