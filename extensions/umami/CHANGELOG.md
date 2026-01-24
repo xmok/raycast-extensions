@@ -1,5 +1,9 @@
 # Umami Changelog
 
+## [View Websites (Menu Bar)] - 2026-01-24
+
+- View Websites (Menu Bar)
+
 ## [View Admin Users] - 2026-01-19
 
 - View Admin Users (only supported in **self-hosted**)
