@@ -1,6 +1,6 @@
 # Postiz Changelog
 
-## [Date, X Settings in New Post] - {PR_MERGE_DATE}
+## [Date, X Settings in New Post] - 2026-01-24
 
 In Create Post:
 - Added date picker for post date
