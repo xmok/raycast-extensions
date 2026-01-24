@@ -2,9 +2,9 @@
 
 ## [Date, X Settings in New Post] - {PR_MERGE_DATE}
 
-In Create Post **v2**:
+In Create Post:
 - Added date picker for post date
-- Added provider settings for _X_
+- Added provider settings for _X_ (**v2**)
 
 ## [Character Counter in New Post] - 2026-01-19
 

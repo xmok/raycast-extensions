@@ -23,12 +23,16 @@ export default function CreatePost() {
     async onSubmit(values) {
       const toast = await showToast(Toast.Style.Animated, "Creating");
       const { date, ...rest } = values;
+      // get all settings e.g. settings-x-who_can_reply_post
       const settingsEntries = Object.entries(rest).filter(([key]) => key.startsWith("settings-"));
-      const settings: Record<string, string> = {};
+      let settings: Record<string, string> | undefined;
       if (settingsEntries.length) {
+        settings = {};
+        // extract the key e.g. settings-x-who_can_reply_post -> who_can_reply_post
         settingsEntries.forEach(([key, value]) => {
-          settings[key.split("-")[2]] = value;
+          settings![key.split("-")[2]] = value;
         });
+        // extract the type e.g. settings-x-who_can_reply_post -> x
         settings["__type"] = settingsEntries[0][0].split("-")[1];
       }
       try {
