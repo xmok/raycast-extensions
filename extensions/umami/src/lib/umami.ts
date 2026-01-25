@@ -49,7 +49,6 @@ export const useWebsites = (userId?: string) =>
       const statsResponses = await Promise.all(
         websites.map((website) => umami.getWebsiteStats(website.id, { startAt, endAt })),
       );
-      // const stats = statsResponses.map(({ data }) => typeof data?.bounces==="number");
       const stats = statsResponses.map((statData) => {
         const data = statData.data as UmamiWebsiteStats | UmamiWebsiteStatsV3;
         const isV3 = (d: UmamiWebsiteStats | UmamiWebsiteStatsV3): d is UmamiWebsiteStatsV3 =>
@@ -58,11 +57,11 @@ export const useWebsites = (userId?: string) =>
         return isV3(data)
           ? data
           : {
-              pageviews: data.pageviews.value,
-              visitors: data.visitors.value,
-              visits: data.visits.value,
-              bounces: data.bounces.value,
-              totaltime: data.totaltime.value,
+              pageviews: data.pageviews.value || 0,
+              visitors: data.visitors.value || 0,
+              visits: data.visits.value || 0,
+              bounces: data.bounces.value || 0,
+              totaltime: data.totaltime.value || 0,
             };
       });
       return websites.map((website, index) => ({ ...website, stats: stats[index] }));
