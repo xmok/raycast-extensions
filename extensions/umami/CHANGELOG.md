@@ -1,6 +1,6 @@
 # Umami Changelog
 
-## [Fix Website Stats Always Zero in Cloud] - {PR_MERGE_DATE}
+## [Fix Website Stats Always Zero in Cloud] - 2026-01-25
 
 - Fix: Website Stats are now correctly displayed when using Cloud V3
 
