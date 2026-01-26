@@ -4,6 +4,6 @@
 
 - Add "Add New Email Account" `Action` to `EmptyView`
 - Add handler to refresh the list of email accounts after creation
-- Add "DNS" `Action` to allow accessing DNS settings from any domain (previosly, user had to attempt adding a domain before being shown the view)
+- Add "DNS" `Action` to allow accessing DNS settings from any domain (previously, user had to attempt adding a domain before being shown the view)
 
 ## [Initial Version] - 2026-01-12
