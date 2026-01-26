@@ -1,6 +1,6 @@
 # MXroute Changelog
 
-## [Add Email Account from EmptyView + Access DNS Info] - {PR_MERGE_DATE}
+## [Add Email Account from EmptyView + Access DNS Info] - 2026-01-26
 
 - Add "Add New Email Account" `Action` to `EmptyView`
 - Add handler to refresh the list of email accounts after creation
