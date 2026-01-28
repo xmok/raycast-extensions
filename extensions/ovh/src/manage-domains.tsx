@@ -405,20 +405,24 @@ function UpdateServiceInformation({ serviceName }: { serviceName: string }) {
         },
       };
       try {
-        await Promise.all([
+        const updates = [
           callOvh(`v1/domain/${serviceName}/serviceInfos`, {
             method: "PUT",
             body,
           }),
-          callOvh(`v1/domain/zone/${serviceName}/serviceInfos`, {
-            method: "PUT",
-            body,
-          }).then(() =>
-            ovh.domain.zone.refresh(serviceName).catch(() => {
-              throw new Error("Could not refresh");
-            }),
-          ),
-        ]);
+        ];
+        if (values.alsoUpdateDNSZone)
+          updates.push(
+            callOvh(`v1/domain/zone/${serviceName}/serviceInfos`, {
+              method: "PUT",
+              body,
+            }).then(() =>
+              ovh.domain.zone.refresh(serviceName).catch(() => {
+                throw new Error("Could not refresh");
+              }),
+            ),
+          );
+        await Promise.all(updates);
         toast.style = Toast.Style.Success;
         toast.title = "Updated";
         pop();
