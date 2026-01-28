@@ -14,7 +14,7 @@ import {
 } from "@raycast/api";
 import { FormValidation, getAvatarIcon, getFavicon, useCachedPromise, useCachedState, useForm } from "@raycast/utils";
 import { DNSRecord, Domain, DomainServiceInfo } from "./types";
-import { callOvh } from "./ovh";
+import { callOvh, ovh } from "./ovh";
 
 function generateDomainAccessories(domain: Domain) {
   const accessories: List.Item.Accessory[] = [];
@@ -133,7 +133,12 @@ export default function ManageDomains() {
                 target={<ModifyDNSServers domain={domain} />}
                 onPop={revalidate}
               />
-              <Action.Push icon={Icon.Pencil} title="Update Service Information" target={<UpdateServiceInformation serviceName={domain.domain} />} onPop={revalidate} />
+              <Action.Push
+                icon={Icon.Pencil}
+                title="Update Service Information"
+                target={<UpdateServiceInformation serviceName={domain.domain} />}
+                onPop={revalidate}
+              />
               <Action
                 shortcut={Keyboard.Shortcut.Common.ToggleQuickLook}
                 icon={Icon.AppWindowSidebarLeft}
@@ -193,9 +198,7 @@ function DNSRecords({ domain }: { domain: Domain }) {
         },
       );
       toast.title = "Deleted! Refreshing";
-      await callOvh(`v1/domain/zone/${record.zone}/refresh`, {
-        method: "POST",
-      }).catch(() => {
+      await ovh.domain.zone.refresh(record.zone).catch(() => {
         throw new Error("Could not refresh");
       });
       toast.style = Toast.Style.Success;
@@ -376,33 +379,48 @@ function UpdateServiceInformation({ serviceName }: { serviceName: string }) {
   const { pop } = useNavigation();
   type FormValues = {
     period: string;
+    alsoUpdateDNSZone: boolean;
   };
-  const {isLoading: isLoadingPaymentMethods, data: paymentMethods} = useCachedPromise(async() => {
+  const { isLoading: isLoadingPaymentMethods, data: paymentMethods } = useCachedPromise(async () => {
     const result = await callOvh<number[]>("v1/me/payment/method?status=VALID");
     return result;
-  })
-  const {isLoading, data} = useCachedPromise(async(serviceName: string) => {
-    const result = await callOvh<DomainServiceInfo>(`v1/domain/${serviceName}/serviceInfos`);
-    return result;
-  }, [serviceName])
+  });
+  const { isLoading, data } = useCachedPromise(
+    async (serviceName: string) => {
+      const result = await callOvh<DomainServiceInfo>(`v1/domain/${serviceName}/serviceInfos`);
+      return result;
+    },
+    [serviceName],
+  );
   const { handleSubmit, itemProps, values } = useForm<FormValues>({
     async onSubmit(values) {
       const toast = await showToast(Toast.Style.Animated, "Updating");
+      const body = {
+        renew: {
+          manualPayment: !values.period,
+          deleteAtExpiration: !!data?.renew?.deleteAtExpiration,
+          forced: !!data?.renew?.forced,
+          automatic: !!values.period,
+          period: values.period ? +values.period : null,
+        },
+      };
       try {
-        await callOvh(`v1/domain/${serviceName}/serviceInfos`, {
-          method: "PUT",
-          body: {
-            renew: {
-              manualPayment: !values.period,
-              deleteAtExpiration: !!data?.renew?.deleteAtExpiration,
-              forced: !!data?.renew?.forced,
-              automatic: !!values.period,
-              period: values.period ? +values.period : null
-            }
-          },
-        });
-      toast.style = Toast.Style.Success;
-      toast.title = "Updated";
+        await Promise.all([
+          callOvh(`v1/domain/${serviceName}/serviceInfos`, {
+            method: "PUT",
+            body,
+          }),
+          callOvh(`v1/domain/zone/${serviceName}/serviceInfos`, {
+            method: "PUT",
+            body,
+          }).then(() =>
+            ovh.domain.zone.refresh(serviceName).catch(() => {
+              throw new Error("Could not refresh");
+            }),
+          ),
+        ]);
+        toast.style = Toast.Style.Success;
+        toast.title = "Updated";
         pop();
       } catch (error) {
         toast.style = Toast.Style.Failure;
@@ -411,11 +429,12 @@ function UpdateServiceInformation({ serviceName }: { serviceName: string }) {
       }
     },
     initialValues: {
-      period: data?.renew?.period?.toString()
-    }
+      period: data?.renew?.period?.toString(),
+    },
   });
   return (
-    <Form isLoading={isLoadingPaymentMethods || isLoading}
+    <Form
+      isLoading={isLoadingPaymentMethods || isLoading}
       navigationTitle={`... / ${serviceName} / Update Service Information`}
       actions={
         <ActionPanel>
@@ -423,7 +442,10 @@ function UpdateServiceInformation({ serviceName }: { serviceName: string }) {
         </ActionPanel>
       }
     >
-      <Form.Description title="Configure renewal" text={`How often would you like to renew your ${serviceName} service?`} />
+      <Form.Description
+        title="Configure renewal"
+        text={`How often would you like to renew your ${serviceName} service?`}
+      />
       <Form.Dropdown title="" {...itemProps.period}>
         <Form.Dropdown.Item title="Manual renewal" value="" />
         <Form.Dropdown.Item title="Every year" value="12" />
@@ -436,14 +458,27 @@ function UpdateServiceInformation({ serviceName }: { serviceName: string }) {
         <Form.Dropdown.Item title="Every 8 years" value="96" />
         <Form.Dropdown.Item title="Every 9 years" value="108" />
       </Form.Dropdown>
-      {!values.period ? <>
-      <Form.Description text={`You have selected manual renewal for your ${serviceName} service. Your service won't automatically renew when it expires.`} />
-      </> : <>
-        <Form.Description text={`This service will automatically renew every ${+values.period/12} ${values.period==="12" ? "year" : "years"}.
+      {!values.period ? (
+        <>
+          <Form.Description
+            text={`You have selected manual renewal for your ${serviceName} service. Your service won't automatically renew when it expires.`}
+          />
+        </>
+      ) : (
+        <>
+          <Form.Description
+            text={`This service will automatically renew every ${+values.period / 12} ${values.period === "12" ? "year" : "years"}.
         
-If you choose not to renew, disable auto-renewal before your service expires.`} />
-{!paymentMethods?.length && <Form.Description text={`You have selected automatic payment for your ${serviceName} service. To use this renewal method, please enter a payment method in the “Payments Methods” section.`} />}
-      </>}
+If you choose not to renew, disable auto-renewal before your service expires.`}
+          />
+          {!paymentMethods?.length && (
+            <Form.Description
+              text={`You have selected automatic payment for your ${serviceName} service. To use this renewal method, please enter a payment method in the “Payments Methods” section.`}
+            />
+          )}
+        </>
+      )}
+      <Form.Checkbox label="Also Update DNS Zone" {...itemProps.alsoUpdateDNSZone} />
     </Form>
   );
 }
