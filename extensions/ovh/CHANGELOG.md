@@ -1,6 +1,6 @@
 # OVHcloud Changelog
 
-## [Update Domain & DNS Service Information] - {PR_MERGE_DATE}
+## [Update Domain & DNS Service Information] - 2026-01-28
 
 - Update Domain Service Information (renewal)
 - Update DNS Zone Service Information (renewal)
