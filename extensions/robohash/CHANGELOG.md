@@ -1,3 +1,3 @@
 # RoboHash Changelog
 
-## [Initial Version] - 2024-06-14
+## [Initial Version] - {PR_MERGE_DATE}

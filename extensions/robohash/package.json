@@ -30,6 +30,10 @@
           "required": true,
           "data": [
             {
+              "title": "any",
+              "value": "any"
+            },
+            {
               "title": "bgset1",
               "value": "bg1"
             },
@@ -54,37 +58,44 @@
           "required": true,
           "data": [
             {
-              "title": "set1",
+              "title": "Zikri Kader (1)",
               "value": "set1"
             },
             {
-              "title": "set2",
+              "title": "Hrvoje Novakovic (2)",
               "value": "set2"
             },
             {
-              "title": "set3",
+              "title": "Julian Peter Arias (3)",
               "value": "set3"
             },
             {
-              "title": "set4",
+              "title": "Cats (4)",
               "value": "set4"
+            },
+            {
+              "title": "avataaars (5)",
+              "value": "set5"
+            },
+            {
+              "title": "Gorillas (6)",
+              "value": "set6"
             }
           ]
         }
       ]
     }
   ],
-  "tools": null,
   "dependencies": {
-    "@raycast/api": "^1.76.0"
+    "@raycast/api": "^1.103.0"
   },
   "devDependencies": {
-    "@raycast/eslint-config": "^1.0.6",
-    "@types/node": "20.8.10",
-    "@types/react": "18.2.27",
-    "eslint": "^8.51.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
   },
   "scripts": {
     "build": "ray build -e dist",
@@ -93,5 +104,8 @@
     "lint": "ray lint",
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish"
-  }
+  },
+  "platforms": [
+    "macOS"
+  ]
 }
